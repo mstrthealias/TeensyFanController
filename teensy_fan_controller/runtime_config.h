@@ -125,9 +125,9 @@ struct RuntimeConfig {
   TableConfig tbl;
 
 
-  int to_bytes(byte *bytes, size_t len);
+  int to_bytes(byte *bytes, const size_t &len);
 
-  static RuntimeConfig parse_bytes(const byte bytes[], size_t len);
+  static RuntimeConfig parse_bytes(const byte bytes[], const size_t &len);
 };
 
 

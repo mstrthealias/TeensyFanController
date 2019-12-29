@@ -3,9 +3,10 @@
 //
 
 #include "runtime_config.h"
+#include <memory>
 
 
-int RuntimeConfig::to_bytes(byte *bytes, size_t len) {
+int RuntimeConfig::to_bytes(byte *bytes, const size_t &len) {
   if (len < CONFIG_BYTES) {
     Serial.println("Logic Error: 127 bytes needed for program configuration");
     return -1;
@@ -23,8 +24,11 @@ int RuntimeConfig::to_bytes(byte *bytes, size_t len) {
   return 0;
 }
 
-/*static */RuntimeConfig RuntimeConfig::parse_bytes(const byte bytes[], size_t len) {
-  if ((uint8_t)bytes[CONFIG_POS_VERSION] > CONTROLLER_VERSION || (uint8_t)bytes[CONFIG_POS_VERSION] < 1 || (char)bytes[CONFIG_POS_KEY1] != CONTROLLER_KEY1 || (char)bytes[CONFIG_POS_KEY2] != CONTROLLER_KEY2) {
+/*static */RuntimeConfig RuntimeConfig::parse_bytes(const byte bytes[], const size_t &len) {
+  if (len < CONFIG_BYTES) {
+    return RuntimeConfig();  // Return defaults
+  }
+  else if (static_cast<uint8_t>(bytes[CONFIG_POS_VERSION]) > CONTROLLER_VERSION || static_cast<uint8_t>(bytes[CONFIG_POS_VERSION]) < 1 || static_cast<char>(bytes[CONFIG_POS_KEY1]) != CONTROLLER_KEY1 || static_cast<char>(bytes[CONFIG_POS_KEY2]) != CONTROLLER_KEY2) {
     return RuntimeConfig();  // Return defaults
   }
 
@@ -84,7 +88,7 @@ RuntimeConfig::SensorConfig __RuntimeConfig_v1::__SensorConfig_v1::decompress() 
     pin,
     beta,
     seriesR,
-    (uint16_t) (nominalR * 1000)
+    static_cast<uint16_t>(nominalR * 1000)
   };
 }
 
@@ -93,7 +97,7 @@ RuntimeConfig::SensorConfig __RuntimeConfig_v1::__SensorConfig_v1::decompress() 
     in.pin,
     in.beta,
     in.seriesR,
-    (uint8_t) (in.nominalR / 1000)
+    static_cast<uint8_t>(in.nominalR / 1000)
   };
 }
 
@@ -103,7 +107,7 @@ RuntimeConfig::FanConfig __RuntimeConfig_v1::__FanConfig_v1::decompress() {
     pinPWM,
     pinRPM,
     mode,
-    (float) (ratio / 100.0)
+    static_cast<float>(ratio / 100.0)
   };
 }
 
@@ -112,48 +116,48 @@ RuntimeConfig::FanConfig __RuntimeConfig_v1::__FanConfig_v1::decompress() {
     in.pinPWM,
     in.pinRPM,
     in.mode,
-    (uint8_t) (in.ratio * 100)
+    static_cast<uint8_t>(in.ratio * 100)
   };
 }
 
 
 RuntimeConfig::PIDConfig __RuntimeConfig_v1::__PIDConfig_v1::decompress() {
   return {
-    (float) (setpoint / 4.0),
-    (float) (setpoint_min / 4.0),
-    (float) (setpoint_max / 4.0),
+    static_cast<float>(setpoint / 4.0),
+    static_cast<float>(setpoint_min / 4.0),
+    static_cast<float>(setpoint_max / 4.0),
     gain_p,
-    (float) (gain_i / 100.0),
-    (float) (gain_d / 100.0),
+    static_cast<float>(gain_i / 100.0),
+    static_cast<float>(gain_d / 100.0),
     adaptive_sp,
     adaptive_sp_check_case_temp,
-    (float) (adaptive_sp_step_size / 50.0),
+    static_cast<float>(adaptive_sp_step_size / 50.0),
     adaptive_sp_step_down.decompress(),
     adaptive_sp_step_up.decompress(),
     adaptive_tuning,
     adaptive_tuning_delay,
-    (float) (adaptive_tuning_delta_t_threshold / 100.0),
-    (float) (adaptive_tuning_multiplier / 100.0)
+    static_cast<float>(adaptive_tuning_delta_t_threshold / 100.0),
+    static_cast<float>(adaptive_tuning_multiplier / 100.0)
   };
 }
 
 /*static */__RuntimeConfig_v1::__PIDConfig_v1 __RuntimeConfig_v1::__PIDConfig_v1::compress(RuntimeConfig::PIDConfig in) {
   return {
-    (uint8_t) (in.setpoint * 4),
-    (uint8_t) (in.setpoint_min * 4),
-    (uint8_t) (in.setpoint_max * 4),
+    static_cast<uint8_t>(in.setpoint * 4),
+    static_cast<uint8_t>(in.setpoint_min * 4),
+    static_cast<uint8_t>(in.setpoint_max * 4),
     in.gain_p,
-    (uint8_t) (in.gain_i * 100),
-    (uint8_t) (in.gain_d * 100),
+    static_cast<uint8_t>(in.gain_i * 100),
+    static_cast<uint8_t>(in.gain_d * 100),
     in.adaptive_sp,
     in.adaptive_sp_check_case_temp,
-    (uint8_t) (in.adaptive_sp_step_size * 50),
+    static_cast<uint8_t>(in.adaptive_sp_step_size * 50),
     __PIDStep_v1::compress(in.adaptive_sp_step_down),
     __PIDStep_v1::compress(in.adaptive_sp_step_up),
     in.adaptive_tuning,
     in.adaptive_tuning_delay,
-    (uint16_t) (in.adaptive_tuning_delta_t_threshold * 100),
-    (uint8_t) (in.adaptive_tuning_multiplier * 100)
+    static_cast<uint16_t>(in.adaptive_tuning_delta_t_threshold * 100),
+    static_cast<uint8_t>(in.adaptive_tuning_multiplier * 100)
   };
 }
 
@@ -162,7 +166,7 @@ RuntimeConfig::PIDConfig::PIDStep __RuntimeConfig_v1::__PIDConfig_v1::__PIDStep_
   return {
     pct,
     delay,
-    (float) (case_temp_delta / 50.0)
+    static_cast<float>(case_temp_delta / 50.0)
   };
 }
 
@@ -170,6 +174,6 @@ RuntimeConfig::PIDConfig::PIDStep __RuntimeConfig_v1::__PIDConfig_v1::__PIDStep_
   return {
     in.pct,
     in.delay,
-    (uint8_t) (in.case_temp_delta * 50)
+    static_cast<uint8_t>(in.case_temp_delta * 50)
   };
 }
