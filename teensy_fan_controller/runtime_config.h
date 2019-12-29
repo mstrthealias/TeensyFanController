@@ -5,7 +5,15 @@
 #ifndef TFC_RUNTIMECONFIG_H
 #define TFC_RUNTIMECONFIG_H
 
+#ifdef ARDUINO
 #include <Arduino.h>
+#else
+#include  <cstdint>
+typedef unsigned char byte;
+#define A4 0
+#define A6 0
+#define A7 0
+#endif
 
 
 // thermistor coefficients/defaults
@@ -24,6 +32,7 @@
 #define CONFIG_POS_CONFIG               4
 
 #define CONFIG_BYTES 127
+#define CHUNK_SIZE 48
 
 
 enum CONTROL_MODE : uint8_t {

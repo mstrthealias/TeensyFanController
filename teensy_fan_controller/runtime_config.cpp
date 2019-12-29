@@ -8,7 +8,9 @@
 
 int RuntimeConfig::to_bytes(byte *bytes, const size_t &len) {
   if (len < CONFIG_BYTES) {
+#ifdef ARDUINO
     Serial.println("Logic Error: 127 bytes needed for program configuration");
+#endif
     return -1;
   }
 
@@ -26,6 +28,9 @@ int RuntimeConfig::to_bytes(byte *bytes, const size_t &len) {
 
 /*static */RuntimeConfig RuntimeConfig::parse_bytes(const byte bytes[], const size_t &len) {
   if (len < CONFIG_BYTES) {
+#ifdef ARDUINO
+    Serial.println("Logic Error: 127 bytes needed to parse program configuration, defaults returned");
+#endif
     return RuntimeConfig();  // Return defaults
   }
   else if (static_cast<uint8_t>(bytes[CONFIG_POS_VERSION]) > CONTROLLER_VERSION || static_cast<uint8_t>(bytes[CONFIG_POS_VERSION]) < 1 || static_cast<char>(bytes[CONFIG_POS_KEY1]) != CONTROLLER_KEY1 || static_cast<char>(bytes[CONFIG_POS_KEY2]) != CONTROLLER_KEY2) {

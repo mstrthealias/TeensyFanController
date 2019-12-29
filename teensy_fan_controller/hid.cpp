@@ -2,12 +2,14 @@
 // Created by jd on 12/15/2019.
 //
 
+#include <memory>
 #include "hid.h"
+#include "core.h"
 
 
 #ifdef USB_RAWHID_EN
 
-const size_t CHUNK_SIZE = 48;
+
 static byte config_bytes[CONFIG_BYTES];
 
 HID::HID(const std::unique_ptr<TempController> &ctrl, RuntimeConfig &config) : ctrl(ctrl), config(config) {
