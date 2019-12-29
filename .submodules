@@ -1,0 +1,7 @@
+[submodule "HIDAPI"]
+	path = HIDAPI
+	url = git@github.com:mstrthealias/HIDAPI-Qt5.git
+[submodule "ui_qt5"]
+	path = ui_qt5
+	url = git@github.com:mstrthealias/TFC-ui.git
+
