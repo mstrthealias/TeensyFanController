@@ -87,7 +87,7 @@ struct RuntimeConfig {
     bool adaptive_sp_check_case_temp = true;
     float adaptive_sp_step_size = 0.5f;
     PIDStep adaptive_sp_step_down = {45, 60, 2.1f};
-    PIDStep adaptive_sp_step_up = {65, 30, 0.3f};
+    PIDStep adaptive_sp_step_up = {65, 30, 1.8f};
 
     bool adaptive_tuning = true;  // use a more aggressive tuning factor when DeltaT > delta_t_threshold
     uint8_t adaptive_tuning_delay = 5;
