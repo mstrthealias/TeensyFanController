@@ -8,7 +8,8 @@
 #ifdef ARDUINO
 #include <Arduino.h>
 #else
-#include  <cstdint>
+#include <cstdint>
+#include <cstddef>
 typedef unsigned char byte;
 #define A4 0
 #define A6 0
