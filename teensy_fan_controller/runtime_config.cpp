@@ -4,7 +4,83 @@
 
 #include "runtime_config.h"
 #include <memory>
+#include <cstddef>
+#include <cstring>
 
+
+RuntimeConfig::RuntimeConfig() :
+    config_version{CONTROLLER_VERSION},
+    fan1{4, 5, MODE_PID, 1},
+    fan2{6, 7, MODE_PID, 0.8f},
+    fan3{10, 11, MODE_PID, 1},
+    fan4{9, 8, MODE_PID, 0.8f},
+    fan5{3, 2, MODE_PID, 1},
+    fan6{22, 12, MODE_PID, 1},
+    tempSupply{A7, DEFAULT_BCOEFFICIENT, DEFAULT_SERIESRESISTOR, DEFAULT_THERMISTORNOMINAL},
+    tempReturn{A6, DEFAULT_BCOEFFICIENT, DEFAULT_SERIESRESISTOR, DEFAULT_THERMISTORNOMINAL},
+    tempCase{A4, DEFAULT_BCOEFFICIENT, DEFAULT_SERIESRESISTOR, DEFAULT_THERMISTORNOMINAL},
+    tempAux{0, DEFAULT_BCOEFFICIENT, DEFAULT_SERIESRESISTOR, DEFAULT_THERMISTORNOMINAL},
+    pwm_percent_min{24},
+    pwm_percent_max1{75},
+    pwm_percent_max2{100},
+    pid{
+          28.0f,  // Default Setpoint
+          28.0f,
+          31.5f,
+          34,  //39
+          0.9f,  //1.03f
+          0.02f,  //0.03f
+          true,  // adapt setpoint by 0.5C within setpoint_min >= setpoint >= setpoint_max
+          true,
+          0.5f,
+          {45, 60, 2.1f},
+          {65, 30, 1.8f},
+          true,  // use a more aggressive tuning factor when DeltaT > delta_t_threshold
+          5,
+          2.5f,
+          1.15f
+      },
+      tbl{
+          VIRTUAL_DELTA_TEMP,
+          {
+             {25, 0},
+             {25, 0},
+             {25, 28},
+             {28, 35},
+             {29, 45},
+             {30, 55},
+             {31, 65},
+             {32, 75},
+             {33, 85},
+             {35, 100},
+           }
+      }
+{
+}
+
+RuntimeConfig::RuntimeConfig(uint8_t config_version,
+        FanConfig fan1,
+        FanConfig fan2,
+        FanConfig fan3,
+        FanConfig fan4,
+        FanConfig fan5,
+        FanConfig fan6,
+        SensorConfig tempSupply,
+        SensorConfig tempReturn,
+        SensorConfig tempCase,
+        SensorConfig tempAux,
+        uint8_t pwm_percent_min,
+        uint8_t pwm_percent_max1,
+        uint8_t pwm_percent_max2,
+        PIDConfig pid,
+        TableConfig tbl)
+    : config_version{config_version},
+      fan1{fan1}, fan2{fan2}, fan3{fan3}, fan4{fan4}, fan5{fan5}, fan6{fan6},
+      tempSupply{tempSupply}, tempReturn{tempReturn}, tempCase{tempCase}, tempAux{tempAux},
+      pwm_percent_min{pwm_percent_min}, pwm_percent_max1{pwm_percent_max1}, pwm_percent_max2{pwm_percent_max2},
+      pid{pid}, tbl{tbl}
+{
+}
 
 int RuntimeConfig::to_bytes(byte *bytes, const size_t &len) {
   if (len < CONFIG_BYTES) {

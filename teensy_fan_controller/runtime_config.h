@@ -72,67 +72,73 @@ struct RuntimeConfig {
       float case_temp_delta;  // require (case_temp <= setpoint - <delta>) to step down setpoint
     };
 
-    float setpoint = 28.0f;  // Default Setpoint
-    float setpoint_min = 28.0f;
-    float setpoint_max = 31.5f;
+    float setpoint;  // Default Setpoint
+    float setpoint_min;
+    float setpoint_max;
 
     // PID Tunings
     //double Kp=39, Ki=1.61, Kd=0.05;  // sheet5  // 100ms, ideal for router cooling experiment
     //double Kp = 39, Ki = 1.03, Kd = 0.03; // sufficient for 360+120 radiators aggresive tunings
-    uint8_t gain_p = 34;  //39
-    float gain_i = 0.9f;  //1.03f
-    float gain_d = 0.02f;  //0.03f
+    uint8_t gain_p;  //39
+    float gain_i;  //1.03f
+    float gain_d;  //0.03f
 
-    bool adaptive_sp = true;  // adapt setpoint by 0.5C within setpoint_min >= setpoint >= setpoint_max
-    bool adaptive_sp_check_case_temp = true;
-    float adaptive_sp_step_size = 0.5f;
-    PIDStep adaptive_sp_step_down = {45, 60, 2.1f};
-    PIDStep adaptive_sp_step_up = {65, 30, 1.8f};
+    bool adaptive_sp;  // adapt setpoint by 0.5C within setpoint_min >= setpoint >= setpoint_max
+    bool adaptive_sp_check_case_temp;
+    float adaptive_sp_step_size;
+    PIDStep adaptive_sp_step_down;
+    PIDStep adaptive_sp_step_up;
 
-    bool adaptive_tuning = true;  // use a more aggressive tuning factor when DeltaT > delta_t_threshold
-    uint8_t adaptive_tuning_delay = 5;
-    float adaptive_tuning_delta_t_threshold = 2.5f;
-    float adaptive_tuning_multiplier = 1.15f;
+    bool adaptive_tuning;  // use a more aggressive tuning factor when DeltaT > delta_t_threshold
+    uint8_t adaptive_tuning_delay;
+    float adaptive_tuning_delta_t_threshold;
+    float adaptive_tuning_multiplier;
   };
   // TODO
   struct TableConfig {
-    TBL_INPUT input = VIRTUAL_DELTA_TEMP;
+    TBL_INPUT input;
 
-    uint8_t tempPercentTable[10][2] = {
-      {25, 0},
-      {25, 0},
-      {25, 28},
-      {28, 35},
-      {29, 45},
-      {30, 55},
-      {31, 65},
-      {32, 75},
-      {33, 85},
-      {35, 100},
-    };
+    uint8_t tempPercentTable[10][2];
   };
 
-  uint8_t config_version = CONTROLLER_VERSION;
+  uint8_t config_version;
 
-  FanConfig fan1 = {4, 5, MODE_PID, 1};
-  FanConfig fan2 = {6, 7, MODE_PID, 0.8f};
-  FanConfig fan3 = {10, 11, MODE_PID, 1};
-  FanConfig fan4 = {9, 8, MODE_PID, 0.8f};
-  FanConfig fan5 = {3, 2, MODE_PID, 1};
-  FanConfig fan6 = {22, 12, MODE_PID, 1};
+  FanConfig fan1;
+  FanConfig fan2;
+  FanConfig fan3;
+  FanConfig fan4;
+  FanConfig fan5;
+  FanConfig fan6;
 
-  SensorConfig tempSupply = {A7, DEFAULT_BCOEFFICIENT, DEFAULT_SERIESRESISTOR, DEFAULT_THERMISTORNOMINAL};
-  SensorConfig tempReturn = {A6, DEFAULT_BCOEFFICIENT, DEFAULT_SERIESRESISTOR, DEFAULT_THERMISTORNOMINAL};
-  SensorConfig tempCase = {A4, DEFAULT_BCOEFFICIENT, DEFAULT_SERIESRESISTOR, DEFAULT_THERMISTORNOMINAL};
-  SensorConfig tempAux = {0, DEFAULT_BCOEFFICIENT, DEFAULT_SERIESRESISTOR, DEFAULT_THERMISTORNOMINAL};
+  SensorConfig tempSupply;
+  SensorConfig tempReturn;
+  SensorConfig tempCase;
+  SensorConfig tempAux;
 
-  uint8_t pwm_percent_min = 24;
-  uint8_t pwm_percent_max1 = 75;
-  uint8_t pwm_percent_max2 = 100;
+  uint8_t pwm_percent_min;
+  uint8_t pwm_percent_max1;
+  uint8_t pwm_percent_max2;
 
   PIDConfig pid;
   TableConfig tbl;
 
+  RuntimeConfig();
+  RuntimeConfig(uint8_t config_version,
+                FanConfig fan1,
+                FanConfig fan2,
+                FanConfig fan3,
+                FanConfig fan4,
+                FanConfig fan5,
+                FanConfig fan6,
+                SensorConfig tempSupply,
+                SensorConfig tempReturn,
+                SensorConfig tempCase,
+                SensorConfig tempAux,
+                uint8_t pwm_percent_min,
+                uint8_t pwm_percent_max1,
+                uint8_t pwm_percent_max2,
+                PIDConfig pid,
+                TableConfig tbl);
 
   int to_bytes(byte *bytes, const size_t &len);
 
