@@ -9,10 +9,12 @@
 static_assert(E2END + 1 >= CONFIG_BYTES, "Device EEPROM size must be at least 127 bytes");
 
 
-FanData::FanData(const RuntimeConfig::FanConfig &fan) : cfg(fan) {
+FanData::FanData(const RuntimeConfig::FanConfig &fan, const String &lbl) : cfg(fan), lbl(lbl)
+{
 }
 
-void FanData::setupPin(void (*isr)()) {
+void FanData::setupPin(void (*isr)())
+{
   pulse_counter = 0;
   if (cfg.pinPWM) {
     pinMode(cfg.pinPWM, OUTPUT);
@@ -28,7 +30,8 @@ void FanData::setupPin(void (*isr)()) {
   }
 }
 
-void FanData::doRPM() {
+void FanData::doRPM()
+{
   if (cfg.pinRPM) {
     // flush pulse_counter to RPM (2 pulse per revolution, over 0.5s...)
     rpmAvg(pulse_counter * 60);
@@ -37,19 +40,25 @@ void FanData::doRPM() {
   }
 }
 
-void FanData::writePWM(const uint8_t pout, const CONTROL_MODE mode) {
+void FanData::writePWM(const uint8_t pout, const CONTROL_MODE mode) const
+{
   if (cfg.mode == mode && cfg.pinPWM) {
     analogWrite(cfg.pinPWM, (int)(pout * cfg.ratio));
   }
 }
 
 
-SensorData::SensorData(const RuntimeConfig::SensorConfig &sensor) : cfg(sensor) {
+SensorData::SensorData(const RuntimeConfig::SensorConfig &sensor, const String &lbl) : cfg(sensor), lbl(lbl)
+{
 }
 
-void SensorData::doSample() {
+void SensorData::doSample()
+{
   if (cfg.pin) {
     val = convert_reading(getAverage(), cfg.nominalR, TEMPERATURENOMINAL, cfg.beta, cfg.seriesR);
+  }
+  else {
+    val = 0;
   }
 }
 
@@ -58,7 +67,8 @@ void SensorData::doSample() {
 
    Source: https://learn.adafruit.com/thermistor/using-a-thermistor
 */
-float SensorData::getAverage() {
+float SensorData::getAverage() const
+{
   // average all the samples out
   float average = 0;
   size_t i;
@@ -79,7 +89,8 @@ float SensorData::getAverage() {
    @param beta Beta coefficient of the thermistor (usually 3000-4000)
    @param seriesR Value of the 'other' resistor
 */
-/*static */float SensorData::convert_reading(float reading, uint16_t nominalR, uint8_t nominalTemp, uint16_t beta, uint16_t seriesR) {
+/*static */float SensorData::convert_reading(float reading, uint16_t nominalR, uint8_t nominalTemp, uint16_t beta, uint16_t seriesR)
+{
   // convert value1 to resistance
   reading = (ADC_RANGE / reading) - 1;
   reading = seriesR / reading;
@@ -95,7 +106,8 @@ float SensorData::getAverage() {
 }
 
 
-int read_config(byte bytes[], size_t len) {
+int read_config(byte bytes[], size_t len)
+{
   memset(bytes, '\0', len);
   uint8_t i;
   for (i = 0; i < len; i++) {
@@ -104,7 +116,8 @@ int read_config(byte bytes[], size_t len) {
   return 0;
 }
 
-int write_config(const byte bytes[], size_t len) {
+int write_config(const byte bytes[], size_t len)
+{
   uint8_t i;
   for (i = 0; i < len; i++) {
     EEPROM[i] = bytes[i];  //EEPROM.write(i, val)

@@ -29,18 +29,20 @@ IntervalTimer adcTimer;
 
 RuntimeConfig config;  // saved in EEPROM (using __RuntimeConfig_v1)
 
-SensorData supplyTemp = SensorData(config.tempSupply);  // Water Supply Temp
-SensorData returnTemp = SensorData(config.tempReturn);  // Water Return Temp
-SensorData caseTemp = SensorData(config.tempCase);  // Case Temp
-SensorData auxTemp = SensorData(config.tempAux);
-FanData fan1 = FanData(config.fan1);
-FanData fan2 = FanData(config.fan2);
-FanData fan3 = FanData(config.fan3);
-FanData fan4 = FanData(config.fan4);
-FanData fan5 = FanData(config.fan5);
-FanData fan6 = FanData(config.fan6);
+SensorData supplyTemp = SensorData(config.tempSupply, "CWS-T");  // Water Supply Temp
+SensorData returnTemp = SensorData(config.tempReturn, "CWR-T");  // Water Return Temp
+SensorData caseTemp = SensorData(config.tempCase, "Case-T");
+SensorData aux1Temp = SensorData(config.tempAux1, "Aux1-T");
+SensorData aux2Temp = SensorData(config.tempAux2, "Aux2-T");
+FanData fan1 = FanData(config.fan1, "1");
+FanData fan2 = FanData(config.fan2, "2");
+FanData fan3 = FanData(config.fan3, "3");
+FanData fan4 = FanData(config.fan4, "4");
+FanData fan5 = FanData(config.fan5, "5");
+FanData fan6 = FanData(config.fan6, "6");
 
-byte rbuffer[CONFIG_BYTES];
+byte rbuffer[CONFIG_BYTES];  // EEPROM buffer
+uint8_t logIntervalCnt = 0;
 
 
 /**
@@ -56,12 +58,15 @@ void timer_adc_handler() {
 /**
    ISR called from PERIOD ms (500ms) timer (rpmTimer).
 
-   Enables do_rpm() and do_log() logic.
+   Enables do_rpm(), and do_log() (every 10 calls).
 */
 void timer_rpm_handler() {
   doRPM = true;
-  doLog = true;
   doHIDSend = true;
+  if (++logIntervalCnt >= 10) {
+    logIntervalCnt = 0;
+    doLog = true;
+  }
 }
 
 /*
@@ -121,9 +126,9 @@ void setup(void) {
 
   read_eeprom();
 
-  setup_hardware();
+  // note: initializing the controller calls setup_hardware() through configChanged()
+  ctrl = std::make_unique<TempController>(config, PERIOD, supplyTemp, returnTemp, caseTemp, aux1Temp, aux2Temp, fan1, fan2, fan3, fan4, fan5, fan6, setup_hardware, update_eeprom);
 
-  ctrl = std::make_unique<TempController>(config, PERIOD, supplyTemp, returnTemp, caseTemp, auxTemp, fan1, fan2, fan3, fan4, fan5, fan6, setup_hardware, update_eeprom);
 #ifdef USB_RAWHID_EN
   hid = std::make_unique<HID>(ctrl, config);
 #endif
@@ -148,32 +153,7 @@ void do_rpm() {
    Calculate fan PWN % (PID & table), and write PWM outputs. Invoked once every 100ms.
 */
 void do_pid() {
-  float pct;
-  uint8_t pout;
-
-  if (config.fan1.mode == MODE_PID || config.fan2.mode == MODE_PID || config.fan3.mode == MODE_PID || config.fan4.mode == MODE_PID || config.fan5.mode == MODE_PID || config.fan6.mode == MODE_PID) {
-    // PID update
-    pct = ctrl->sample(MODE_PID, supplyTemp.val);
-    pout = (uint8_t) round(map(pct, 0, 100, 0, 255));
-    fan1.writePWM(pout, MODE_PID);
-    fan2.writePWM(pout, MODE_PID);
-    fan3.writePWM(pout, MODE_PID);
-    fan4.writePWM(pout, MODE_PID);
-    fan5.writePWM(pout, MODE_PID);
-    fan6.writePWM(pout, MODE_PID);
-  }
-
-  if (config.fan1.mode == MODE_PERCENT_TABLE || config.fan2.mode == MODE_PERCENT_TABLE || config.fan3.mode == MODE_PERCENT_TABLE || config.fan4.mode == MODE_PERCENT_TABLE || config.fan5.mode == MODE_PERCENT_TABLE || config.fan6.mode == MODE_PERCENT_TABLE) {
-    // fan table update
-    pct = ctrl->sample(MODE_PERCENT_TABLE, ctrl->getTableInputTemp());
-    pout = (uint8_t) round(map(pct, 0, 100, 0, 255));
-    fan1.writePWM(pout, MODE_PERCENT_TABLE);
-    fan2.writePWM(pout, MODE_PERCENT_TABLE);
-    fan3.writePWM(pout, MODE_PERCENT_TABLE);
-    fan4.writePWM(pout, MODE_PERCENT_TABLE);
-    fan5.writePWM(pout, MODE_PERCENT_TABLE);
-    fan6.writePWM(pout, MODE_PERCENT_TABLE);
-  }
+  ctrl->doFanUpdate();
 }
 
 /**
@@ -188,8 +168,10 @@ void do_adc() {
       returnTemp.samples[i] = analogRead(returnTemp.cfg.pin);
     if (caseTemp.cfg.pin)
       caseTemp.samples[i] = analogRead(caseTemp.cfg.pin);
-    if (auxTemp.cfg.pin)
-      auxTemp.samples[i] = analogRead(auxTemp.cfg.pin);
+    if (aux1Temp.cfg.pin)
+      aux1Temp.samples[i] = analogRead(aux1Temp.cfg.pin);
+    if (aux2Temp.cfg.pin)
+      aux2Temp.samples[i] = analogRead(aux2Temp.cfg.pin);
     delay(READ_DELAY);
   }
 
@@ -197,7 +179,8 @@ void do_adc() {
   supplyTemp.doSample();
   returnTemp.doSample();
   caseTemp.doSample();
-  auxTemp.doSample();
+  aux1Temp.doSample();
+  aux2Temp.doSample();
 }
 
 /*
@@ -205,42 +188,67 @@ void do_adc() {
 */
 
 #define PRINT_RPM(str, f)\
-  if (f.cfg.pinRPM) { Serial.print(str);Serial.print(f.rpm);Serial.print("; "); }
+  if (f->cfg.pinRPM) { Serial.print("; ");Serial.print(str);Serial.print(f->rpm); }
 #define PRINT_TEMP(str, temp)\
   Serial.print(str); Serial.print(temp); Serial.print(" C; ");
 #define PRINT_PCT(str, pct)\
-  Serial.print(str); Serial.print(pct); Serial.print("%; ");
+  Serial.print(str); Serial.print(pct); Serial.print("%");
 
 /**
    Writes data log to (usb raw hid) serial. Invoked once every 500ms.
 */
 void do_log() {
-  float pct = ctrl->getFanPercentPID();
-
   PRINT_TEMP("CWS-T ", supplyTemp.val);
   if (returnTemp.cfg.pin) {
     //PRINT_TEMP("CWR-T ", returnTemp.val);
     PRINT_TEMP("DeltaT ", ctrl->getDeltaT());
   }
 
-  PRINT_TEMP("Set-Point ", ctrl->getTempSetpoint());
-
   if (caseTemp.cfg.pin) {
     PRINT_TEMP("Case-T ", caseTemp.val);
   }
-  if (auxTemp.cfg.pin) {
-    PRINT_TEMP("Aux-T ", auxTemp.val);
+  if (aux1Temp.cfg.pin) {
+    PRINT_TEMP("Aux1-T ", aux1Temp.val);
+  }
+  if (aux2Temp.cfg.pin) {
+    PRINT_TEMP("Aux2-T ", aux2Temp.val);
   }
 
-  PRINT_PCT("PID-PWM ", pct);
+  // Iterate over the map
+  auto &controlModes = ctrl->getControlModes();
+  TempController::ctrl_map_t::const_iterator iter;
+  for (iter = controlModes.begin(); iter != controlModes.end(); iter++) {
+    if (iter != controlModes.begin())
+      Serial.print("; ");
 
-  PRINT_RPM("RPM1 ", fan1);
-  PRINT_RPM("RPM2 ", fan2);
-  PRINT_RPM("RPM3 ", fan3);
-  PRINT_RPM("RPM4 ", fan4);
-  PRINT_RPM("RPM5 ", fan5);
-  PRINT_RPM("RPM6 ", fan6);
+    TempController::unique_ctrl_t key = iter->first;
+    const TempController::ControlData &value = iter->second;
 
+    Serial.print(" (" + value.label + ": ");
+
+    if (key.first == CONTROL_MODE::MODE_PID) {
+      PRINT_TEMP("Setpoint ", value.pidCtrl->getSetpoint());
+      PRINT_PCT("PWM ", value.pct);
+    }
+    // do not print % for tbl, as there may be multiple tables in this config
+//    else if (key.first == CONTROL_MODE::MODE_TBL) {
+//      PRINT_PCT("PWM ", value.pct);
+//    }
+    else if (key.first == CONTROL_MODE::MODE_FIXED) {
+      PRINT_PCT("PWM ", value.pct);
+    }
+
+    // loop and print RPM for each fan associated to this control mode
+    for (const auto &fan : value.fans) {
+      if (fan != nullptr) {
+        PRINT_RPM("RPM" + fan->lbl + " ", fan);
+      }
+      else {
+        break;
+      }
+    }
+    Serial.print(")");
+  }
   Serial.println();
 }
 
@@ -257,7 +265,7 @@ void do_hid_recv() {
    Transmits HID raw data packet(s) (which packet sent depends on HID state). Invoked once every 500ms.
 */
 void do_hid_send() {
-  if (hid->send() == 0) {
+  if (hid->send() < 0) {
     Serial.println(F("Unable to transmit packet"));
   }
 }

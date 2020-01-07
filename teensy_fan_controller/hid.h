@@ -25,9 +25,7 @@ class HID {
     void logConfigChunk(uint8_t chunk);
 
     void setupPayloadData();
-    void setupPayloadConfig();
-    void setupPayloadConfigB();
-    void setupPayloadConfigC();
+    void setupPayloadConfig(uint8_t chunk);
 
   public:
     HID(const std::unique_ptr<TempController> &ctrl, RuntimeConfig &config);

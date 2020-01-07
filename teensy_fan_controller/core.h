@@ -5,7 +5,9 @@
 #ifndef TFC_CORE_H
 #define TFC_CORE_H
 
+#include <array>
 #include <Arduino.h>
+#include <PID_v1.h>
 #include "moving_average.h"
 #include "runtime_config.h"
 
@@ -36,11 +38,13 @@ struct FanData {
 
   uint8_t isrPin = 0;
 
-  FanData(const RuntimeConfig::FanConfig &fan);
+  const String lbl;
+
+  FanData(const RuntimeConfig::FanConfig &fan, const String &lbl);
 
   void setupPin(void (*isr)());
   void doRPM();
-  void writePWM(const uint8_t pout, const CONTROL_MODE mode);
+  void writePWM(const uint8_t pout, const CONTROL_MODE mode) const;
 };
 
 
@@ -53,9 +57,11 @@ struct SensorData {
   uint16_t samples[NUMSAMPLES];
   float val = 0;
 
-  SensorData(const RuntimeConfig::SensorConfig &sensor);
+  const String lbl;
 
-  float getAverage();
+  SensorData(const RuntimeConfig::SensorConfig &sensor, const String &lbl);
+
+  float getAverage() const;
   void doSample();
 
   static float convert_reading(float reading, uint16_t nominalR, uint8_t nominalTemp, uint16_t beta, uint16_t seriesR);

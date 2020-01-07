@@ -24,28 +24,30 @@ typedef unsigned char byte;
 #define DEFAULT_THERMISTORNOMINAL 10000  // Default thermistor nominal resistence (at nominal temp)
 
 #define CONTROLLER_VERSION 1  // use to flag the version of configuration saved
-#define CONTROLLER_KEY1 'j'  // use to flag a valid config
-#define CONTROLLER_KEY2 'd'  // use to flag a valid config
+#define CONTROLLER_KEY1 0x1A  // use to flag a valid config
+#define CONTROLLER_KEY2 0x20  // use to flag a valid config
 
 #define CONFIG_POS_VERSION              0
 #define CONFIG_POS_KEY1                 1
 #define CONFIG_POS_KEY2                 2
 #define CONFIG_POS_CONFIG               4
 
-#define CONFIG_BYTES 127
+#define CONFIG_BYTES 336
 #define CHUNK_SIZE 48
 
 
-enum CONTROL_MODE : uint8_t {
-  MODE_PERCENT_TABLE,
-  MODE_PID
+enum class CONTROL_MODE : uint8_t {
+  MODE_TBL,
+  MODE_PID,
+  MODE_FIXED
 };
 
-enum TBL_INPUT : uint8_t {
+enum class CONTROL_SOURCE : uint8_t {
   SENSOR_WATER_SUPPLY_TEMP,
   SENSOR_WATER_RETURN_TEMP,
   SENSOR_CASE_TEMP,
-  SENSOR_AUX_TEMP,
+  SENSOR_AUX1_TEMP,
+  SENSOR_AUX2_TEMP,
   VIRTUAL_DELTA_TEMP,
 };
 
@@ -54,17 +56,16 @@ enum TBL_INPUT : uint8_t {
    Fan controller's runtime configuration struct.
 */
 struct RuntimeConfig {
-  struct SensorConfig {
-    uint8_t pin;
-    uint16_t beta;
-    uint16_t seriesR;
-    uint16_t nominalR;
+  struct TableConfig {
+    uint8_t temp_pct_table[10][2];
   };
   struct FanConfig {
     uint8_t pinPWM;
     uint8_t pinRPM;
     CONTROL_MODE mode;
+    CONTROL_SOURCE source;
     float ratio;
+    TableConfig tbl;
   };
   struct PIDConfig {
     struct PIDStep {
@@ -72,6 +73,10 @@ struct RuntimeConfig {
       uint16_t delay;  // # of seconds fan % must be below step_down_pct to step setpoint down 0.5C
       float case_temp_delta;  // require (case_temp <= setpoint - <delta>) to step down setpoint
     };
+
+    uint8_t pwm_percent_min;
+    uint8_t pwm_percent_max1;
+    uint8_t pwm_percent_max2;
 
     float setpoint;  // Default Setpoint
     float setpoint_min;
@@ -89,17 +94,13 @@ struct RuntimeConfig {
     float adaptive_sp_step_size;
     PIDStep adaptive_sp_step_down;
     PIDStep adaptive_sp_step_up;
-
-    bool adaptive_tuning;  // use a more aggressive tuning factor when DeltaT > delta_t_threshold
-    uint8_t adaptive_tuning_delay;
-    float adaptive_tuning_delta_t_threshold;
-    float adaptive_tuning_multiplier;
   };
-  // TODO
-  struct TableConfig {
-    TBL_INPUT input;
-
-    uint8_t tempPercentTable[10][2];
+  struct SensorConfig {
+    uint8_t pin;
+    uint16_t beta;
+    uint16_t seriesR;
+    uint16_t nominalR;
+    PIDConfig pid;
   };
 
   uint8_t config_version;
@@ -114,14 +115,8 @@ struct RuntimeConfig {
   SensorConfig tempSupply;
   SensorConfig tempReturn;
   SensorConfig tempCase;
-  SensorConfig tempAux;
-
-  uint8_t pwm_percent_min;
-  uint8_t pwm_percent_max1;
-  uint8_t pwm_percent_max2;
-
-  PIDConfig pid;
-  TableConfig tbl;
+  SensorConfig tempAux1;
+  SensorConfig tempAux2;
 
   RuntimeConfig();
   RuntimeConfig(uint8_t config_version,
@@ -134,12 +129,8 @@ struct RuntimeConfig {
                 SensorConfig tempSupply,
                 SensorConfig tempReturn,
                 SensorConfig tempCase,
-                SensorConfig tempAux,
-                uint8_t pwm_percent_min,
-                uint8_t pwm_percent_max1,
-                uint8_t pwm_percent_max2,
-                PIDConfig pid,
-                TableConfig tbl);
+                SensorConfig tempAux1,
+                SensorConfig tempAux2);
 
   int to_bytes(byte *bytes, const size_t &len);
 
@@ -151,21 +142,13 @@ struct RuntimeConfig {
    Version 1 of RuntimeConfig.  Compressed, fe. some floats stored as uint8_t (by multiplying them by 100).
 */
 struct __RuntimeConfig_v1 {
-  struct __SensorConfig_v1 {
-    uint8_t pin;
-    uint16_t beta;
-    uint16_t seriesR;
-    uint8_t nominalR;
-
-    RuntimeConfig::SensorConfig decompress();
-
-    static __SensorConfig_v1 compress(RuntimeConfig::SensorConfig in);
-  };
   struct __FanConfig_v1 {
     uint8_t pinPWM;
     uint8_t pinRPM;
     CONTROL_MODE mode;
+    CONTROL_SOURCE source;
     uint8_t ratio;
+    RuntimeConfig::TableConfig tbl;
 
     RuntimeConfig::FanConfig decompress();
 
@@ -182,6 +165,10 @@ struct __RuntimeConfig_v1 {
       static __PIDStep_v1 compress(RuntimeConfig::PIDConfig::PIDStep in);
     };
 
+    uint8_t pwm_percent_min;
+    uint8_t pwm_percent_max1;
+    uint8_t pwm_percent_max2;
+
     uint8_t setpoint;
     uint8_t setpoint_min;
     uint8_t setpoint_max;
@@ -196,17 +183,21 @@ struct __RuntimeConfig_v1 {
     __PIDStep_v1 adaptive_sp_step_down;
     __PIDStep_v1 adaptive_sp_step_up;
 
-    bool adaptive_tuning;
-    uint8_t adaptive_tuning_delay;
-    uint16_t adaptive_tuning_delta_t_threshold;
-    uint8_t adaptive_tuning_multiplier;
-
     RuntimeConfig::PIDConfig decompress();
 
     static __PIDConfig_v1 compress(RuntimeConfig::PIDConfig in);
   };
-  //struct __TableConfig_v1 {
-  //};
+  struct __SensorConfig_v1 {
+    uint8_t pin;
+    uint16_t beta;
+    uint16_t seriesR;
+    uint8_t nominalR;
+    __PIDConfig_v1 pid;
+
+    RuntimeConfig::SensorConfig decompress();
+
+    static __SensorConfig_v1 compress(RuntimeConfig::SensorConfig in);
+  };
 
   uint8_t config_version;
 
@@ -220,14 +211,8 @@ struct __RuntimeConfig_v1 {
   __SensorConfig_v1 tempSupply;
   __SensorConfig_v1 tempReturn;
   __SensorConfig_v1 tempCase;
-  __SensorConfig_v1 tempAux;
-
-  uint8_t pwm_percent_min;
-  uint8_t pwm_percent_max1;
-  uint8_t pwm_percent_max2;
-
-  __PIDConfig_v1 pid;
-  RuntimeConfig::TableConfig tbl;
+  __SensorConfig_v1 tempAux1;
+  __SensorConfig_v1 tempAux2;
 
   RuntimeConfig decompress();
 

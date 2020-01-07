@@ -24,10 +24,6 @@ typedef unsigned char byte;
 // Bi-directional payload types
 #define HID_PAYLOAD_CONFIG1           0xC0
 #define HID_PAYLOAD_CONFIG2           0xC1
-#define HID_PAYLOAD_CONFIG_B1         0xC0
-#define HID_PAYLOAD_CONFIG_B2         0xC2
-#define HID_PAYLOAD_CONFIG_C1         0xC0
-#define HID_PAYLOAD_CONFIG_C2         0xC3
 
 
 #define FILL_ZEROS(buf, start, size)\

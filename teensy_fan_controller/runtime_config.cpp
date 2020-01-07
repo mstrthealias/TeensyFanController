@@ -2,58 +2,45 @@
 // Created by jd on 11/26/2019.
 //
 
-#include "runtime_config.h"
 #include <memory>
 #include <cstring>
+
+#include "runtime_config.h"
+
+
+#define DEFAULT_PERCENT_TABLE {{25, 0}, {25, 0}, {25, 28}, {28, 35}, {29, 45}, {30, 55}, {31, 65}, {32, 75}, {33, 85}, {35, 100}}
+
+#define DEFAULT_PID {\
+      24,\
+      75,\
+      100,\
+      28.0f,\
+      28.0f,\
+      31.5f,\
+      34,\
+      0.9f,\
+      0.02f,\
+      true,\
+      true,\
+      0.5f,\
+      {45, 60, 2.1f},\
+      {65, 30, 1.8f}\
+    }
 
 
 RuntimeConfig::RuntimeConfig() :
     config_version{CONTROLLER_VERSION},
-    fan1{4, 5, MODE_PID, 1},
-    fan2{6, 7, MODE_PID, 0.8f},
-    fan3{10, 11, MODE_PID, 1},
-    fan4{9, 8, MODE_PID, 0.8f},
-    fan5{3, 2, MODE_PID, 1},
-    fan6{22, 12, MODE_PID, 1},
-    tempSupply{A7, DEFAULT_BCOEFFICIENT, DEFAULT_SERIESRESISTOR, DEFAULT_THERMISTORNOMINAL},
-    tempReturn{A6, DEFAULT_BCOEFFICIENT, DEFAULT_SERIESRESISTOR, DEFAULT_THERMISTORNOMINAL},
-    tempCase{A4, DEFAULT_BCOEFFICIENT, DEFAULT_SERIESRESISTOR, DEFAULT_THERMISTORNOMINAL},
-    tempAux{0, DEFAULT_BCOEFFICIENT, DEFAULT_SERIESRESISTOR, DEFAULT_THERMISTORNOMINAL},
-    pwm_percent_min{24},
-    pwm_percent_max1{75},
-    pwm_percent_max2{100},
-    pid{
-          28.0f,  // Default Setpoint
-          28.0f,
-          31.5f,
-          34,  //39
-          0.9f,  //1.03f
-          0.02f,  //0.03f
-          true,  // adapt setpoint by 0.5C within setpoint_min >= setpoint >= setpoint_max
-          true,
-          0.5f,
-          {45, 60, 2.1f},
-          {65, 30, 1.8f},
-          true,  // use a more aggressive tuning factor when DeltaT > delta_t_threshold
-          5,
-          2.5f,
-          1.15f
-      },
-      tbl{
-          VIRTUAL_DELTA_TEMP,
-          {
-             {25, 0},
-             {25, 0},
-             {25, 28},
-             {28, 35},
-             {29, 45},
-             {30, 55},
-             {31, 65},
-             {32, 75},
-             {33, 85},
-             {35, 100},
-           }
-      }
+    fan1{4, 5, CONTROL_MODE::MODE_PID, CONTROL_SOURCE::SENSOR_WATER_SUPPLY_TEMP, 1, {DEFAULT_PERCENT_TABLE}},
+    fan2{6, 7, CONTROL_MODE::MODE_PID, CONTROL_SOURCE::SENSOR_WATER_SUPPLY_TEMP, 0.8f, {DEFAULT_PERCENT_TABLE}},
+    fan3{10, 11, CONTROL_MODE::MODE_PID, CONTROL_SOURCE::SENSOR_WATER_SUPPLY_TEMP, 1, {DEFAULT_PERCENT_TABLE}},
+    fan4{9, 8, CONTROL_MODE::MODE_PID, CONTROL_SOURCE::SENSOR_WATER_SUPPLY_TEMP, 0.8f, {DEFAULT_PERCENT_TABLE}},
+    fan5{3, 2, CONTROL_MODE::MODE_PID, CONTROL_SOURCE::SENSOR_WATER_SUPPLY_TEMP, 1, {DEFAULT_PERCENT_TABLE}},
+    fan6{22, 12, CONTROL_MODE::MODE_PID, CONTROL_SOURCE::SENSOR_WATER_SUPPLY_TEMP, 1, {DEFAULT_PERCENT_TABLE}},
+    tempSupply{A7, DEFAULT_BCOEFFICIENT, DEFAULT_SERIESRESISTOR, DEFAULT_THERMISTORNOMINAL, DEFAULT_PID},
+    tempReturn{A6, DEFAULT_BCOEFFICIENT, DEFAULT_SERIESRESISTOR, DEFAULT_THERMISTORNOMINAL, DEFAULT_PID},
+    tempCase{A4, DEFAULT_BCOEFFICIENT, DEFAULT_SERIESRESISTOR, DEFAULT_THERMISTORNOMINAL, DEFAULT_PID},
+    tempAux1{0, DEFAULT_BCOEFFICIENT, DEFAULT_SERIESRESISTOR, DEFAULT_THERMISTORNOMINAL, DEFAULT_PID},
+    tempAux2{0, DEFAULT_BCOEFFICIENT, DEFAULT_SERIESRESISTOR, DEFAULT_THERMISTORNOMINAL, DEFAULT_PID}
 {
 }
 
@@ -67,17 +54,11 @@ RuntimeConfig::RuntimeConfig(uint8_t config_version,
         SensorConfig tempSupply,
         SensorConfig tempReturn,
         SensorConfig tempCase,
-        SensorConfig tempAux,
-        uint8_t pwm_percent_min,
-        uint8_t pwm_percent_max1,
-        uint8_t pwm_percent_max2,
-        PIDConfig pid,
-        TableConfig tbl)
+        SensorConfig tempAux1,
+        SensorConfig tempAux2)
     : config_version{config_version},
       fan1{fan1}, fan2{fan2}, fan3{fan3}, fan4{fan4}, fan5{fan5}, fan6{fan6},
-      tempSupply{tempSupply}, tempReturn{tempReturn}, tempCase{tempCase}, tempAux{tempAux},
-      pwm_percent_min{pwm_percent_min}, pwm_percent_max1{pwm_percent_max1}, pwm_percent_max2{pwm_percent_max2},
-      pid{pid}, tbl{tbl}
+      tempSupply{tempSupply}, tempReturn{tempReturn}, tempCase{tempCase}, tempAux1{tempAux1}, tempAux2{tempAux2}
 {
 }
 
@@ -132,12 +113,8 @@ RuntimeConfig __RuntimeConfig_v1::decompress() {
     tempSupply.decompress(),
     tempReturn.decompress(),
     tempCase.decompress(),
-    tempAux.decompress(),
-    pwm_percent_min,
-    pwm_percent_max1,
-    pwm_percent_max2,
-    pid.decompress(),
-    tbl
+    tempAux1.decompress(),
+    tempAux2.decompress()
   };
 }
 
@@ -153,12 +130,8 @@ RuntimeConfig __RuntimeConfig_v1::decompress() {
     __SensorConfig_v1::compress(in.tempSupply),
     __SensorConfig_v1::compress(in.tempReturn),
     __SensorConfig_v1::compress(in.tempCase),
-    __SensorConfig_v1::compress(in.tempAux),
-    in.pwm_percent_min,
-    in.pwm_percent_max1,
-    in.pwm_percent_max2,
-    __PIDConfig_v1::compress(in.pid),
-    in.tbl
+    __SensorConfig_v1::compress(in.tempAux1),
+    __SensorConfig_v1::compress(in.tempAux2)
   };
 }
 
@@ -168,7 +141,8 @@ RuntimeConfig::SensorConfig __RuntimeConfig_v1::__SensorConfig_v1::decompress() 
     pin,
     beta,
     seriesR,
-    static_cast<uint16_t>(nominalR * 1000)
+    static_cast<uint16_t>(nominalR * 1000),
+    pid.decompress()
   };
 }
 
@@ -177,7 +151,8 @@ RuntimeConfig::SensorConfig __RuntimeConfig_v1::__SensorConfig_v1::decompress() 
     in.pin,
     in.beta,
     in.seriesR,
-    static_cast<uint8_t>(in.nominalR / 1000)
+    static_cast<uint8_t>(in.nominalR / 1000),
+    __PIDConfig_v1::compress(in.pid)
   };
 }
 
@@ -187,7 +162,9 @@ RuntimeConfig::FanConfig __RuntimeConfig_v1::__FanConfig_v1::decompress() {
     pinPWM,
     pinRPM,
     mode,
-    static_cast<float>(ratio / 100.0)
+    source,
+    static_cast<float>(ratio / 100.0),
+    tbl
   };
 }
 
@@ -196,13 +173,18 @@ RuntimeConfig::FanConfig __RuntimeConfig_v1::__FanConfig_v1::decompress() {
     in.pinPWM,
     in.pinRPM,
     in.mode,
-    static_cast<uint8_t>(in.ratio * 100)
+    in.source,
+    static_cast<uint8_t>(in.ratio * 100),
+    in.tbl
   };
 }
 
 
 RuntimeConfig::PIDConfig __RuntimeConfig_v1::__PIDConfig_v1::decompress() {
   return {
+    pwm_percent_min,
+    pwm_percent_max1,
+    pwm_percent_max2,
     static_cast<float>(setpoint / 4.0),
     static_cast<float>(setpoint_min / 4.0),
     static_cast<float>(setpoint_max / 4.0),
@@ -213,16 +195,15 @@ RuntimeConfig::PIDConfig __RuntimeConfig_v1::__PIDConfig_v1::decompress() {
     adaptive_sp_check_case_temp,
     static_cast<float>(adaptive_sp_step_size / 50.0),
     adaptive_sp_step_down.decompress(),
-    adaptive_sp_step_up.decompress(),
-    adaptive_tuning,
-    adaptive_tuning_delay,
-    static_cast<float>(adaptive_tuning_delta_t_threshold / 100.0),
-    static_cast<float>(adaptive_tuning_multiplier / 100.0)
+    adaptive_sp_step_up.decompress()
   };
 }
 
 /*static */__RuntimeConfig_v1::__PIDConfig_v1 __RuntimeConfig_v1::__PIDConfig_v1::compress(RuntimeConfig::PIDConfig in) {
   return {
+    in.pwm_percent_min,
+    in.pwm_percent_max1,
+    in.pwm_percent_max2,
     static_cast<uint8_t>(in.setpoint * 4),
     static_cast<uint8_t>(in.setpoint_min * 4),
     static_cast<uint8_t>(in.setpoint_max * 4),
@@ -233,11 +214,7 @@ RuntimeConfig::PIDConfig __RuntimeConfig_v1::__PIDConfig_v1::decompress() {
     in.adaptive_sp_check_case_temp,
     static_cast<uint8_t>(in.adaptive_sp_step_size * 50),
     __PIDStep_v1::compress(in.adaptive_sp_step_down),
-    __PIDStep_v1::compress(in.adaptive_sp_step_up),
-    in.adaptive_tuning,
-    in.adaptive_tuning_delay,
-    static_cast<uint16_t>(in.adaptive_tuning_delta_t_threshold * 100),
-    static_cast<uint8_t>(in.adaptive_tuning_multiplier * 100)
+    __PIDStep_v1::compress(in.adaptive_sp_step_up)
   };
 }
 
