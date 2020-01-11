@@ -23,37 +23,21 @@ uint8_t HID::send()
     n = RawHID.send(buffer, 100);
   }
   else if (state == HID_CONFIG) {
-    // config requested, transmit (3) config packets
+    // config requested, transmit (all) config packets
 
     // copy entire configuration into config_bytes
     if (ctrl.config.to_bytes(config_bytes, CONFIG_BYTES) != 0) {
       return -1;  // TODO errno
     }
 
-    setupPayloadConfig(0);
-    n = RawHID.send(buffer, 100);  // TODO handle failures
-    setupPayloadConfig(1);
-    n += RawHID.send(buffer, 100);
-    setupPayloadConfig(2);
-    n += RawHID.send(buffer, 100);
-    setupPayloadConfig(3);
-    n += RawHID.send(buffer, 100);
-    setupPayloadConfig(4);
-    n += RawHID.send(buffer, 100);
-    setupPayloadConfig(5);
-    n += RawHID.send(buffer, 100);
-
-    // setup last payload
-    buffer[0] = HID_PAYLOAD_CONFIG1;
-    buffer[1] = HID_PAYLOAD_CONFIG2 + 6;
-    memcpy((buffer + 2), (config_bytes + 6 * CHUNK_SIZE), CONFIG_BYTES - 6 * CHUNK_SIZE);  // place chunk (48 bytes) in buffer
-    FILL_ZEROS(buffer, (CONFIG_BYTES - 6 * CHUNK_SIZE + 2), CONFIG_BYTES);
-    buffer[63] = HID_DATA;  // put next state at the end
-    n += RawHID.send(buffer, 100);
+    for (uint8_t chunk = 0; chunk < CHUNK_CNT; chunk++) {
+      setupPayloadConfig(chunk, chunk == CHUNK_CNT - 1);
+      n += RawHID.send(buffer, 100);  // TODO handle failures
+    }
 
     setState(HID_DATA);
 
-    if (n < sizeof(buffer) * 7) {
+    if (n < sizeof(buffer) * CHUNK_CNT) {
       Serial.println("HID SEND ERROR");
       return -1;
     }
@@ -71,24 +55,26 @@ uint8_t HID::recv()
       setState(HID_CONFIG);  // transmit config in send()
     }
     else if (buffer[0] == HID_PAYLOAD_CONFIG1 && buffer[1] == HID_PAYLOAD_CONFIG2 && state != HID_DOWNLOAD) {
-      // Remote is sending configuration payload chunk 1
+      // Remote is sending first configuration payload chunk
       setState(HID_DOWNLOAD);  // expecting sequential config payloads
-      memset(config_bytes, '\0', CONFIG_BYTES);
+      memset(config_bytes, '\0', CONFIG_BYTES);  // first chunk, zero config_byes
       memcpy(config_bytes, (buffer + 2), CHUNK_SIZE);
-      logConfigChunk(1);
+      logConfigChunk(0);
     }
-    else if (buffer[0] == HID_PAYLOAD_CONFIG1 && buffer[1] > HID_PAYLOAD_CONFIG2 && buffer[1] <= HID_PAYLOAD_CONFIG2 + 6 && state == HID_DOWNLOAD) {
+    else if (buffer[0] == HID_PAYLOAD_CONFIG1 && buffer[1] > HID_PAYLOAD_CONFIG2 && buffer[1] < HID_PAYLOAD_CONFIG2 + CHUNK_CNT && state == HID_DOWNLOAD) {
       // Remote is sending configuration payload chunk n
-      if (buffer[1] == HID_PAYLOAD_CONFIG2 + 6)
-        memcpy((config_bytes + 6 * CHUNK_SIZE), (buffer + 2), CONFIG_BYTES - 6 * CHUNK_SIZE);
-      else
-        memcpy((config_bytes + (buffer[1] - HID_PAYLOAD_CONFIG2) * CHUNK_SIZE), (buffer + 2), CHUNK_SIZE);
+      uint8_t chunk = buffer[1] - HID_PAYLOAD_CONFIG2;
+      if (chunk < CHUNK_CNT - 1) {
+        // middle chunk
+        memcpy((config_bytes + (chunk * CHUNK_SIZE)), (buffer + 2), CHUNK_SIZE);
+        logConfigChunk(chunk);
+      }
+      else {
+        // last chunk
+        memcpy((config_bytes + (chunk * CHUNK_SIZE)), (buffer + 2), CONFIG_BYTES - (chunk * CHUNK_SIZE));
+        logConfigChunk(chunk);
 
-      logConfigChunk(buffer[1] - HID_PAYLOAD_CONFIG2 + 1);
-
-      if (buffer[1] == HID_PAYLOAD_CONFIG2 + 6) {
-        // last packet, switch to DAT mode
-        setState(HID_DATA);
+        setState(HID_DATA);  // config received, set HID state back to DATA
 
         // update config from received bytes
         ctrl.config = RuntimeConfig::parse_bytes(config_bytes, CONFIG_BYTES);
@@ -123,17 +109,24 @@ void HID::logConfigChunk(uint8_t chunk)
   Serial.println(" downloaded");
 }
 
-void HID::setupPayloadConfig(uint8_t chunk)
+void HID::setupPayloadConfig(uint8_t chunk, bool isLast)
 {
   // first 2 bytes are a signature
   buffer[0] = HID_PAYLOAD_CONFIG1;
   buffer[1] = HID_PAYLOAD_CONFIG2 + chunk;
 
-  // place first chunk (48 bytes) in HID buffer
-  memcpy((buffer + 2), (config_bytes + chunk * CHUNK_SIZE), CHUNK_SIZE);
-
-  FILL_ZEROS(buffer, (CHUNK_SIZE + 2), sizeof(buffer));
-  buffer[63] = HID_CONFIG;  // put next state at the end
+  // place chunk in HID buffer
+  if (!isLast) {
+    memcpy((buffer + 2), (config_bytes + (chunk * CHUNK_SIZE)), CHUNK_SIZE);
+    FILL_ZEROS(buffer, (CHUNK_SIZE + 2), sizeof(buffer));
+    buffer[63] = HID_CONFIG;  // put next state at the end
+  }
+  else {
+    // last chunk
+    memcpy((buffer + 2), (config_bytes + (chunk * CHUNK_SIZE)), CONFIG_BYTES - (chunk * CHUNK_SIZE));
+    FILL_ZEROS(buffer, (CONFIG_BYTES - (chunk * CHUNK_SIZE) + 2), sizeof(buffer));
+    buffer[63] = HID_DATA;  // put next state at the end
+  }
 }
 
 void HID::setupPayloadData()

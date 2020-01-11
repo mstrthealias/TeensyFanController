@@ -25,7 +25,7 @@ class HID {
     void logConfigChunk(uint8_t chunk);
 
     void setupPayloadData();
-    void setupPayloadConfig(uint8_t chunk);
+    void setupPayloadConfig(uint8_t chunk, bool isLast);
 
   public:
     HID(TempController &ctrl);

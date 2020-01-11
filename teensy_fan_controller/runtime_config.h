@@ -24,16 +24,17 @@ typedef unsigned char byte;
 #define DEFAULT_THERMISTORNOMINAL 10000  // Default thermistor nominal resistence (at nominal temp)
 
 #define CONTROLLER_VERSION 1  // use to flag the version of configuration saved
-#define CONTROLLER_KEY1 0x1A  // use to flag a valid config
-#define CONTROLLER_KEY2 0x20  // use to flag a valid config
+#define CONFIG_KEY1 0x1B  // use to flag a valid config
+#define CONFIG_KEY2 0x30  // use to flag a valid config
 
 #define CONFIG_POS_VERSION              0
 #define CONFIG_POS_KEY1                 1
 #define CONFIG_POS_KEY2                 2
 #define CONFIG_POS_CONFIG               4
 
-#define CONFIG_BYTES 320
-#define CHUNK_SIZE 48
+#define CONFIG_BYTES 448
+#define CHUNK_SIZE 56
+#define CHUNK_CNT 8
 
 
 enum class CONTROL_MODE : uint8_t {
@@ -58,7 +59,7 @@ enum class CONTROL_SOURCE : uint8_t {
 */
 struct RuntimeConfig {
   struct TableConfig {
-    uint8_t temp_pct_table[10][2];
+    float temp_pct_table[10][2];
   };
   struct FanConfig {
     uint8_t pinPWM;
@@ -143,13 +144,20 @@ struct RuntimeConfig {
    Version 1 of RuntimeConfig.  Compressed, fe. some floats stored as uint8_t (by multiplying them by 100).
 */
 struct __RuntimeConfig_v1 {
+  struct __TableConfig_v1 {
+    uint16_t temp_pct_table[10][2];
+
+    RuntimeConfig::TableConfig decompress() const;
+
+    static __TableConfig_v1 compress(RuntimeConfig::TableConfig in);
+  };
   struct __FanConfig_v1 {
     uint8_t pinPWM;
     uint8_t pinRPM;
     CONTROL_MODE mode;
     CONTROL_SOURCE source;
     uint8_t ratio;
-    RuntimeConfig::TableConfig tbl;
+    __TableConfig_v1 tbl;
 
     RuntimeConfig::FanConfig decompress() const;
 

@@ -30,6 +30,25 @@ static_assert(CONFIG_BYTES >= sizeof(__RuntimeConfig_v1) + 4, "CONFIG_BYTES must
     {65, 30, 1.8f}\
   }
 
+/*
+   Macros for __TableConfig_v1::compress and __TableConfig_v1::decompress:
+*/
+#define TBL_PART_COMPRESS(v) static_cast<uint16_t>(v * 500)
+#define TBL_PART_DECOMPRESS(v) static_cast<float>(v / 500.0f)
+#define BRACE_COPY_TABLE_PART(p, CONV) {CONV(p[0]), CONV(p[1])}
+#define BRACE_COPY_TABLE(t, CONV) {\
+    BRACE_COPY_TABLE_PART(t[0], CONV),\
+    BRACE_COPY_TABLE_PART(t[1], CONV),\
+    BRACE_COPY_TABLE_PART(t[2], CONV),\
+    BRACE_COPY_TABLE_PART(t[3], CONV),\
+    BRACE_COPY_TABLE_PART(t[4], CONV),\
+    BRACE_COPY_TABLE_PART(t[5], CONV),\
+    BRACE_COPY_TABLE_PART(t[6], CONV),\
+    BRACE_COPY_TABLE_PART(t[7], CONV),\
+    BRACE_COPY_TABLE_PART(t[8], CONV),\
+    BRACE_COPY_TABLE_PART(t[9], CONV)\
+  }
+
 
 RuntimeConfig::RuntimeConfig()
   : config_version{CONTROLLER_VERSION},
@@ -69,7 +88,7 @@ int RuntimeConfig::to_bytes(byte *bytes, const size_t &len)
 {
   if (len < CONFIG_BYTES) {
 #ifdef ARDUINO
-    Serial.println("Logic Error: 127 bytes needed for program configuration");
+    Serial.println("Logic Error: CONFIG_BYTES bytes needed for program configuration");
 #endif
     return -1;
   }
@@ -77,8 +96,8 @@ int RuntimeConfig::to_bytes(byte *bytes, const size_t &len)
   memset(bytes, '\0', len);  // null all bytes
 
   bytes[CONFIG_POS_VERSION] = CONTROLLER_VERSION;
-  bytes[CONFIG_POS_KEY1] = CONTROLLER_KEY1;
-  bytes[CONFIG_POS_KEY2] = CONTROLLER_KEY2;
+  bytes[CONFIG_POS_KEY1] = CONFIG_KEY1;
+  bytes[CONFIG_POS_KEY2] = CONFIG_KEY2;
 
   __RuntimeConfig_v1 config = __RuntimeConfig_v1::compress(*this);
   memcpy((bytes + CONFIG_POS_CONFIG), &config, sizeof(__RuntimeConfig_v1));
@@ -90,11 +109,16 @@ int RuntimeConfig::to_bytes(byte *bytes, const size_t &len)
 {
   if (len < CONFIG_BYTES) {
 #ifdef ARDUINO
-    Serial.println("Logic Error: 127 bytes needed to parse program configuration, defaults returned");
+    Serial.println("Logic Error: CONFIG_BYTES needed to parse program configuration, defaults returned");
 #endif
     return RuntimeConfig();  // Return defaults
   }
-  else if (static_cast<uint8_t>(bytes[CONFIG_POS_VERSION]) > CONTROLLER_VERSION || static_cast<uint8_t>(bytes[CONFIG_POS_VERSION]) < 1 || static_cast<char>(bytes[CONFIG_POS_KEY1]) != CONTROLLER_KEY1 || static_cast<char>(bytes[CONFIG_POS_KEY2]) != CONTROLLER_KEY2) {
+  else if (static_cast<uint8_t>(bytes[CONFIG_POS_VERSION]) != CONTROLLER_VERSION || static_cast<uint8_t>(bytes[CONFIG_POS_VERSION]) < 1 || bytes[CONFIG_POS_KEY1] != CONFIG_KEY1 || bytes[CONFIG_POS_KEY2] != CONFIG_KEY2) {
+#ifdef ARDUINO
+    if (static_cast<uint8_t>(bytes[CONFIG_POS_VERSION]) != 0) {
+      Serial.println("Config version mismatch, defaults returned");
+    }
+#endif
     return RuntimeConfig();  // Return defaults
   }
 
@@ -143,6 +167,21 @@ RuntimeConfig __RuntimeConfig_v1::decompress() const
 }
 
 
+RuntimeConfig::TableConfig __RuntimeConfig_v1::__TableConfig_v1::decompress() const
+{
+  return {
+    BRACE_COPY_TABLE(temp_pct_table, TBL_PART_DECOMPRESS)
+  };
+}
+
+/*static */__RuntimeConfig_v1::__TableConfig_v1 __RuntimeConfig_v1::__TableConfig_v1::compress(RuntimeConfig::TableConfig in)
+{
+  return {
+    BRACE_COPY_TABLE(in.temp_pct_table, TBL_PART_COMPRESS)
+  };
+}
+
+
 RuntimeConfig::SensorConfig __RuntimeConfig_v1::__SensorConfig_v1::decompress() const
 {
   return {
@@ -174,7 +213,7 @@ RuntimeConfig::FanConfig __RuntimeConfig_v1::__FanConfig_v1::decompress() const
     mode,
     source,
     static_cast<float>(ratio / 100.0),
-    tbl
+    tbl.decompress()
   };
 }
 
@@ -186,7 +225,7 @@ RuntimeConfig::FanConfig __RuntimeConfig_v1::__FanConfig_v1::decompress() const
     in.mode,
     in.source,
     static_cast<uint8_t>(in.ratio * 100),
-    in.tbl
+    __TableConfig_v1::compress(in.tbl)
   };
 }
 
