@@ -11,25 +11,25 @@
 #define DEFAULT_PERCENT_TABLE {{25, 0}, {25, 0}, {25, 28}, {28, 35}, {29, 45}, {30, 55}, {31, 65}, {32, 75}, {33, 85}, {35, 100}}
 
 #define DEFAULT_PID {\
-      24,\
-      75,\
-      100,\
-      28.0f,\
-      28.0f,\
-      31.5f,\
-      34,\
-      0.9f,\
-      0.02f,\
-      true,\
-      true,\
-      0.5f,\
-      {45, 60, 2.1f},\
-      {65, 30, 1.8f}\
-    }
+    24,\
+    75,\
+    100,\
+    28.0f,\
+    28.0f,\
+    31.5f,\
+    34,\
+    0.9f,\
+    0.02f,\
+    true,\
+    true,\
+    0.5f,\
+    {45, 60, 2.1f},\
+    {65, 30, 1.8f}\
+  }
 
 
-RuntimeConfig::RuntimeConfig() :
-    config_version{CONTROLLER_VERSION},
+RuntimeConfig::RuntimeConfig()
+  : config_version{CONTROLLER_VERSION},
     fan1{4, 5, CONTROL_MODE::MODE_PID, CONTROL_SOURCE::SENSOR_WATER_SUPPLY_TEMP, 1, {DEFAULT_PERCENT_TABLE}},
     fan2{6, 7, CONTROL_MODE::MODE_PID, CONTROL_SOURCE::SENSOR_WATER_SUPPLY_TEMP, 0.8f, {DEFAULT_PERCENT_TABLE}},
     fan3{10, 11, CONTROL_MODE::MODE_PID, CONTROL_SOURCE::SENSOR_WATER_SUPPLY_TEMP, 1, {DEFAULT_PERCENT_TABLE}},
@@ -45,24 +45,25 @@ RuntimeConfig::RuntimeConfig() :
 }
 
 RuntimeConfig::RuntimeConfig(uint8_t config_version,
-        FanConfig fan1,
-        FanConfig fan2,
-        FanConfig fan3,
-        FanConfig fan4,
-        FanConfig fan5,
-        FanConfig fan6,
-        SensorConfig tempSupply,
-        SensorConfig tempReturn,
-        SensorConfig tempCase,
-        SensorConfig tempAux1,
-        SensorConfig tempAux2)
-    : config_version{config_version},
-      fan1{fan1}, fan2{fan2}, fan3{fan3}, fan4{fan4}, fan5{fan5}, fan6{fan6},
-      tempSupply{tempSupply}, tempReturn{tempReturn}, tempCase{tempCase}, tempAux1{tempAux1}, tempAux2{tempAux2}
+                             FanConfig fan1,
+                             FanConfig fan2,
+                             FanConfig fan3,
+                             FanConfig fan4,
+                             FanConfig fan5,
+                             FanConfig fan6,
+                             SensorConfig tempSupply,
+                             SensorConfig tempReturn,
+                             SensorConfig tempCase,
+                             SensorConfig tempAux1,
+                             SensorConfig tempAux2)
+  : config_version{config_version},
+    fan1{fan1}, fan2{fan2}, fan3{fan3}, fan4{fan4}, fan5{fan5}, fan6{fan6},
+    tempSupply{tempSupply}, tempReturn{tempReturn}, tempCase{tempCase}, tempAux1{tempAux1}, tempAux2{tempAux2}
 {
 }
 
-int RuntimeConfig::to_bytes(byte *bytes, const size_t &len) {
+int RuntimeConfig::to_bytes(byte *bytes, const size_t &len)
+{
   if (len < CONFIG_BYTES) {
 #ifdef ARDUINO
     Serial.println("Logic Error: 127 bytes needed for program configuration");
@@ -82,7 +83,8 @@ int RuntimeConfig::to_bytes(byte *bytes, const size_t &len) {
   return 0;
 }
 
-/*static */RuntimeConfig RuntimeConfig::parse_bytes(const byte bytes[], const size_t &len) {
+/*static */RuntimeConfig RuntimeConfig::parse_bytes(const byte bytes[], const size_t &len)
+{
   if (len < CONFIG_BYTES) {
 #ifdef ARDUINO
     Serial.println("Logic Error: 127 bytes needed to parse program configuration, defaults returned");
@@ -101,7 +103,8 @@ int RuntimeConfig::to_bytes(byte *bytes, const size_t &len) {
 
 
 
-RuntimeConfig __RuntimeConfig_v1::decompress() {
+RuntimeConfig __RuntimeConfig_v1::decompress() const
+{
   return {
     config_version,
     fan1.decompress(),
@@ -118,7 +121,8 @@ RuntimeConfig __RuntimeConfig_v1::decompress() {
   };
 }
 
-/*static */__RuntimeConfig_v1 __RuntimeConfig_v1::compress(RuntimeConfig in) {
+/*static */__RuntimeConfig_v1 __RuntimeConfig_v1::compress(RuntimeConfig in)
+{
   return {
     in.config_version,
     __FanConfig_v1::compress(in.fan1),
@@ -136,7 +140,8 @@ RuntimeConfig __RuntimeConfig_v1::decompress() {
 }
 
 
-RuntimeConfig::SensorConfig __RuntimeConfig_v1::__SensorConfig_v1::decompress() {
+RuntimeConfig::SensorConfig __RuntimeConfig_v1::__SensorConfig_v1::decompress() const
+{
   return {
     pin,
     beta,
@@ -146,7 +151,8 @@ RuntimeConfig::SensorConfig __RuntimeConfig_v1::__SensorConfig_v1::decompress() 
   };
 }
 
-/*static */__RuntimeConfig_v1::__SensorConfig_v1 __RuntimeConfig_v1::__SensorConfig_v1::compress(RuntimeConfig::SensorConfig in) {
+/*static */__RuntimeConfig_v1::__SensorConfig_v1 __RuntimeConfig_v1::__SensorConfig_v1::compress(RuntimeConfig::SensorConfig in)
+{
   return {
     in.pin,
     in.beta,
@@ -157,7 +163,8 @@ RuntimeConfig::SensorConfig __RuntimeConfig_v1::__SensorConfig_v1::decompress() 
 }
 
 
-RuntimeConfig::FanConfig __RuntimeConfig_v1::__FanConfig_v1::decompress() {
+RuntimeConfig::FanConfig __RuntimeConfig_v1::__FanConfig_v1::decompress() const
+{
   return {
     pinPWM,
     pinRPM,
@@ -168,7 +175,8 @@ RuntimeConfig::FanConfig __RuntimeConfig_v1::__FanConfig_v1::decompress() {
   };
 }
 
-/*static */__RuntimeConfig_v1::__FanConfig_v1 __RuntimeConfig_v1::__FanConfig_v1::compress(RuntimeConfig::FanConfig in) {
+/*static */__RuntimeConfig_v1::__FanConfig_v1 __RuntimeConfig_v1::__FanConfig_v1::compress(RuntimeConfig::FanConfig in)
+{
   return {
     in.pinPWM,
     in.pinRPM,
@@ -180,7 +188,8 @@ RuntimeConfig::FanConfig __RuntimeConfig_v1::__FanConfig_v1::decompress() {
 }
 
 
-RuntimeConfig::PIDConfig __RuntimeConfig_v1::__PIDConfig_v1::decompress() {
+RuntimeConfig::PIDConfig __RuntimeConfig_v1::__PIDConfig_v1::decompress() const
+{
   return {
     pwm_percent_min,
     pwm_percent_max1,
@@ -199,7 +208,8 @@ RuntimeConfig::PIDConfig __RuntimeConfig_v1::__PIDConfig_v1::decompress() {
   };
 }
 
-/*static */__RuntimeConfig_v1::__PIDConfig_v1 __RuntimeConfig_v1::__PIDConfig_v1::compress(RuntimeConfig::PIDConfig in) {
+/*static */__RuntimeConfig_v1::__PIDConfig_v1 __RuntimeConfig_v1::__PIDConfig_v1::compress(RuntimeConfig::PIDConfig in)
+{
   return {
     in.pwm_percent_min,
     in.pwm_percent_max1,
@@ -219,7 +229,8 @@ RuntimeConfig::PIDConfig __RuntimeConfig_v1::__PIDConfig_v1::decompress() {
 }
 
 
-RuntimeConfig::PIDConfig::PIDStep __RuntimeConfig_v1::__PIDConfig_v1::__PIDStep_v1::decompress() {
+RuntimeConfig::PIDConfig::PIDStep __RuntimeConfig_v1::__PIDConfig_v1::__PIDStep_v1::decompress() const
+{
   return {
     pct,
     delay,
@@ -227,7 +238,8 @@ RuntimeConfig::PIDConfig::PIDStep __RuntimeConfig_v1::__PIDConfig_v1::__PIDStep_
   };
 }
 
-/*static */__RuntimeConfig_v1::__PIDConfig_v1::__PIDStep_v1 __RuntimeConfig_v1::__PIDConfig_v1::__PIDStep_v1::compress(RuntimeConfig::PIDConfig::PIDStep in) {
+/*static */__RuntimeConfig_v1::__PIDConfig_v1::__PIDStep_v1 __RuntimeConfig_v1::__PIDConfig_v1::__PIDStep_v1::compress(RuntimeConfig::PIDConfig::PIDStep in)
+{
   return {
     in.pct,
     in.delay,

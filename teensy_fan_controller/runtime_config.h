@@ -151,7 +151,7 @@ struct __RuntimeConfig_v1 {
     uint8_t ratio;
     RuntimeConfig::TableConfig tbl;
 
-    RuntimeConfig::FanConfig decompress();
+    RuntimeConfig::FanConfig decompress() const;
 
     static __FanConfig_v1 compress(RuntimeConfig::FanConfig in);
   };
@@ -161,7 +161,7 @@ struct __RuntimeConfig_v1 {
       uint16_t delay;
       uint8_t case_temp_delta;
 
-      RuntimeConfig::PIDConfig::PIDStep decompress();
+      RuntimeConfig::PIDConfig::PIDStep decompress() const;
 
       static __PIDStep_v1 compress(RuntimeConfig::PIDConfig::PIDStep in);
     };
@@ -184,7 +184,7 @@ struct __RuntimeConfig_v1 {
     __PIDStep_v1 adaptive_sp_step_down;
     __PIDStep_v1 adaptive_sp_step_up;
 
-    RuntimeConfig::PIDConfig decompress();
+    RuntimeConfig::PIDConfig decompress() const;
 
     static __PIDConfig_v1 compress(RuntimeConfig::PIDConfig in);
   };
@@ -195,7 +195,7 @@ struct __RuntimeConfig_v1 {
     uint8_t nominalR;
     __PIDConfig_v1 pid;
 
-    RuntimeConfig::SensorConfig decompress();
+    RuntimeConfig::SensorConfig decompress() const;
 
     static __SensorConfig_v1 compress(RuntimeConfig::SensorConfig in);
   };
@@ -215,7 +215,7 @@ struct __RuntimeConfig_v1 {
   __SensorConfig_v1 tempAux1;
   __SensorConfig_v1 tempAux2;
 
-  RuntimeConfig decompress();
+  RuntimeConfig decompress() const;
 
   static __RuntimeConfig_v1 compress(RuntimeConfig in);
 };
