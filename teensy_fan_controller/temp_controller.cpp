@@ -354,7 +354,7 @@ void TempController::doFanUpdate()
           if (fan != nullptr) {
             pct = value.doTbl(fan->cfg.tbl.temp_pct_table);
             pout = static_cast<uint8_t>(round(map(pct, 0, 100, 0, 255)));
-            fan->writePWM(pout, CONTROL_MODE::MODE_TBL);
+            fan->writePWM(pout);
           }
           else {
             break;
@@ -366,7 +366,7 @@ void TempController::doFanUpdate()
         pout = static_cast<uint8_t>(round(map(pct, 0, 100, 0, 255)));
         for (const auto &fan : value.fans) {
           if (fan != nullptr) {
-            fan->writePWM(pout, CONTROL_MODE::MODE_FIXED);
+            fan->writePWM(pout);
           }
           else {
             break;
@@ -378,7 +378,7 @@ void TempController::doFanUpdate()
         pout = static_cast<uint8_t>(round(map(pct, 0, 100, 0, 255)));
         for (const auto &fan : value.fans) {
           if (fan != nullptr) {
-            fan->writePWM(pout, CONTROL_MODE::MODE_PID);
+            fan->writePWM(pout);
           }
           else {
             break;

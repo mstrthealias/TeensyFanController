@@ -100,6 +100,11 @@ void interrupt_handler6() {
 }
 
 void setup_hardware() {
+  supplyTemp.setupPin();
+  returnTemp.setupPin();
+  caseTemp.setupPin();
+  aux1Temp.setupPin();
+  aux2Temp.setupPin();
   fan1.setupPin(interrupt_handler1);
   fan2.setupPin(interrupt_handler2);
   fan3.setupPin(interrupt_handler3);

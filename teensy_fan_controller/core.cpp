@@ -24,18 +24,29 @@ FanData::FanData(const RuntimeConfig::FanConfig &fan, const String &lbl) : cfg(f
 
 void FanData::setupPin(void (*isr)())
 {
+  rpm = 0;
   pulse_counter = 0;
-  if (cfg.pinPWM) {
-    pinMode(cfg.pinPWM, OUTPUT);
+  if (pwmPin != cfg.pinPWM) {
+    if (pwmPin) {
+      pinMode(pwmPin, INPUT);  // default pin mode
+      pwmPin = 0;
+    }
+    if (cfg.pinPWM) {
+      pinMode(cfg.pinPWM, OUTPUT);
+      pwmPin = cfg.pinPWM;
+    }
   }
-  if (isrPin) {
-    detachInterrupt(digitalPinToInterrupt(isrPin));
-    isrPin = 0;
-  }
-  if (cfg.pinRPM) {
-    pinMode(cfg.pinRPM, INPUT_PULLUP);
-    attachInterrupt(digitalPinToInterrupt(cfg.pinRPM), isr, FALLING);
-    isrPin = cfg.pinRPM;
+  if (isrPin != cfg.pinRPM) {
+    if (isrPin) {
+      detachInterrupt(digitalPinToInterrupt(isrPin));
+      pinMode(isrPin, INPUT);  // default pin mode
+      isrPin = 0;
+    }
+    if (cfg.pinRPM) {
+      pinMode(cfg.pinRPM, INPUT_PULLUP);
+      attachInterrupt(digitalPinToInterrupt(cfg.pinRPM), isr, FALLING);
+      isrPin = cfg.pinRPM;
+    }
   }
 }
 
@@ -49,9 +60,9 @@ void FanData::doRPM()
   }
 }
 
-void FanData::writePWM(const uint8_t pout, const CONTROL_MODE mode) const
+void FanData::writePWM(const uint8_t pout) const
 {
-  if (cfg.mode == mode && cfg.pinPWM) {
+  if (cfg.pinPWM) {
     analogWrite(cfg.pinPWM, (int)(pout * cfg.ratio));
   }
 }
@@ -61,13 +72,26 @@ SensorData::SensorData(const RuntimeConfig::SensorConfig &sensor, const String &
 {
 }
 
+void SensorData::setupPin()
+{
+  val = 0;
+  // TODO ...changing ADC pin to input makes reading unreliable on Teensy 3.5
+//  if (adcPin != cfg.pin) {
+//    if (adcPin) {
+//      pinMode(adcPin, INPUT);  // default pin mode
+//      adcPin = 0;
+//    }
+//    if (cfg.pin) {
+//      pinMode(cfg.pin, INPUT);
+//      adcPin = cfg.pin;
+//    }
+//  }
+}
+
 void SensorData::doSample()
 {
   if (cfg.pin) {
     val = convert_reading(getAverage(), cfg.nominalR, TEMPERATURENOMINAL, cfg.beta, cfg.seriesR);
-  }
-  else {
-    val = 0;
   }
 }
 

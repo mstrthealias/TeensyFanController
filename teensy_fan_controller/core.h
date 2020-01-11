@@ -48,6 +48,7 @@ struct FanData {
   uint16_t pulse_counter = 0;
 
   uint8_t isrPin = 0;
+  uint8_t pwmPin = 0;
 
   const String lbl;
 
@@ -55,7 +56,7 @@ struct FanData {
 
   void setupPin(void (*isr)());
   void doRPM();
-  void writePWM(const uint8_t pout, const CONTROL_MODE mode) const;
+  void writePWM(const uint8_t pout) const;
 };
 
 
@@ -68,12 +69,15 @@ struct SensorData {
   uint16_t samples[NUMSAMPLES];
   float val = 0;
 
+  uint8_t adcPin = 0;
+
   const String lbl;
 
   SensorData(const RuntimeConfig::SensorConfig &sensor, const String &lbl);
 
-  float getAverage() const;
+  void setupPin();
   void doSample();
+  float getAverage() const;
 
   static float convert_reading(float reading, uint16_t nominalR, uint8_t nominalTemp, uint16_t beta, uint16_t seriesR);
 };

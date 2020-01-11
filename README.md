@@ -1,5 +1,7 @@
 # Teensy Fan Controller
 
+*Work in progress... An initial release is not yet available. However, you're welcome to build and flash using Arduino Studio (with Teensyduino add-on).*
+
 A PC fan controller using temperature sensors/thermistors, for Teensy 3.x USB Development Board(s).
 
 Supports up to 6 PWM (4pin) fans, and up to 5 temperature sensors (supply water temp, return water temp, case temp, aux1 temp, aux2 temp). Each fan may individually operate in PID, percent-table, or fixed-speed (percent) control modes.
