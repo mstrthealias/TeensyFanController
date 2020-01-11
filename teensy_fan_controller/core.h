@@ -7,6 +7,7 @@
 
 #include <array>
 #include <Arduino.h>
+#include <EEPROM.h>
 #include <PID_v1.h>
 #include "moving_average.h"
 #include "runtime_config.h"
@@ -25,6 +26,15 @@
 #define ADC_RANGE 4096
 #define NUMSAMPLES 10  // num of samples to averages
 #define READ_DELAY 1  // delay between ADC reads
+
+
+// disable EEPROM if device EEPROM is too small:
+#ifndef DISABLE_EEPROM
+#if E2END + 1 < CONFIG_BYTES
+#define EEPROM_TOO_SMALL
+#define DISABLE_EEPROM
+#endif  //E2END + 1 < CONFIG_BYTES
+#endif  //DISABLE_EEPROM
 
 
 /**

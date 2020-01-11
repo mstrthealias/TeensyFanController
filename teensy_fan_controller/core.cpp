@@ -2,12 +2,19 @@
 // Created by jd on 11/26/2019.
 //
 
-#include <EEPROM.h>
 #include "core.h"
 
 
-#ifndef DISABLE_EEPROM
-static_assert(E2END + 1 >= CONFIG_BYTES, "Device EEPROM size must be at least 127 bytes");
+#ifdef EEPROM_TOO_SMALL
+#define XSTR(x) STR(x)
+#define STR(x) #x
+#pragma message "Device EEPROM (" XSTR(E2END) " bytes) is too small (" XSTR(CONFIG_BYTES) " bytes needed), disabling EEPROM"
+#endif
+
+#ifdef DISABLE_EEPROM
+#pragma message "EEPROM disabled, configuration changes will not persist after reboot"
+#else
+static_assert(E2END + 1 >= CONFIG_BYTES, "Device EEPROM size must be at least CONFIG_BYTES bytes");
 #endif
 
 
