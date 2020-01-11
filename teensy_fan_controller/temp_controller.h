@@ -5,9 +5,7 @@
 #ifndef TFC_TEMP_CONTROLLER_H
 #define TFC_TEMP_CONTROLLER_H
 
-#include <utility>
-#include <functional>
-#include <map>
+#include <array>
 #include <PID_v1.h>
 #include "runtime_config.h"
 #include "core.h"
@@ -52,18 +50,20 @@ class TempController {
       float *sample;
       PIDController *pidCtrl;
       std::array<const FanData*, 6> fans;
+      CONTROL_MODE mode;
+      uint8_t source;  //CONTROL_SOURCE (or fixed fan %)
       uint16_t samplePeriod;
       uint8_t pct = 0;
       String label;
 
       ControlData();
-      ControlData(float *sample, const FanData* firstFan, const uint16_t samplePeriod, const String &label);  // %-tbl constructor
-      ControlData(SensorData *pidSensor, const FanData* firstFan, const uint16_t samplePeriod, const String &label);  // PID constructor
-      ControlData(float *sample, const FanData* firstFan, const uint16_t samplePeriod, const uint8_t pct, const String &label);  // fixed-% constructor
-      ControlData(ControlData&& that);  // move constructor
       ~ControlData();
 
-      ControlData& operator=(ControlData&& that);  // move assignment operator
+      void resetPIDCtrl();
+      void setPctTable(float *sample, CONTROL_MODE mode, CONTROL_SOURCE source, const uint16_t samplePeriod, const String &label);  // %-tbl constructor
+      void setPID(SensorData *pidSensor, CONTROL_MODE mode, CONTROL_SOURCE source, const uint16_t samplePeriod, const String &label);  // PID constructor
+      void setFixed(float *sample, CONTROL_MODE mode, uint8_t source, const uint16_t samplePeriod, const uint8_t pct, const String &label);  // fixed-% constructor
+      void reset();
 
       // delete copy assignment
       ControlData(const ControlData& that) = delete;
@@ -76,38 +76,39 @@ class TempController {
       uint8_t getFanCount() const;
     };
 
-    typedef std::pair<CONTROL_MODE, uint8_t> unique_ctrl_t;  // second part is CONTROL_SOURCE OR fixed fan %
-    typedef std::map<unique_ctrl_t, ControlData> ctrl_map_t;
-
-  private:
-    const RuntimeConfig &config;
 
   public:
+    RuntimeConfig &config;
+
     SensorData &supplyTemp;  // Water Supply Temp
     SensorData &returnTemp;  // Water Return Temp
     SensorData &caseTemp;
     SensorData &aux1Temp;
     SensorData &aux2Temp;
 
-    const std::array<const FanData*, 6> fans;
-
-    TempController(const RuntimeConfig &config, uint16_t samplePeriod, SensorData &supplyTemp, SensorData &returnTemp, SensorData &caseTemp, SensorData &aux1Temp, SensorData &aux2Temp, const FanData &fan1, const FanData &fan2, const FanData &fan3, const FanData &fan4, const FanData &fan5, const FanData &fan6, const void (*setupHardware)(), const void (*saveConfig)());
+    TempController(RuntimeConfig &config, uint16_t samplePeriod, SensorData &supplyTemp, SensorData &returnTemp, SensorData &caseTemp, SensorData &aux1Temp, SensorData &aux2Temp, const FanData &fan1, const FanData &fan2, const FanData &fan3, const FanData &fan4, const FanData &fan5, const FanData &fan6, void (*setupHardware)(), void (*saveConfig)());
 
     void configChanged(bool doSave = true);
     void doFanUpdate();
+    void resetControlModes();
 
     float getDeltaT() const;
-    const ctrl_map_t& getControlModes() const;
+    uint16_t getFanRPM(uint8_t i) const;
+    const std::array<ControlData, 6>& getControlModes() const;
+
 
   private:
-    const uint16_t samplePeriod;
+    const std::array<const FanData*, 6> fans;
+    std::array<ControlData, 6> controlModes;
 
     float deltaT;  // returnTemp - supplyTemp (0 if no returnTemp sensor)
 
-    ctrl_map_t controlModes;  // std::map of unique control modes w/ related fans
+    const uint16_t samplePeriod;
 
-    const void (*setupHardware)();  // callback to update pin muxing after config changes
-    const void (*saveConfig)();  // callback to save config to EEPROM after config changes
+    ControlData& findOrCreateControlMode(CONTROL_MODE mode, uint8_t source, uint8_t i);
+
+    void (*setupHardware)();  // callback to update pin muxing after config changes
+    void (*saveConfig)();  // callback to save config to EEPROM after config changes
 };
 
 

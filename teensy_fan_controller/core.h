@@ -12,6 +12,7 @@
 #include "runtime_config.h"
 
 
+//#define DISABLE_EEPROM  // disable EEPROM
 #define USB_RAWHID_EN  // enable RawHID
 
 //#define TEENSY_LC

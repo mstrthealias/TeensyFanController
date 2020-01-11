@@ -14,10 +14,10 @@
 
 class HID {
   private:
-    const std::unique_ptr<TempController> &ctrl;
-    RuntimeConfig &config;
+    TempController &ctrl;
 
     byte buffer[64];  // Teensy RawHID packets are 64 bytes
+    byte config_bytes[CONFIG_BYTES];
 
     HID_STATE state = HID_DATA;
 
@@ -28,7 +28,7 @@ class HID {
     void setupPayloadConfig(uint8_t chunk);
 
   public:
-    HID(const std::unique_ptr<TempController> &ctrl, RuntimeConfig &config);
+    HID(TempController &ctrl);
 
     uint8_t recv();
     uint8_t send();

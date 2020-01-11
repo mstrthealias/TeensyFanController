@@ -32,14 +32,15 @@ typedef unsigned char byte;
 #define CONFIG_POS_KEY2                 2
 #define CONFIG_POS_CONFIG               4
 
-#define CONFIG_BYTES 336
+#define CONFIG_BYTES 320
 #define CHUNK_SIZE 48
 
 
 enum class CONTROL_MODE : uint8_t {
   MODE_TBL,
   MODE_PID,
-  MODE_FIXED
+  MODE_FIXED,
+  MODE_OFF
 };
 
 enum class CONTROL_SOURCE : uint8_t {

@@ -16,11 +16,6 @@ volatile bool doPID = false;
 volatile bool doLog = false;
 volatile bool doHIDSend = false;
 
-std::unique_ptr<TempController> ctrl;
-#ifdef USB_RAWHID_EN
-std::unique_ptr<HID> hid;
-#endif
-
 // use 500ms timer interrupt to average pulses to RPM (and enable log logic)
 IntervalTimer rpmTimer;
 
@@ -43,6 +38,18 @@ FanData fan6 = FanData(config.fan6, "6");
 
 byte rbuffer[CONFIG_BYTES];  // EEPROM buffer
 uint8_t logIntervalCnt = 0;
+
+// needed for controller function pointers:
+void setup_hardware();
+void update_eeprom();
+
+// primary ctrl/TempController
+TempController ctrl(config, PERIOD, supplyTemp, returnTemp, caseTemp, aux1Temp, aux2Temp, fan1, fan2, fan3, fan4, fan5, fan6, setup_hardware, update_eeprom);
+
+// HID controller
+#ifdef USB_RAWHID_EN
+HID hid(ctrl);
+#endif
 
 
 /**
@@ -103,14 +110,18 @@ void setup_hardware() {
 
 void read_eeprom() {
   memset(rbuffer, '\0', CONFIG_BYTES);
+#ifndef DISABLE_EEPROM
   read_config(rbuffer, CONFIG_BYTES);
+#endif
   config = RuntimeConfig::parse_bytes(rbuffer, CONFIG_BYTES);
   Serial.println("Config read from EEPROM");
 }
 
 void update_eeprom() {
   if (config.to_bytes(rbuffer, CONFIG_BYTES) == 0) {
+#ifndef DISABLE_EEPROM
     write_config(rbuffer, CONFIG_BYTES);
+#endif
     Serial.println("Config written to EEPROM");
   }
 }
@@ -126,12 +137,8 @@ void setup(void) {
 
   read_eeprom();
 
-  // note: initializing the controller calls setup_hardware() through configChanged()
-  ctrl = std::make_unique<TempController>(config, PERIOD, supplyTemp, returnTemp, caseTemp, aux1Temp, aux2Temp, fan1, fan2, fan3, fan4, fan5, fan6, setup_hardware, update_eeprom);
-
-#ifdef USB_RAWHID_EN
-  hid = std::make_unique<HID>(ctrl, config);
-#endif
+  // initialize controller (calls setup_hardware())
+  ctrl.configChanged(false);
 
   rpmTimer.begin(timer_rpm_handler, 500000);
   adcTimer.begin(timer_adc_handler, PERIOD * 1000);
@@ -153,7 +160,7 @@ void do_rpm() {
    Calculate fan PWN % (PID & table), and write PWM outputs. Invoked once every 100ms.
 */
 void do_pid() {
-  ctrl->doFanUpdate();
+  ctrl.doFanUpdate();
 }
 
 /**
@@ -201,7 +208,7 @@ void do_log() {
   PRINT_TEMP("CWS-T ", supplyTemp.val);
   if (returnTemp.cfg.pin) {
     //PRINT_TEMP("CWR-T ", returnTemp.val);
-    PRINT_TEMP("DeltaT ", ctrl->getDeltaT());
+    PRINT_TEMP("DeltaT ", ctrl.getDeltaT());
   }
 
   if (caseTemp.cfg.pin) {
@@ -215,26 +222,25 @@ void do_log() {
   }
 
   // Iterate over the map
-  auto &controlModes = ctrl->getControlModes();
-  TempController::ctrl_map_t::const_iterator iter;
-  for (iter = controlModes.begin(); iter != controlModes.end(); iter++) {
-    if (iter != controlModes.begin())
-      Serial.print("; ");
+  uint8_t i = 0;
+  for (const auto &value : ctrl.getControlModes()) {
+    if (value.mode == CONTROL_MODE::MODE_OFF)
+      break;  // remaining control modes are off
 
-    TempController::unique_ctrl_t key = iter->first;
-    const TempController::ControlData &value = iter->second;
+    if (i++ != 0)
+      Serial.print("; ");
 
     Serial.print(" (" + value.label + ": ");
 
-    if (key.first == CONTROL_MODE::MODE_PID) {
+    if (value.mode == CONTROL_MODE::MODE_PID) {
       PRINT_TEMP("Setpoint ", value.pidCtrl->getSetpoint());
       PRINT_PCT("PWM ", value.pct);
     }
     // do not print % for tbl, as there may be multiple tables in this config
-//    else if (key.first == CONTROL_MODE::MODE_TBL) {
+//    else if (value.mode == CONTROL_MODE::MODE_TBL) {
 //      PRINT_PCT("PWM ", value.pct);
 //    }
-    else if (key.first == CONTROL_MODE::MODE_FIXED) {
+    else if (value.mode == CONTROL_MODE::MODE_FIXED) {
       PRINT_PCT("PWM ", value.pct);
     }
 
@@ -258,14 +264,14 @@ void do_log() {
    Reads command from HID raw.
 */
 void do_hid_recv() {
-  hid->recv();  // TODO do something and return non void
+  hid.recv();
 }
 
 /**
    Transmits HID raw data packet(s) (which packet sent depends on HID state). Invoked once every 500ms.
 */
 void do_hid_send() {
-  if (hid->send() < 0) {
+  if (hid.send() < 0) {
     Serial.println(F("Unable to transmit packet"));
   }
 }

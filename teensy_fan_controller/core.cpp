@@ -6,7 +6,9 @@
 #include "core.h"
 
 
+#ifndef DISABLE_EEPROM
 static_assert(E2END + 1 >= CONFIG_BYTES, "Device EEPROM size must be at least 127 bytes");
+#endif
 
 
 FanData::FanData(const RuntimeConfig::FanConfig &fan, const String &lbl) : cfg(fan), lbl(lbl)
