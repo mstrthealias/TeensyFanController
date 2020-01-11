@@ -111,7 +111,7 @@ float SensorData::getAverage() const
 int read_config(byte bytes[], size_t len)
 {
   memset(bytes, '\0', len);
-  uint8_t i;
+  uint16_t i;
   for (i = 0; i < len; i++) {
     *(bytes + i) = EEPROM[i];  //EEPROM.read(i)
   }
@@ -120,7 +120,7 @@ int read_config(byte bytes[], size_t len)
 
 int write_config(const byte bytes[], size_t len)
 {
-  uint8_t i;
+  uint16_t i;
   for (i = 0; i < len; i++) {
     EEPROM[i] = bytes[i];  //EEPROM.write(i, val)
   }
