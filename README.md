@@ -68,27 +68,27 @@ The default configuration works well on a PC with a water-cooled CPU and an air-
 
 For example, the fans are controlled to keep supply water temperature at setpoint:
 
-![Example 1.1](doc/images/ex1.1.jpg?raw=true 'Example 1.1'){:height="480px"}
+![Example 1.1](doc/images/ex1.1.jpg?raw=true 'Example 1.1')
 
 
 In the same dataset as ![Example 1.1], and only plotting fan RPMs and DeltaT (return temp - supply temp), observe the fan speeds closely tracking DeltaT (which represents CPU load in the following example):
 
-![Example 1.2](doc/images/ex1.2.jpg?raw=true 'Example 1.2'){:height="480px"}
+![Example 1.2](doc/images/ex1.2.jpg?raw=true 'Example 1.2')
 
 
 Next, an air-cooled GPU is used for about 30 minutes, showing *setpoint adjustment* keeping fan speeds within the configured range:
 
-![Example 2](doc/images/ex2.jpg?raw=true 'Example 2'){:height="480px"}
+![Example 2](doc/images/ex2.jpg?raw=true 'Example 2')
 
 
 The same behavior is observed, except caused by room temperature changes, in this example:
 
-![Example 3](doc/images/ex3.jpg?raw=true 'Example 3'){:height="480px"}
+![Example 3](doc/images/ex3.jpg?raw=true 'Example 3')
 
 
 When only the CPU is loaded, the setpoint temperature does not change, and the fans speed up as needed:
 
-![Example 4](doc/images/ex4.jpg?raw=true 'Example 4'){:height="480px"}
+![Example 4](doc/images/ex4.jpg?raw=true 'Example 4')
 
 
 ### Considerations
