@@ -60,10 +60,10 @@ To be published (liquidtux).
 
 The default configuration works well on a PC with a water-cooled CPU and an air-cooled GPU:
 
-- Uses a supply water temperature and case temperature sensor
-- Controls supply water temperature to 2-3°C above case temperature
+- Uses a supply water temperature sensor and a case temperature sensor
+- Controls supply water temperature to 2-3°C above case temperature (initial setpoint is 28°C)
 - Fan output percent is generally between 45%-60%, unless CPU is loaded
-- If case temperature is within 2°C of supply water temperature, the setpoint will increase in 0.25°C increments when fans are spinning faster than 60% for 20 seconds
+- If case temperature is within 2°C of supply water temperature, and fan output percent is greater than 60% for 20 seconds, the setpoint increases by 0.25°C
 
 
 For example, the fans are controlled to keep supply water temperature at setpoint:
@@ -71,7 +71,7 @@ For example, the fans are controlled to keep supply water temperature at setpoin
 ![Example 1.1](doc/images/ex1.1.jpg?raw=true 'Example 1.1')
 
 
-In the same dataset as ![Example 1.1], and only plotting fan RPMs and DeltaT (return temp - supply temp), observe the fan speeds closely tracking DeltaT (which represents CPU load in the following example):
+In the same dataset as *Example 1.1*, and only plotting fan RPMs and DeltaT (return temp - supply temp), observe the fan speeds trailing DeltaT (which represents CPU load in the following example):
 
 ![Example 1.2](doc/images/ex1.2.jpg?raw=true 'Example 1.2')
 
@@ -96,7 +96,7 @@ When only the CPU is loaded, the setpoint temperature does not change, and the f
 A case temperature sensor should be used if using *setpoint adjustment* with PID supply water temperature control:
 
 - When under load and without a case temperature sensor, the setpoint will increase to the maximum before allowing fan speedup
-- Without a case temperature sensor, setpoint adjustment may achieve the same result as using a supply water *temperature to fan %-table*
+- Without a case temperature sensor, *setpoint adjustment* may achieve the same result as using a supply water *temperature to fan %-table*
 
 
 ## Configuration
