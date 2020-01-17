@@ -143,12 +143,12 @@ void HID::setupPayloadData()
   memcpy((buffer + 6), &(val = static_cast<uint64_t>(ctrl.returnTemp.val * 1000)), 4);
   memcpy((buffer + 10), &(val = static_cast<uint64_t>(ctrl.caseTemp.val * 1000)), 4);
   memcpy((buffer + 14), &(val = static_cast<uint64_t>(ctrl.aux1Temp.val * 1000)), 4);
-//  memcpy((buffer + 14), &(val = static_cast<uint64_t>(ctrl.aux2Temp.val * 1000)), 4);
+  memcpy((buffer + 18), &(val = static_cast<uint64_t>(ctrl.aux2Temp.val * 1000)), 4);
 
-  memcpy((buffer + 18), &(val = static_cast<uint64_t>(ctrl.getDeltaT() * 1000)), 4);
+  memcpy((buffer + 22), &(val = static_cast<uint64_t>(ctrl.getDeltaT() * 1000)), 4);
 //  memcpy((buffer + 22), &(val = static_cast<uint64_t>(ctrl.getFanPercentPID() * 1000)), 4);
 //  memcpy((buffer + 26), &(val = static_cast<uint64_t>(ctrl.getFanPercentTbl() * 1000)), 4);
-//  memcpy((buffer + 30), &(val = static_cast<uint64_t>(ctrl.getTempSetpoint() * 1000)), 4);
+  memcpy((buffer + 30), &(val = static_cast<uint64_t>(ctrl.getPIDSupplyTempSetpoint() * 1000)), 4);
 
   memcpy((buffer + 34), &(rpm = ctrl.getFanRPM(0)), 2);
   memcpy((buffer + 36), &(rpm = ctrl.getFanRPM(1)), 2);

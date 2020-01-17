@@ -177,17 +177,19 @@ uint8_t TempController::ControlData::doTbl(const auto &tempPctTbl)
 {
   // Calculates Fan % using only tempPercentTable
   const float &reading = *sample;
-  uint8_t lastTemp = 0, lastPct = 0,
-          curTemp, curPct, i;
+  float lastTemp = 0,
+        curTemp;
+  uint8_t lastPct = 0,
+          curPct, i;
   for (i = 0; i < 9; i++) {
     curTemp = tempPctTbl[i][0];
     curPct = tempPctTbl[i][1];
     if (reading <= curTemp) {  // use this entry
-      if (curPct >= 100) {
-        return pct = 100;
-      }
-      else if (i > 0) {  // calc % between lastEntry and this entry
+      if (i > 0) {  // calc % between lastEntry and this entry
         return pct = (1 - ((curTemp - reading) / (curTemp - lastTemp))) * (curPct - lastPct) + lastPct;
+      }
+      else if (curPct >= 100) {
+        return pct = 100;
       }
       else {  // use % in table
         return pct = curPct;
@@ -341,6 +343,19 @@ void TempController::configChanged(bool doSave)
   setupHardware();  // setup pin muxing
 }
 
+float TempController::getPIDSupplyTempSetpoint() const
+{
+  for (const TempController::ControlData &controlMode : controlModes) {
+    if (controlMode.mode == CONTROL_MODE::MODE_PID && static_cast<CONTROL_SOURCE>(controlMode.source) == CONTROL_SOURCE::SENSOR_WATER_SUPPLY_TEMP) {
+      return controlMode.pidCtrl->getSetpoint();
+    }
+    else if (controlMode.mode == CONTROL_MODE::MODE_OFF) {
+      break;
+    }
+  }
+  return 0;
+}
+
 void TempController::doFanUpdate()
 {
   deltaT = getDeltaT();  // update delta T
@@ -401,7 +416,10 @@ float TempController::getDeltaT() const
 
 uint16_t TempController::getFanRPM(uint8_t i) const
 {
-  return fans[0]->rpm;
+  if (i < 6)
+    return fans[i]->rpm;
+  else
+    return 0;
 }
 
 const std::array<TempController::ControlData, 6>& TempController::getControlModes() const

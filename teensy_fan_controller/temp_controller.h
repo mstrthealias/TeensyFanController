@@ -93,6 +93,7 @@ class TempController {
     void resetControlModes();
 
     float getDeltaT() const;
+    float getPIDSupplyTempSetpoint() const;
     uint16_t getFanRPM(uint8_t i) const;
     const std::array<ControlData, 6>& getControlModes() const;
 
