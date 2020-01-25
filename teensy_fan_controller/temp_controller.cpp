@@ -103,14 +103,16 @@ TempController::ControlData::~ControlData()
   }
 }
 
-void TempController::ControlData::resetPIDCtrl() {
+void TempController::ControlData::resetPIDCtrl()
+{
   if (this->pidCtrl != nullptr) {
     delete this->pidCtrl;
     this->pidCtrl = nullptr;
   }
 }
 
-void TempController::ControlData::reset() {
+void TempController::ControlData::reset()
+{
   this->resetPIDCtrl();
 
   this->sample = nullptr;
@@ -234,7 +236,8 @@ TempController::TempController(RuntimeConfig &config, uint16_t samplePeriod, Sen
 {
 }
 
-TempController::ControlData& TempController::findOrCreateControlMode(CONTROL_MODE mode, uint8_t source, uint8_t i) {
+TempController::ControlData& TempController::findOrCreateControlMode(CONTROL_MODE mode, uint8_t source, uint8_t i)
+{
   for (TempController::ControlData &controlMode : controlModes) {
     if (controlMode.mode != CONTROL_MODE::MODE_OFF) {
       if (controlMode.mode == mode && source == controlMode.source) {
@@ -299,7 +302,8 @@ TempController::ControlData& TempController::findOrCreateControlMode(CONTROL_MOD
   return controlModes[controlModes.size() - 1];
 }
 
-void TempController::resetControlModes() {
+void TempController::resetControlModes()
+{
   for (auto &controlMode : controlModes) {
     controlMode.reset();
   }

@@ -117,9 +117,9 @@ void read_eeprom() {
   memset(rbuffer, '\0', CONFIG_BYTES);
 #ifndef DISABLE_EEPROM
   read_config(rbuffer, CONFIG_BYTES);
+  Serial.println("Config read from EEPROM");
 #endif
   config = RuntimeConfig::parse_bytes(rbuffer, CONFIG_BYTES);
-  Serial.println("Config read from EEPROM");
 }
 
 void update_eeprom() {
