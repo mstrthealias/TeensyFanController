@@ -11,7 +11,7 @@
 static_assert(CONFIG_BYTES >= sizeof(__RuntimeConfig_v1) + 4, "CONFIG_BYTES must be at least sizeof(__RuntimeConfig_v1) + 4");
 
 
-#define DEFAULT_PERCENT_TABLE {{25, 0}, {25, 0}, {25, 28}, {28, 35}, {29, 45}, {30, 55}, {31, 65}, {32, 75}, {33, 85}, {35, 100}}
+#define DEFAULT_PERCENT_TABLE {{26, 1}, {26,1}, {26, 1}, {26, 1}, {26, 1}, {26, 1}, {26, 1}, {26, 28}, {30, 65}, {33, 100}}
 
 #define DEFAULT_PID {\
     24,\
