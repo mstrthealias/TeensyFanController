@@ -2,6 +2,13 @@
 
 The initial, untested, simple Teensy Fan Controller PCB.
 
+Designed to fit in a (Raspberry Pi 3 case)[1].
+
+
+## Instructions
+
+TODO
+
 
 ## Notes
 
@@ -18,6 +25,7 @@ TODO
 
 - Supports Teensy 3.x, and Teensy 4.0
 - Standard 4pin Molex PC power connector
+- Fits in a (Raspberry Pi 3 case)[1]
 - 6 fans
 - 5 temperature sensors
 
@@ -35,3 +43,7 @@ TODO
 | simple001/schematic.pdf | Schematic print-out PDF (Simple001)
 | simple001/freeDFM.pdf | freeDFM multi-layer PDF output results (Simple001)
 
+
+## Links
+
+[1]: https://www.microcenter.com/product/614861/micro-connectors-plastic-raspberry-pi-3-model-b-case-kit
