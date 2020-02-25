@@ -13,7 +13,7 @@ Designed to control radiator fans on a PC water cooling loop (to maintain supply
 Hardware is described in the [Hardware][4] folder:
 
 * [Prototype - Hand-made (Schmart Board based)][2]: uses over-the-shelf components (OK for single fan/single sensor builds)
-* [Prototype - Simple PCB]([3]: requires PCB fabrication (gerber files provided) and through-hole soldering
+* [Prototype - Simple PCB][3]: requires PCB fabrication (gerber files provided) and through-hole soldering
 * [Routing Cooling Demo][1]: breadboard based experiment using a single fan/single sensor to cool a router to a specific temperature
 
 ## Interface
@@ -155,7 +155,7 @@ If used on a Teensy LC, the config will not be savable on the device (and will a
 
 
 
- [1]: Hardware/Router cooling demo/
- [2]: Hardware/Schmart Board/
- [3]: Hardware/Simple/
- [4]: Hardware/
+[1]: Hardware/Router cooling demo/
+[2]: Hardware/Schmart Board/
+[3]: Hardware/Simple/
+[4]: Hardware/
