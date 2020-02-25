@@ -155,8 +155,7 @@ If used on a Teensy LC, the config will not be savable on the device (and will a
 
 
 
-[1]: https://google.com
-[2]: Hardware/Router cooling demo/
-[3]: Hardware/Schmart Board/
+[2]: Hardware/Router%20cooling%20demo/
+[3]: Hardware/Schmart%20Board/
 [4]: Hardware/Simple/
 [5]: Hardware/
