@@ -35,15 +35,21 @@ TODO
 
 | Path | Description |
 |----------|-------------|
-| datasheets/ | Part datasheets
-| simple001/EAGLE/ | Simple001 EAGLE library, schematic, and board
-| simple001/gerbers.zip | Gerber files for PCB fabrication (Simple001)
-| simple001/parts.csv | Part order list (Simple001)
-| simple001/partslist.txt | Modified EAGLE partlist.txt export (Simple001)
-| simple001/schematic.pdf | Schematic print-out PDF (Simple001)
-| simple001/freeDFM.pdf | freeDFM multi-layer PDF output results (Simple001)
+| [datasheets/][2] | Part datasheets
+| [simple001/EAGLE/][3] | EAGLE library, schematic, and board (Simple001)
+| [simple001/gerbers.zip][4] | Gerber files for PCB fabrication (Simple001)
+| [simple001/parts.csv][5] | Part order list (Simple001)
+| [simple001/partslist.txt][6] | Modified EAGLE partlist.txt export (Simple001)
+| [simple001/schematic.pdf][7] | Schematic print-out PDF (Simple001)
+| [simple001/freeDFM.pdf][8] | freeDFM multi-layer PDF output results (Simple001)
 
 
-## Links
 
 [1]: https://www.microcenter.com/product/614861/micro-connectors-plastic-raspberry-pi-3-model-b-case-kit
+[2]: datasheets/
+[3]: simple001/EAGLE/
+[4]: simple001/gerbers.zip?raw=true
+[5]: simple001/parts.csv
+[6]: simple001/partslist.txt
+[7]: simple001/schematic.pdf?raw=true
+[8]: simple001/freeDFM.pdf?raw=true

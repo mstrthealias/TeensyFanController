@@ -2,14 +2,19 @@
 
 *Work in progress... An initial release is not yet available. However, you're welcome to build and flash using Arduino Studio (with Teensyduino add-on).*
 
-A PC fan controller using temperature sensors/thermistors, for Teensy 3.x USB Development Board(s).
+A PC fan controller with temperature sensor input, for **Teensy 3.x** USB Development Board(s).
 
-Supports up to 6 PWM (4pin) fans, and up to 5 temperature sensors (supply water temp, return water temp, case temp, aux1 temp, aux2 temp). Each fan may individually operate in PID, percent-table, or fixed-speed (percent) control modes.
+Supports up to 6 fans (4pin/PWM), and up to 5 temperature sensors (thermistors). Each fan may individually operate in PID, temperature-percent table, or fixed-percent control modes.
 
-Primarily designed to control radiator fans (4pin/PWM) for a PC water cooling loop, using feedback from a supply water temperature sensor. Configurable to prefer quiet-but-safe operation in all cases.
+Designed to control radiator fans on a PC water cooling loop (to maintain supply water temperature), but may be configured for other purposes (for example, see [Hardware/Router cooling demo][1]).
 
-Prototype hardware (supporting 6 fans and 4 sensors) is described in the *Hardware* folder.  Schematic and PCB (Gerber files) will be provided later.
+## Hardware
 
+Hardware is described in the [Hardware][4] folder:
+
+* [Prototype - Hand-made (Schmart Board based)][2]: uses over-the-shelf components (OK for single fan/single sensor builds)
+* [Prototype - Simple PCB]([3]: requires PCB fabrication (gerber files provided) and through-hole soldering
+* [Routing Cooling Demo][1]: breadboard based experiment using a single fan/single sensor to cool a router to a specific temperature
 
 ## Interface
 
@@ -102,6 +107,7 @@ A case temperature sensor should be used if using *setpoint adjustment* with PID
 ## Configuration
 TODO
 
+
 ### Fan(s)
 TODO
 
@@ -112,6 +118,8 @@ TODO
 
 ### Sensor(s)
 TODO
+
+Note: sensors are labeled as supply water temp, return water temp, case temp, aux1 temp, and aux2 temp.
 
 #### Hardware Setup
 TODO
@@ -126,9 +134,9 @@ TODO
 
 
 
-## Hardware
+## Notes
 
-Mostly tested with a Teensy 3.5, however the prototype board is also pin-compatible with the Teensy LC.  The prototype board was built using a Schmart Board; details are provided in the *Hardware* folder.
+Releases will be published for supported devices. For now, Teensy 3.x should be used (although prototype hardware is pin-compatible with Teensy LC, 3.x, and 4.0).
 
 If used on a Teensy LC, the config will not be savable on the device (and will always load compiled defaults on start).
 
@@ -144,3 +152,10 @@ If used on a Teensy LC, the config will not be savable on the device (and will a
 - https://learn.adafruit.com/thermistor/using-a-thermistor (License Apache?)
 - https://stackoverflow.com/a/10990893/1345237 (License ?)
 
+
+
+
+ [1]: Hardware/Router cooling demo/
+ [2]: Hardware/Schmart Board/
+ [3]: Hardware/Simple/
+ [4]: Hardware/
