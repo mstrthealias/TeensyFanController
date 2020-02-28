@@ -63,7 +63,7 @@ void FanData::doRPM()
 void FanData::writePWM(const uint8_t pout) const
 {
   if (cfg.pinPWM) {
-    analogWrite(cfg.pinPWM, (int)(pout * cfg.ratio));
+    analogWrite(cfg.pinPWM, (int) (pout * cfg.ratio));
   }
 }
 
@@ -104,7 +104,7 @@ float SensorData::getAverage() const
 {
   // average all the samples out
   float average = 0;
-  size_t i;
+  uint16_t i;
   for (i = 0; i < NUMSAMPLES; i++) {
     average += samples[i];
   }
@@ -122,7 +122,7 @@ float SensorData::getAverage() const
    @param beta Beta coefficient of the thermistor (usually 3000-4000)
    @param seriesR Value of the 'other' resistor
 */
-/*static */float SensorData::convert_reading(float reading, uint16_t nominalR, uint8_t nominalTemp, uint16_t beta, uint16_t seriesR)
+/*static */float SensorData::convert_reading(float reading, const uint16_t nominalR, const uint8_t nominalTemp, const uint16_t beta, const uint16_t seriesR)
 {
   // convert value1 to resistance
   reading = (ADC_RANGE / reading) - 1;
@@ -139,7 +139,7 @@ float SensorData::getAverage() const
 }
 
 
-int read_config(byte bytes[], size_t len)
+int read_config(byte bytes[], const uint16_t len)
 {
   memset(bytes, '\0', len);
   uint16_t i;
@@ -149,7 +149,7 @@ int read_config(byte bytes[], size_t len)
   return 0;
 }
 
-int write_config(const byte bytes[], size_t len)
+int write_config(const byte bytes[], const uint16_t len)
 {
   uint16_t i;
   for (i = 0; i < len; i++) {

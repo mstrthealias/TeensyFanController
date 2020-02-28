@@ -11,7 +11,7 @@
 /**
    Source: https://stackoverflow.com/a/10990893/1345237
 */
-template<typename T, typename Total, size_t N>
+template<typename T, typename Total, uint16_t N>
 class Moving_Average {
   public:
     void operator()(T sample) {
@@ -32,7 +32,7 @@ class Moving_Average {
 
   private:
     T samples_[N];
-    size_t num_samples_{0};
+    uint16_t num_samples_{0};
     Total total_{0};
 };
 

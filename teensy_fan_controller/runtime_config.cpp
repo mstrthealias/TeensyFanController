@@ -78,13 +78,13 @@ RuntimeConfig::RuntimeConfig(uint8_t config_version,
                              SensorConfig tempCase,
                              SensorConfig tempAux1,
                              SensorConfig tempAux2)
-  : config_version{config_version},
-    fan1{fan1}, fan2{fan2}, fan3{fan3}, fan4{fan4}, fan5{fan5}, fan6{fan6},
-    tempSupply{tempSupply}, tempReturn{tempReturn}, tempCase{tempCase}, tempAux1{tempAux1}, tempAux2{tempAux2}
+    : config_version{config_version},
+      fan1{fan1}, fan2{fan2}, fan3{fan3}, fan4{fan4}, fan5{fan5}, fan6{fan6},
+      tempSupply{tempSupply}, tempReturn{tempReturn}, tempCase{tempCase}, tempAux1{tempAux1}, tempAux2{tempAux2}
 {
 }
 
-int RuntimeConfig::to_bytes(byte *bytes, const size_t &len)
+int RuntimeConfig::toBytes(byte *bytes, const uint16_t len) const
 {
   if (len < CONFIG_BYTES) {
 #ifdef ARDUINO
@@ -105,7 +105,7 @@ int RuntimeConfig::to_bytes(byte *bytes, const size_t &len)
   return 0;
 }
 
-/*static */RuntimeConfig RuntimeConfig::parse_bytes(const byte bytes[], const size_t &len)
+/*static */RuntimeConfig RuntimeConfig::parse_bytes(const byte bytes[], const uint16_t len)
 {
   if (len < CONFIG_BYTES) {
 #ifdef ARDUINO
@@ -133,36 +133,36 @@ int RuntimeConfig::to_bytes(byte *bytes, const size_t &len)
 RuntimeConfig __RuntimeConfig_v1::decompress() const
 {
   return {
-    config_version,
-    fan1.decompress(),
-    fan2.decompress(),
-    fan3.decompress(),
-    fan4.decompress(),
-    fan5.decompress(),
-    fan6.decompress(),
-    tempSupply.decompress(),
-    tempReturn.decompress(),
-    tempCase.decompress(),
-    tempAux1.decompress(),
-    tempAux2.decompress()
+      config_version,
+      fan1.decompress(),
+      fan2.decompress(),
+      fan3.decompress(),
+      fan4.decompress(),
+      fan5.decompress(),
+      fan6.decompress(),
+      tempSupply.decompress(),
+      tempReturn.decompress(),
+      tempCase.decompress(),
+      tempAux1.decompress(),
+      tempAux2.decompress()
   };
 }
 
 /*static */__RuntimeConfig_v1 __RuntimeConfig_v1::compress(RuntimeConfig in)
 {
   return {
-    in.config_version,
-    __FanConfig_v1::compress(in.fan1),
-    __FanConfig_v1::compress(in.fan2),
-    __FanConfig_v1::compress(in.fan3),
-    __FanConfig_v1::compress(in.fan4),
-    __FanConfig_v1::compress(in.fan5),
-    __FanConfig_v1::compress(in.fan6),
-    __SensorConfig_v1::compress(in.tempSupply),
-    __SensorConfig_v1::compress(in.tempReturn),
-    __SensorConfig_v1::compress(in.tempCase),
-    __SensorConfig_v1::compress(in.tempAux1),
-    __SensorConfig_v1::compress(in.tempAux2)
+      in.config_version,
+      __FanConfig_v1::compress(in.fan1),
+      __FanConfig_v1::compress(in.fan2),
+      __FanConfig_v1::compress(in.fan3),
+      __FanConfig_v1::compress(in.fan4),
+      __FanConfig_v1::compress(in.fan5),
+      __FanConfig_v1::compress(in.fan6),
+      __SensorConfig_v1::compress(in.tempSupply),
+      __SensorConfig_v1::compress(in.tempReturn),
+      __SensorConfig_v1::compress(in.tempCase),
+      __SensorConfig_v1::compress(in.tempAux1),
+      __SensorConfig_v1::compress(in.tempAux2)
   };
 }
 
@@ -170,14 +170,14 @@ RuntimeConfig __RuntimeConfig_v1::decompress() const
 RuntimeConfig::TableConfig __RuntimeConfig_v1::__TableConfig_v1::decompress() const
 {
   return {
-    BRACE_COPY_TABLE(temp_pct_table, TBL_PART_DECOMPRESS)
+      BRACE_COPY_TABLE(temp_pct_table, TBL_PART_DECOMPRESS)
   };
 }
 
 /*static */__RuntimeConfig_v1::__TableConfig_v1 __RuntimeConfig_v1::__TableConfig_v1::compress(RuntimeConfig::TableConfig in)
 {
   return {
-    BRACE_COPY_TABLE(in.temp_pct_table, TBL_PART_COMPRESS)
+      BRACE_COPY_TABLE(in.temp_pct_table, TBL_PART_COMPRESS)
   };
 }
 
@@ -185,22 +185,22 @@ RuntimeConfig::TableConfig __RuntimeConfig_v1::__TableConfig_v1::decompress() co
 RuntimeConfig::SensorConfig __RuntimeConfig_v1::__SensorConfig_v1::decompress() const
 {
   return {
-    pin,
-    beta,
-    seriesR,
-    static_cast<uint16_t>(nominalR * 1000),
-    pid.decompress()
+      pin,
+      beta,
+      seriesR,
+      static_cast<uint16_t>(nominalR * 1000),
+      pid.decompress()
   };
 }
 
 /*static */__RuntimeConfig_v1::__SensorConfig_v1 __RuntimeConfig_v1::__SensorConfig_v1::compress(RuntimeConfig::SensorConfig in)
 {
   return {
-    in.pin,
-    in.beta,
-    in.seriesR,
-    static_cast<uint8_t>(in.nominalR / 1000),
-    __PIDConfig_v1::compress(in.pid)
+      in.pin,
+      in.beta,
+      in.seriesR,
+      static_cast<uint8_t>(in.nominalR / 1000),
+      __PIDConfig_v1::compress(in.pid)
   };
 }
 
@@ -208,24 +208,24 @@ RuntimeConfig::SensorConfig __RuntimeConfig_v1::__SensorConfig_v1::decompress() 
 RuntimeConfig::FanConfig __RuntimeConfig_v1::__FanConfig_v1::decompress() const
 {
   return {
-    pinPWM,
-    pinRPM,
-    mode,
-    source,
-    static_cast<float>(ratio / 100.0),
-    tbl.decompress()
+      pinPWM,
+      pinRPM,
+      mode,
+      source,
+      static_cast<float>(ratio / 100.0),
+      tbl.decompress()
   };
 }
 
 /*static */__RuntimeConfig_v1::__FanConfig_v1 __RuntimeConfig_v1::__FanConfig_v1::compress(RuntimeConfig::FanConfig in)
 {
   return {
-    in.pinPWM,
-    in.pinRPM,
-    in.mode,
-    in.source,
-    static_cast<uint8_t>(in.ratio * 100),
-    __TableConfig_v1::compress(in.tbl)
+      in.pinPWM,
+      in.pinRPM,
+      in.mode,
+      in.source,
+      static_cast<uint8_t>(in.ratio * 100),
+      __TableConfig_v1::compress(in.tbl)
   };
 }
 
@@ -233,40 +233,40 @@ RuntimeConfig::FanConfig __RuntimeConfig_v1::__FanConfig_v1::decompress() const
 RuntimeConfig::PIDConfig __RuntimeConfig_v1::__PIDConfig_v1::decompress() const
 {
   return {
-    pwm_percent_min,
-    pwm_percent_max1,
-    pwm_percent_max2,
-    static_cast<float>(setpoint / 4.0),
-    static_cast<float>(setpoint_min / 4.0),
-    static_cast<float>(setpoint_max / 4.0),
-    gain_p,
-    static_cast<float>(gain_i / 100.0),
-    static_cast<float>(gain_d / 100.0),
-    adaptive_sp,
-    adaptive_sp_check_case_temp,
-    static_cast<float>(adaptive_sp_step_size / 50.0),
-    adaptive_sp_step_down.decompress(),
-    adaptive_sp_step_up.decompress()
+      pwm_percent_min,
+      pwm_percent_max1,
+      pwm_percent_max2,
+      static_cast<float>(setpoint / 4.0),
+      static_cast<float>(setpoint_min / 4.0),
+      static_cast<float>(setpoint_max / 4.0),
+      gain_p,
+      static_cast<float>(gain_i / 100.0),
+      static_cast<float>(gain_d / 100.0),
+      adaptive_sp,
+      adaptive_sp_check_case_temp,
+      static_cast<float>(adaptive_sp_step_size / 50.0),
+      adaptive_sp_step_down.decompress(),
+      adaptive_sp_step_up.decompress()
   };
 }
 
 /*static */__RuntimeConfig_v1::__PIDConfig_v1 __RuntimeConfig_v1::__PIDConfig_v1::compress(RuntimeConfig::PIDConfig in)
 {
   return {
-    in.pwm_percent_min,
-    in.pwm_percent_max1,
-    in.pwm_percent_max2,
-    static_cast<uint8_t>(in.setpoint * 4),
-    static_cast<uint8_t>(in.setpoint_min * 4),
-    static_cast<uint8_t>(in.setpoint_max * 4),
-    in.gain_p,
-    static_cast<uint8_t>(in.gain_i * 100),
-    static_cast<uint8_t>(in.gain_d * 100),
-    in.adaptive_sp,
-    in.adaptive_sp_check_case_temp,
-    static_cast<uint8_t>(in.adaptive_sp_step_size * 50),
-    __PIDStep_v1::compress(in.adaptive_sp_step_down),
-    __PIDStep_v1::compress(in.adaptive_sp_step_up)
+      in.pwm_percent_min,
+      in.pwm_percent_max1,
+      in.pwm_percent_max2,
+      static_cast<uint8_t>(in.setpoint * 4),
+      static_cast<uint8_t>(in.setpoint_min * 4),
+      static_cast<uint8_t>(in.setpoint_max * 4),
+      in.gain_p,
+      static_cast<uint8_t>(in.gain_i * 100),
+      static_cast<uint8_t>(in.gain_d * 100),
+      in.adaptive_sp,
+      in.adaptive_sp_check_case_temp,
+      static_cast<uint8_t>(in.adaptive_sp_step_size * 50),
+      __PIDStep_v1::compress(in.adaptive_sp_step_down),
+      __PIDStep_v1::compress(in.adaptive_sp_step_up)
   };
 }
 
@@ -274,17 +274,17 @@ RuntimeConfig::PIDConfig __RuntimeConfig_v1::__PIDConfig_v1::decompress() const
 RuntimeConfig::PIDConfig::PIDStep __RuntimeConfig_v1::__PIDConfig_v1::__PIDStep_v1::decompress() const
 {
   return {
-    pct,
-    delay,
-    static_cast<float>(case_temp_delta / 50.0)
+      pct,
+      delay,
+      static_cast<float>(case_temp_delta / 50.0)
   };
 }
 
 /*static */__RuntimeConfig_v1::__PIDConfig_v1::__PIDStep_v1 __RuntimeConfig_v1::__PIDConfig_v1::__PIDStep_v1::compress(RuntimeConfig::PIDConfig::PIDStep in)
 {
   return {
-    in.pct,
-    in.delay,
-    static_cast<uint8_t>(in.case_temp_delta * 50)
+      in.pct,
+      in.delay,
+      static_cast<uint8_t>(in.case_temp_delta * 50)
   };
 }

@@ -11,6 +11,7 @@
 #include <cstdint>
 #include <cstddef>
 typedef unsigned char byte;
+#define A3 0
 #define A4 0
 #define A6 0
 #define A7 0
@@ -134,9 +135,9 @@ struct RuntimeConfig {
                 SensorConfig tempAux1,
                 SensorConfig tempAux2);
 
-  int to_bytes(byte *bytes, const size_t &len);
+  int toBytes(byte *bytes, const uint16_t len) const;
 
-  static RuntimeConfig parse_bytes(const byte bytes[], const size_t &len);
+  static RuntimeConfig parse_bytes(const byte bytes[], const uint16_t len);
 };
 
 

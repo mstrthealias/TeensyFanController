@@ -6,9 +6,9 @@
 
 
 TempController::PIDController::PIDController(const RuntimeConfig::PIDConfig &pidCfg, const uint16_t samplePeriod)
-  : pidCfg(pidCfg), setpoint(pidCfg.setpoint), in(0), pct(0),
-    pid(&in, &pct, &setpoint, pidCfg.gain_p, pidCfg.gain_i, pidCfg.gain_d, REVERSE),
-    samplePeriod(samplePeriod)
+    : pidCfg(pidCfg), setpoint(pidCfg.setpoint), in(0), pct(0),
+      pid(&in, &pct, &setpoint, pidCfg.gain_p, pidCfg.gain_i, pidCfg.gain_d, REVERSE),
+      samplePeriod(samplePeriod)
 {
   // configure PID
   pid.SetSampleTime(samplePeriod);
@@ -81,18 +81,18 @@ uint8_t TempController::PIDController::sample(const float &sample, const SensorD
   return pct;
 }
 
-const double& TempController::PIDController::getSetpoint() const
+const double &TempController::PIDController::getSetpoint() const
 {
   return setpoint;
 }
 
 
 TempController::ControlData::ControlData()
-  : sample(nullptr),
-    pidCtrl(nullptr),
-    fans{{nullptr, nullptr, nullptr, nullptr, nullptr, nullptr}},
-    mode(CONTROL_MODE::MODE_OFF), source(static_cast<uint8_t>(CONTROL_SOURCE::SENSOR_WATER_SUPPLY_TEMP)),
-    samplePeriod(0), label("")
+    : sample(nullptr),
+      pidCtrl(nullptr),
+      fans{{nullptr, nullptr, nullptr, nullptr, nullptr, nullptr}},
+      mode(CONTROL_MODE::MODE_OFF), source(static_cast<uint8_t>(CONTROL_SOURCE::SENSOR_WATER_SUPPLY_TEMP)),
+      samplePeriod(0), label("")
 {}
 
 TempController::ControlData::~ControlData()
@@ -211,7 +211,7 @@ uint8_t TempController::ControlData::doFixed()
 uint8_t TempController::ControlData::getFanCount() const
 {
   uint8_t i, cnt = 0;
-  for (i = 0; i < fans.size(); i++) {
+  for (i = 0; i < FAN_CNT; i++) {
     if (fans[i] != nullptr) {
       cnt++;
     }
@@ -225,18 +225,20 @@ uint8_t TempController::ControlData::getFanCount() const
 
 #define MK_CONTROL_LABEL(sLbl, modeLbl) String(modeLbl) + "[" + sLbl + "]"
 
-TempController::TempController(RuntimeConfig &config, uint16_t samplePeriod, SensorData &supplyTemp, SensorData &returnTemp, SensorData &caseTemp, SensorData &aux1Temp, SensorData &aux2Temp, const FanData &fan1, const FanData &fan2, const FanData &fan3, const FanData &fan4, const FanData &fan5, const FanData &fan6, void (*setupHardware)(), void (*saveConfig)()) :
-  config(config),
-  supplyTemp(supplyTemp), returnTemp(returnTemp), caseTemp(caseTemp), aux1Temp(aux1Temp), aux2Temp(aux2Temp),
-  fans{&fan1, &fan2, &fan3, &fan4, &fan5, &fan6},
-  controlModes(),
-  deltaT{0},
-  samplePeriod(samplePeriod),
-  setupHardware(setupHardware), saveConfig(saveConfig)
+TempController::TempController(RuntimeConfig &config, uint16_t samplePeriod, SensorData &supplyTemp, SensorData &returnTemp, SensorData &caseTemp, SensorData &aux1Temp,
+                               SensorData &aux2Temp, const FanData &fan1, const FanData &fan2, const FanData &fan3, const FanData &fan4, const FanData &fan5, const FanData &fan6,
+                               void (*setupHardware)(), void (*saveConfig)()) :
+    config(config),
+    supplyTemp(supplyTemp), returnTemp(returnTemp), caseTemp(caseTemp), aux1Temp(aux1Temp), aux2Temp(aux2Temp),
+    fans{&fan1, &fan2, &fan3, &fan4, &fan5, &fan6},
+    controlModes(),
+    deltaT{0},
+    samplePeriod(samplePeriod),
+    setupHardware(setupHardware), saveConfig(saveConfig)
 {
 }
 
-TempController::ControlData& TempController::findOrCreateControlMode(CONTROL_MODE mode, uint8_t source, uint8_t i)
+TempController::ControlData &TempController::findOrCreateControlMode(CONTROL_MODE mode, uint8_t source, uint8_t i)
 {
   for (TempController::ControlData &controlMode : controlModes) {
     if (controlMode.mode != CONTROL_MODE::MODE_OFF) {
@@ -318,16 +320,17 @@ void TempController::configChanged(bool doSave)
   resetControlModes();
 
   uint8_t i, j;
-  for (i = 0; i < 6; i++) {
+  for (i = 0; i < FAN_CNT; i++) {
     if (fans[i]->cfg.mode == CONTROL_MODE::MODE_OFF)
       continue;
 
     // find or create matching ControlData
-    ControlData& controlMode = findOrCreateControlMode(fans[i]->cfg.mode, fans[i]->cfg.mode == CONTROL_MODE::MODE_FIXED ? static_cast<uint8_t>(fans[i]->cfg.ratio * 100) : static_cast<uint8_t>(fans[i]->cfg.source), i);
+    ControlData &controlMode = findOrCreateControlMode(fans[i]->cfg.mode, fans[i]->cfg.mode == CONTROL_MODE::MODE_FIXED ? static_cast<uint8_t>(fans[i]->cfg.ratio * 100)
+                                                                                                                        : static_cast<uint8_t>(fans[i]->cfg.source), i);
 
     // add this fan to fans array
     auto &trackedFans = controlMode.fans;
-    for (j = 0; j < 6; j++) {
+    for (j = 0; j < FAN_CNT; j++) {
       if (trackedFans[j] == nullptr) {
         trackedFans[j] = fans[i];
         break;
@@ -420,13 +423,13 @@ float TempController::getDeltaT() const
 
 uint16_t TempController::getFanRPM(uint8_t i) const
 {
-  if (i < 6)
+  if (i < FAN_CNT)
     return fans[i]->rpm;
   else
     return 0;
 }
 
-const std::array<TempController::ControlData, 6>& TempController::getControlModes() const
+const std::array<TempController::ControlData, FAN_CNT> &TempController::getControlModes() const
 {
   return controlModes;
 }

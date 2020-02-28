@@ -40,7 +40,7 @@ class TempController {
 
         uint8_t sample(const float &sample, const SensorData &caseTemp);
 
-        const double& getSetpoint() const;
+        const double &getSetpoint() const;
     };
 
     /**
@@ -49,7 +49,7 @@ class TempController {
     struct ControlData {
       float *sample;
       PIDController *pidCtrl;
-      std::array<const FanData*, 6> fans;
+      std::array<const FanData *, FAN_CNT> fans;
       CONTROL_MODE mode;
       uint8_t source;  //CONTROL_SOURCE (or fixed fan %)
       uint16_t samplePeriod;
@@ -66,8 +66,8 @@ class TempController {
       void reset();
 
       // delete copy assignment
-      ControlData(const ControlData& that) = delete;
-      ControlData& operator=(const ControlData& that) = delete;
+      ControlData(const ControlData &that) = delete;
+      ControlData &operator=(const ControlData &that) = delete;
 
       uint8_t doPID(const SensorData &caseTemp);
       uint8_t doTbl(const auto &tempPctTbl);
@@ -86,7 +86,11 @@ class TempController {
     SensorData &aux1Temp;
     SensorData &aux2Temp;
 
-    TempController(RuntimeConfig &config, uint16_t samplePeriod, SensorData &supplyTemp, SensorData &returnTemp, SensorData &caseTemp, SensorData &aux1Temp, SensorData &aux2Temp, const FanData &fan1, const FanData &fan2, const FanData &fan3, const FanData &fan4, const FanData &fan5, const FanData &fan6, void (*setupHardware)(), void (*saveConfig)());
+    TempController(RuntimeConfig &config, uint16_t samplePeriod,
+                   SensorData &supplyTemp, SensorData &returnTemp, SensorData &caseTemp, SensorData &aux1Temp, SensorData &aux2Temp,
+                   const FanData &fan1, const FanData &fan2, const FanData &fan3, const FanData &fan4, const FanData &fan5, const FanData &fan6,
+                   void (*setupHardware)(),
+                   void (*saveConfig)());
 
     void configChanged(bool doSave = true);
     void doFanUpdate();
@@ -95,18 +99,18 @@ class TempController {
     float getDeltaT() const;
     float getPIDSupplyTempSetpoint() const;
     uint16_t getFanRPM(uint8_t i) const;
-    const std::array<ControlData, 6>& getControlModes() const;
+    const std::array<ControlData, FAN_CNT> &getControlModes() const;
 
 
   private:
-    const std::array<const FanData*, 6> fans;
-    std::array<ControlData, 6> controlModes;
+    const std::array<const FanData *, FAN_CNT> fans;
+    std::array<ControlData, FAN_CNT> controlModes;
 
     float deltaT;  // returnTemp - supplyTemp (0 if no returnTemp sensor)
 
     const uint16_t samplePeriod;
 
-    ControlData& findOrCreateControlMode(CONTROL_MODE mode, uint8_t source, uint8_t i);
+    ControlData &findOrCreateControlMode(CONTROL_MODE mode, uint8_t source, uint8_t i);
 
     void (*setupHardware)();  // callback to update pin muxing after config changes
     void (*saveConfig)();  // callback to save config to EEPROM after config changes

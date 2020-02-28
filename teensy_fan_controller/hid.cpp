@@ -26,7 +26,8 @@ uint8_t HID::send()
     // config requested, transmit (all) config packets
 
     // copy entire configuration into config_bytes
-    if (ctrl.config.to_bytes(config_bytes, CONFIG_BYTES) != 0) {
+    if (ctrl.config.toBytes(config_bytes, CONFIG_BYTES) != 0) {
+      setState(HID_DATA);
       return -1;  // TODO errno
     }
 

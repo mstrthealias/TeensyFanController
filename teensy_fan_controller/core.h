@@ -16,12 +16,15 @@
 //#define DISABLE_EEPROM  // disable EEPROM
 #define USB_RAWHID_EN  // enable RawHID
 
+// 
 //#define TEENSY_LC
 #define TEENSY_35
 //#define TEENSY_4  // RawHID not yet available in Arduino Studio?
+#define FAN_CNT 6
+#define PERIOD_UPDATE 100  // how often to read ADC / update PID
+#define PERIOD_RPM 500
 
 // ADC coefficients:
-#define PERIOD 100  // how often to read ADC / update PID
 #define ADC_RESOLUTION 12
 #define ADC_RANGE 4096
 #define NUMSAMPLES 10  // num of samples to averages
@@ -79,19 +82,19 @@ struct SensorData {
   void doSample();
   float getAverage() const;
 
-  static float convert_reading(float reading, uint16_t nominalR, uint8_t nominalTemp, uint16_t beta, uint16_t seriesR);
+  static float convert_reading(float reading, const uint16_t nominalR, const uint8_t nominalTemp, const uint16_t beta, const uint16_t seriesR);
 };
 
 
 /**
    Read EEPROM into bytes[].
 */
-int read_config(byte bytes[], size_t len);
+int read_config(byte bytes[], const uint16_t len);
 
 /**
    Write bytes[] into EEPROM.
 */
-int write_config(const byte bytes[], size_t len);
+int write_config(const byte bytes[], const uint16_t len);
 
 
 #endif //TFC_CORE_H

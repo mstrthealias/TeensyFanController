@@ -1,6 +1,5 @@
 #include <memory>
 
-#include "moving_average.h"
 #include "runtime_config.h"
 #include "temp_controller.h"
 #include "core.h"
@@ -13,13 +12,13 @@
 volatile bool doRPM = false;
 volatile bool doADC = false;
 volatile bool doPID = false;
-volatile bool doLog = false;
 volatile bool doHIDSend = false;
+bool doLog = false;
 
 // use 500ms timer interrupt to average pulses to RPM (and enable log logic)
 IntervalTimer rpmTimer;
 
-// use PERIOD ms timer interrupt to enable ADC read (and PID update)
+// use PERIOD_UPDATE ms timer interrupt to enable ADC read (and PID update)
 IntervalTimer adcTimer;
 
 RuntimeConfig config;  // saved in EEPROM (using __RuntimeConfig_v1)
@@ -44,7 +43,7 @@ void setup_hardware();
 void update_eeprom();
 
 // primary ctrl/TempController
-TempController ctrl(config, PERIOD, supplyTemp, returnTemp, caseTemp, aux1Temp, aux2Temp, fan1, fan2, fan3, fan4, fan5, fan6, setup_hardware, update_eeprom);
+TempController ctrl(config, PERIOD_UPDATE, supplyTemp, returnTemp, caseTemp, aux1Temp, aux2Temp, fan1, fan2, fan3, fan4, fan5, fan6, setup_hardware, update_eeprom);
 
 // HID controller
 #ifdef USB_RAWHID_EN
@@ -53,53 +52,63 @@ HID hid(ctrl);
 
 
 /**
-   ISR called from PERIOD ms (100ms) timer (adcTimer).
+   ISR called from PERIOD_UPDATE ms (100ms) timer (adcTimer).
 
    Enables do_adc() and do_pid() logic.
 */
-void timer_adc_handler() {
+void timer_adc_handler()
+{
   doADC = true;
   doPID = true;
 }
 
 /**
-   ISR called from PERIOD ms (500ms) timer (rpmTimer).
+   ISR called from 500ms timer (rpmTimer).
 
    Enables do_rpm(), and do_log() (every 10 calls).
 */
-void timer_rpm_handler() {
+void timer_rpm_handler()
+{
   doRPM = true;
   doHIDSend = true;
-  if (++logIntervalCnt >= 10) {
-    logIntervalCnt = 0;
-    doLog = true;
-  }
 }
 
 /*
    Interrupt handlers, bound for each fan RPM signal.
 */
 
-void interrupt_handler1() {
+void interrupt_handler1()
+{
   fan1.pulse_counter++;
 }
-void interrupt_handler2() {
+
+void interrupt_handler2()
+{
   fan2.pulse_counter++;
 }
-void interrupt_handler3() {
+
+void interrupt_handler3()
+{
   fan3.pulse_counter++;
 }
-void interrupt_handler4() {
+
+void interrupt_handler4()
+{
   fan4.pulse_counter++;
 }
-void interrupt_handler5() {
+
+void interrupt_handler5()
+{
   fan5.pulse_counter++;
 }
-void interrupt_handler6() {
+
+void interrupt_handler6()
+{
   fan6.pulse_counter++;
 }
 
-void setup_hardware() {
+void setup_hardware()
+{
   supplyTemp.setupPin();
   returnTemp.setupPin();
   caseTemp.setupPin();
@@ -113,7 +122,8 @@ void setup_hardware() {
   fan6.setupPin(interrupt_handler6);
 }
 
-void read_eeprom() {
+void read_eeprom()
+{
   memset(rbuffer, '\0', CONFIG_BYTES);
 #ifndef DISABLE_EEPROM
   read_config(rbuffer, CONFIG_BYTES);
@@ -122,8 +132,9 @@ void read_eeprom() {
   config = RuntimeConfig::parse_bytes(rbuffer, CONFIG_BYTES);
 }
 
-void update_eeprom() {
-  if (config.to_bytes(rbuffer, CONFIG_BYTES) == 0) {
+void update_eeprom()
+{
+  if (config.toBytes(rbuffer, CONFIG_BYTES) == 0) {
 #ifndef DISABLE_EEPROM
     write_config(rbuffer, CONFIG_BYTES);
 #endif
@@ -132,7 +143,8 @@ void update_eeprom() {
 }
 
 
-void setup(void) {
+void setup(void)
+{
   Serial.begin(9600);
 
 #ifndef TEENSY_4
@@ -145,14 +157,15 @@ void setup(void) {
   // initialize controller (calls setup_hardware())
   ctrl.configChanged(false);
 
-  rpmTimer.begin(timer_rpm_handler, 500000);
-  adcTimer.begin(timer_adc_handler, PERIOD * 1000);
+  rpmTimer.begin(timer_rpm_handler, PERIOD_RPM * 1000);
+  adcTimer.begin(timer_adc_handler, PERIOD_UPDATE * 1000);
 }
 
 /**
    Flush pulse_counter to RPM (2 pulse per revolution, over 0.5s...) for each fan. Invoked once every 500ms.
 */
-void do_rpm() {
+void do_rpm()
+{
   fan1.doRPM();
   fan2.doRPM();
   fan3.doRPM();
@@ -164,14 +177,16 @@ void do_rpm() {
 /**
    Calculate fan PWN % (PID & table), and write PWM outputs. Invoked once every 100ms.
 */
-void do_pid() {
+void do_pid()
+{
   ctrl.doFanUpdate();
 }
 
 /**
    Read ADC signals. Invoked once every 500ms.
 */
-void do_adc() {
+void do_adc()
+{
   // average NUMSAMPLES of samples, each delayed by READ_DELAY
   uint8_t i;
   for (i = 0; i < NUMSAMPLES; i++) {
@@ -209,7 +224,8 @@ void do_adc() {
 /**
    Writes data log to (usb raw hid) serial. Invoked once every 500ms.
 */
-void do_log() {
+void do_log()
+{
   PRINT_TEMP("CWS-T ", supplyTemp.val);
   if (returnTemp.cfg.pin) {
     //PRINT_TEMP("CWR-T ", returnTemp.val);
@@ -268,14 +284,16 @@ void do_log() {
 /**
    Reads command from HID raw.
 */
-void do_hid_recv() {
+void do_hid_recv()
+{
   hid.recv();
 }
 
 /**
    Transmits HID raw data packet(s) (which packet sent depends on HID state). Invoked once every 500ms.
 */
-void do_hid_send() {
+void do_hid_send()
+{
   if (hid.send() < 0) {
     Serial.println(F("Unable to transmit packet"));
   }
@@ -283,7 +301,8 @@ void do_hid_send() {
 #endif
 
 
-void loop(void) {
+void loop(void)
+{
   if (doADC) {
     doADC = false;
     do_adc();
@@ -306,12 +325,15 @@ void loop(void) {
   if (doRPM) {
     doRPM = false;
     do_rpm();
-  }
 
+    // print log every 5 seconds
+    if (++logIntervalCnt >= 10) {
+      logIntervalCnt = 0;
+      doLog = true;
+    }
+  }
   if (doLog) {
     doLog = false;
     do_log();
   }
-
-  //delay(1);
 }
