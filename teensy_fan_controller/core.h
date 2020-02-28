@@ -16,10 +16,7 @@
 //#define DISABLE_EEPROM  // disable EEPROM
 #define USB_RAWHID_EN  // enable RawHID
 
-// 
-//#define TEENSY_LC
-#define TEENSY_35
-//#define TEENSY_4  // RawHID not yet available in Arduino Studio?
+// Controller constants:
 #define FAN_CNT 6
 #define PERIOD_UPDATE 100  // how often to read ADC / update PID
 #define PERIOD_RPM 500

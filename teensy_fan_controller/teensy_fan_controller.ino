@@ -147,7 +147,7 @@ void setup(void)
 {
   Serial.begin(9600);
 
-#ifndef TEENSY_4
+#ifndef ARDUINO_TEENSY40
   analogReference(EXTERNAL);
 #endif
   analogReadResolution(ADC_RESOLUTION);
