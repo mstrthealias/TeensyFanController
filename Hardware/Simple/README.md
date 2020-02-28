@@ -48,8 +48,8 @@ TODO
 [1]: https://www.microcenter.com/product/614861/micro-connectors-plastic-raspberry-pi-3-model-b-case-kit
 [2]: datasheets/
 [3]: simple001/EAGLE/
-[4]: simple001/gerbers.zip?raw=true
+[4]: simple001/gerbers.zip
 [5]: simple001/parts.csv
 [6]: simple001/partslist.txt
-[7]: simple001/schematic.pdf?raw=true
-[8]: simple001/freeDFM.pdf?raw=true
+[7]: simple001/schematic.pdf
+[8]: simple001/freeDFM.pdf

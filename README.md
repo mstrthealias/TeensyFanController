@@ -14,7 +14,7 @@ Hardware is described in the [Hardware][5] folder:
 
 * [Prototype - Hand-made (Schmart Board based)][3]: uses over-the-shelf components (OK for single fan/single sensor builds)
 * [Prototype - Simple PCB][4]: requires PCB fabrication (gerber files provided) and through-hole soldering
-* [Routing Cooling Demo][2]: breadboard based experiment using a single fan/single sensor to cool a router to a specific temperature
+* [Router Cooling Demo][2]: breadboard based experiment using a single fan/single sensor to cool a router to a specific temperature
 
 ## Interface
 
