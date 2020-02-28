@@ -151,6 +151,7 @@ If used on a Teensy LC, the config will not be savable on the device (and will a
 - https://github.com/br3ttb/Arduino-PID-Library/ (License MIT)
 - https://learn.adafruit.com/thermistor/using-a-thermistor (License Apache?)
 - https://stackoverflow.com/a/10990893/1345237 (License ?)
+- https://github.com/apmorton/teensy-template (License ?)
 
 
 
