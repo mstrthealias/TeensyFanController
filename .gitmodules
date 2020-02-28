@@ -7,4 +7,7 @@
 [submodule "nanopb"]
 	path = nanopb
 	url = https://github.com/nanopb/nanopb.git
+[submodule "PID"]
+	path = teensy_fan_controller/libraries/PID
+	url = https://github.com/br3ttb/Arduino-PID-Library.git
 

@@ -1,5 +1,5 @@
 build-*
-teensy_fan_controller/nanopb.proto
+teensy_fan_controller/src/nanopb.proto
 teensy_fan_controller/tools
 teensy_fan_controller/teensy3
 teensy_fan_controller/libraries/EEPROM
