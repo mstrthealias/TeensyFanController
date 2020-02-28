@@ -4,4 +4,7 @@
 [submodule "ui_qt5"]
 	path = ui_qt5
 	url = git@github.com:mstrthealias/TFC-ui.git
+[submodule "nanopb"]
+	path = nanopb
+	url = https://github.com/nanopb/nanopb.git
 

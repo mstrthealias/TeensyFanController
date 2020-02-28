@@ -1,0 +1,97 @@
+// Protobuf message definition for RuntimeConfig (v1)
+
+syntax = "proto3";
+
+import "nanopb.proto";
+
+package tfcproto;
+
+enum ControlMode {
+    MODE_TBL = 0;
+    MODE_PID = 1;
+    MODE_FIXED = 2;
+    MODE_OFF = 3;
+}
+
+enum ControlSource {
+    SENSOR_WATER_SUPPLY_TEMP = 0;
+    SENSOR_WATER_RETURN_TEMP = 1;
+    SENSOR_CASE_TEMP = 2;
+    SENSOR_AUX1_TEMP = 3;
+    SENSOR_AUX2_TEMP = 4;
+    VIRTUAL_DELTA_TEMP = 5;
+}
+
+
+message SensorConfigV1 {
+    uint32 pin = 1;
+    uint32 beta = 2;
+    uint32 series_r = 3;
+    uint32 nominal_r = 4;
+    PIDConfigV1 pid = 5;
+}
+
+message FanConfigV1 {
+    uint32 pin_pwm = 1;
+    uint32 pin_rpm = 2;
+    ControlMode mode = 3;
+    ControlSource source = 4;
+    uint32 ratio = 5;  //float*100
+    TableConfigV1 tbl = 6;
+}
+
+message TableConfigV1 {
+    message TableEntryV1 {
+        uint32 temp = 1;  //float*500
+        uint32 pct  = 2;  //float*500
+    }
+
+
+    repeated TableEntryV1 entries = 1 [(nanopb).max_count = 10, (nanopb).fixed_count = true];  //float temp_pct_table[10][2];
+}
+
+message PIDConfigV1 {
+    uint32 pwm_percent_min = 1;
+    uint32 pwm_percent_max1 = 2;
+    uint32 pwm_percent_max2 = 3;
+
+    uint32 setpoint = 4;  //float*10
+    uint32 setpoint_min = 5;  //float*10
+    uint32 setpoint_max = 6;  //float*10
+
+    uint32 gain_p = 7;
+    uint32 gain_i = 8;  //float*100
+    uint32 gain_d = 9;  //float*100
+
+    bool adaptive_sp = 10;
+    bool adaptive_sp_check_case_temp = 11;
+
+    uint32 adaptive_sp_step_size = 12;  //float*100
+
+    PIDStepV1 adaptive_sp_step_down = 13;
+    PIDStepV1 adaptive_sp_step_up = 14;
+}
+
+message PIDStepV1 {
+    uint32 pct = 1;
+    uint32 delay = 2;
+    uint32 case_temp_delta = 3;  //float*100
+}
+
+message RuntimeConfigV1 {
+    uint32 config_version = 1;
+
+    FanConfigV1 fan1 = 2;
+    FanConfigV1 fan2 = 3;
+    FanConfigV1 fan3 = 4;
+    FanConfigV1 fan4 = 5;
+    FanConfigV1 fan5 = 6;
+    FanConfigV1 fan6 = 7;
+
+    SensorConfigV1 temp_supply = 8;
+    SensorConfigV1 temp_return = 9;
+    SensorConfigV1 temp_case = 10;
+    SensorConfigV1 temp_aux1 = 11;
+    SensorConfigV1 temp_aux2 = 12;
+}
+

@@ -183,7 +183,7 @@ uint8_t TempController::ControlData::doTbl(const auto &tempPctTbl)
         curTemp;
   uint8_t lastPct = 0,
           curPct, i;
-  for (i = 0; i < 9; i++) {
+  for (i = 0; i < FAN_TBL_SIZE; i++) {
     curTemp = tempPctTbl[i][0];
     curPct = tempPctTbl[i][1];
     if (reading <= curTemp) {  // use this entry

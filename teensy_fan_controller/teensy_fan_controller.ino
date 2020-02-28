@@ -21,7 +21,7 @@ IntervalTimer rpmTimer;
 // use PERIOD_UPDATE ms timer interrupt to enable ADC read (and PID update)
 IntervalTimer adcTimer;
 
-RuntimeConfig config;  // saved in EEPROM (using __RuntimeConfig_v1)
+RuntimeConfig config;  // saved in EEPROM (using protobuf / tfcproto_RuntimeConfigV1)
 
 SensorData supplyTemp = SensorData(config.tempSupply, "CWS-T");  // Water Supply Temp
 SensorData returnTemp = SensorData(config.tempReturn, "CWR-T");  // Water Return Temp
