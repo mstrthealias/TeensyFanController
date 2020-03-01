@@ -1,3 +1,16 @@
+<style>
+.ctbl-wrapper > table > tbody > tr > td {
+  vertical-align:top;
+  border:none;
+}
+.ctbl-wrapper > table > tbody > tr {
+  border:none;
+}
+.ctbl-wrapper > table {
+  border:none;
+}
+</style>
+
 # Teensy Fan Controller - Router Cooling Demo
 
 The controller is configured to cool a temperature sensor (placed between a desk router and switch) to a specific temperature.
@@ -47,16 +60,17 @@ Steps to set up a breadboard with a Teensy 3.2, a single fan, a single temperatu
 
 TODO 
 
-<table style="border:none;">
+<div class="ctbl-wrapper">
+<table>
 <tbody>
-<tr style="border:none;">
-<td style="width:50%;border:none;">
+<tr>
+<td>
 
 * The temperature sensor is placed between the cases of a router stacked on top of a switch
 * The fan is pointed at the router/switch
 
 </td>
-<td align="right" style="width:50%;border:none">
+<td align="right">
 
 ![Router cooling demo - sensor/fan setup](../../doc/images/rcd.setup.jpg)
 
@@ -64,6 +78,7 @@ TODO
 </tr>
 </tbody>
 </table>
+</div>
 
 
 ## Software Setup
@@ -78,10 +93,11 @@ Thermistor pin 1 | A5 (pin 19)
 
 Configure the software using the information given above:
 
-<table style="border:none;">
+<div class="ctbl-wrapper">
+<table>
 <tbody>
-<tr style="border:none;">
-<td style="width:50%;border:none;vertical-align:top">
+<tr>
+<td>
 
 1. Connect the **Micro USB cable** to the **Teensy 3.x**
 1. Launch **Teensy Fan Controller UI**
@@ -112,7 +128,7 @@ Configure the software using the information given above:
 1. Click the **back arrow** on the top-left
 
 </td>
-<td align="right" style="width:50%;border:none;vertical-align:top">
+<td align="right">
 
 ![Router cooling demo - fan settings](../../doc/images/rcd.sw.fansettings.jpg)
 
@@ -120,5 +136,6 @@ Configure the software using the information given above:
 </tr>
 </tbody>
 </table>
+</div>
 
 
