@@ -58,7 +58,7 @@ Each fan may be individually configured to operate using a fixed speed (percent)
 
 ### Linux Kernel module (hwmon)
 
-To be published (liquidtux).
+[Fork of liquidtux](https://github.com/mstrthealias/liquidtux): Linux kernel module for reading temperatures and fan RPMs using *lm-sensors* (or *psensor*, as used below).  Tested on Ubuntu 18.04.
 
 
 ## PID Usage and Example
@@ -144,7 +144,7 @@ If used on a Teensy LC, the config will not be savable on the device (and will a
 ### Compatibility
 
 - Teensy 3.5
-- Partial: Teensy LC (unable to save config in EEPROM)
+- Teensy 3.2
 
 
 ### Code
