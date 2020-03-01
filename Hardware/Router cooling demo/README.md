@@ -1,16 +1,3 @@
-<style>
-.ctbl-wrapper > table > tbody > tr > td {
-  vertical-align:top;
-  border:none;
-}
-.ctbl-wrapper > table > tbody > tr {
-  border:none;
-}
-.ctbl-wrapper > table {
-  border:none;
-}
-</style>
-
 # Teensy Fan Controller - Router Cooling Demo
 
 The controller is configured to cool a temperature sensor (placed between a desk router and switch) to a specific temperature.
