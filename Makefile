@@ -1,5 +1,5 @@
 # ARDUINO_DIR must be set to the Arduino path on your system:
-ARDUINO_DIR = /c/Program\ Files\ \(x86\)/Arduino
+ARDUINO_DIR ?= /c/Program\ Files\ \(x86\)/Arduino
 
 
 # Begin logic:
@@ -45,7 +45,9 @@ clean-setup:
 clean: clean-build clean-setup
 
 
-setup: clean protos
+setup: clean setup-toolchain setup-libs setup-nanopb protos
+
+setup-toolchain:
 	@echo
 	@echo Copy Teensy tools into project...
 	cp $(ARDUINO_DIR)/hardware/tools/teensy* $(PROJECTDIR)/tools/
@@ -59,16 +61,17 @@ setup: clean protos
 	@echo Copy Teensy 3.x cores into project...
 	cp -a $(ARDUINO_DIR)/hardware/teensy/avr/cores/teensy3/* $(PROJECTDIR)/teensy3/
 	touch $(PROJECTDIR)/teensy3/.gitkeep
-	
+
+setup-libs:
 	@echo
 	@echo Copy libraries into project...
 	cp -a $(ARDUINO_DIR)/hardware/teensy/avr/libraries/EEPROM $(PROJECTDIR)/libraries/
 	touch $(PROJECTDIR)/libraries/EEPROM/.gitkeep
-	
+
+setup-nanopb:
 	mkdir $(PROJECTDIR)/libraries/nanopb
 	cp $(NANOPBDIR)/*.{h,c} $(PROJECTDIR)/libraries/nanopb/
 	touch $(PROJECTDIR)/libraries/nanopb/.gitkeep
-	
 
 
 # Protobuf build steps:
