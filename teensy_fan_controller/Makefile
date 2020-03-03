@@ -2,7 +2,7 @@
 TARGET = $(notdir $(CURDIR))
 
 # The teensy version to use, 30, 31, 32, 35, 36, or LC
-TEENSY = 32
+TEENSY ?= 32
 
 # define to override Teensy default frequency (underclocking most chips for this project)
 TEENSY_CORE_SPEED = 48000000
