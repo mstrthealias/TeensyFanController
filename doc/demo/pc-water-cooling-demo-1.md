@@ -15,21 +15,21 @@ The default configuration works well on a PC with a water-cooled CPU and an air-
 
 For example, the fans are controlled to keep supply water temperature at setpoint:
 
-![Example 1.1](https://github.com/mstrthealias/TeensyFanController/tree/9169de2e0e3d817ff4fb50c9669d37643c585822/doc/images/ex1.1.jpg?raw=true)
+![Example 1.1](../images/ex1.1.jpg)
 
 In the same dataset as _Example 1.1_, and only plotting fan RPMs and DeltaT \(return temp - supply temp\), observe the fan speeds trailing DeltaT \(which represents CPU load in the following example\):
 
-![Example 1.2](https://github.com/mstrthealias/TeensyFanController/tree/9169de2e0e3d817ff4fb50c9669d37643c585822/doc/images/ex1.2.jpg?raw=true)
+![Example 1.2](../images/ex1.2.jpg)
 
 Next, an air-cooled GPU is used for about 30 minutes, showing _setpoint adjustment_ keeping fan speeds within the configured range:
 
-![Example 2](https://github.com/mstrthealias/TeensyFanController/tree/9169de2e0e3d817ff4fb50c9669d37643c585822/doc/images/ex2.jpg?raw=true)
+![Example 2](../images/ex2.jpg)
 
 The same behavior is observed, except caused by room temperature changes, in this example:
 
-![Example 3](https://github.com/mstrthealias/TeensyFanController/tree/9169de2e0e3d817ff4fb50c9669d37643c585822/doc/images/ex3.jpg?raw=true)
+![Example 3](../images/ex3.jpg)
 
 When only the CPU is loaded, the setpoint temperature does not change, and the fans speed up as needed:
 
-![Example 4](https://github.com/mstrthealias/TeensyFanController/tree/9169de2e0e3d817ff4fb50c9669d37643c585822/doc/images/ex4.jpg?raw=true)
+![Example 4](../images/ex4.jpg)
 

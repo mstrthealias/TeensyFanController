@@ -16,7 +16,7 @@ A single PWM fan and single sensor is connected to a Teensy 3.2 using a breadboa
 
 ## Hardware Setup
 
-[![Breadboard wiring diagram](../images/rcd.thumb.breadboard.png)](../images/rcd.thumb.breadboard.png) [![Breadboard example](../images/rcd.thumb.photo.png)](../images/rcd.photo.png)
+[![Breadboard wiring diagram](../images/rcd.thumb.breadboard.png)](../images/rcd.thumb.breadboard.png) [![Schematic](../images/rcd.thumb.schematic.png)](../images/rcd.thumb.schematic.png)
 
 Steps to set up a breadboard with a Teensy 3.2, a single fan, a single temperature sensor, and a 12v power supply:
 
@@ -37,7 +37,7 @@ Steps to set up a breadboard with a Teensy 3.2, a single fan, a single temperatu
    1. Connect **power supply GND** to the **GND bus** on the **left side** of the breadboard
    2. Connect **power supply +12V** to the **PWR bus** on the **left side** of the breadboard
 
-[![Schematic](../images/rcd.thumb.schematic.png)](../images/rcd.thumb.schematic.png) [![Board example](../images/rcd.thumb.board.png)](../images/rcd.board.png)
+[![Breadboard example](../images/rcd.thumb.photo.png)](../images/rcd.photo.png) [![Board example](../images/rcd.thumb.board.png)](../images/rcd.board.png)
 
 ## Software Setup
 
