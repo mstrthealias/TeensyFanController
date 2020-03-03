@@ -11,7 +11,7 @@ Designed to control radiator fans on a PC water cooling loop (to maintain supply
 
 ## Documentation
 
-The project is documented using Gitbook, and accessible at [https://mstrthealias.gitbook.io/teensy-fan-controller/][7].
+The project is **documented using Gitbook**, and accessible at **[https://mstrthealias.gitbook.io/teensy-fan-controller/][7]**.
 
 
 ## Hardware
