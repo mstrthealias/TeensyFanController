@@ -1,37 +1,33 @@
-# Summary
+# Table of contents
 
 * [Teensy Fan Controller](README.md)
 
-
 ## Usage
 
-* [Fan Control Modes](Usage/Fan Control Modes.md)
-
+* [Fan Control Modes](usage/fan-control-modes.md)
 
 ## Hardware
 
-* [Prototype](Hardware/Prototype.md)
-* [Breadboard](Hardware/Breadboard.md)
-* [Simple PCB](Hardware/Simple PCB.md)
-
+* [Prototype](hardware/prototype.md)
+* [Breadboard](hardware/breadboard.md)
+* [Simple PCB](hardware/simple-pcb.md)
 
 ## Management UI
 
-* [Overview](UI/Overview.md)
-* [Controller Log](UI/Controller Log.md)
-* [Present Values](UI/Present Values.md)
-* [Fan Setup](UI/Fan Setup.md)
-* [Hardware Setup](UI/Hardware Setup.md)
-
+* [Overview](management-ui/overview.md)
+* [Controller Log](management-ui/controller-log.md)
+* [Present Values](management-ui/present-values.md)
+* [Fan Setup](management-ui/fan-setup.md)
+* [Hardware Setup](management-ui/hardware-setup.md)
 
 ## Build Instructions
 
-* [Project Setup](Build Instructions/Setup.md)
-* [Firmware (Teensy)](Build Instructions/Firmware.md)
-* [Management UI](Build Instructions/UI.md)
-
+* [Project Setup](build-instructions/setup.md)
+* [Firmware \(Teensy\)](build-instructions/firmware.md)
+* [Management UI](build-instructions/ui.md)
 
 ## Demo
 
-* [Router Cooling Demo](Examples/Router cooling demo.md)
-* [Water-cooled CPU and air-cooled GPU](Examples/PC water cooling demo 1.md)
+* [Router Cooling Demo](demo/router-cooling-demo.md)
+* [Water-cooled CPU and air-cooled GPU](demo/pc-water-cooling-demo-1.md)
+
