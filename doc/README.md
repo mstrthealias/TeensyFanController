@@ -4,7 +4,7 @@ A PC fan controller with temperature sensor input, for **Teensy 3.x** USB Develo
 
 Supports up to 6 fans \(4pin/PWM\), and up to 5 temperature sensors \(thermistors\). Each fan may individually operate in PID, temperature-percent table, or fixed-percent control modes.
 
-Designed to control radiator fans on a PC water cooling loop \(to maintain supply water temperature\), but may be configured for other purposes \(for example, see [Hardware/Router cooling demo](demo/router-cooling-demo.md)\).
+Designed to control radiator fans on a PC water cooling loop \(to maintain supply water temperature\), but may be configured for other purposes \(for example, see [Demo/Router Cooling Demo](demo/router-cooling-demo.md)\).
 
 ## Hardware
 
