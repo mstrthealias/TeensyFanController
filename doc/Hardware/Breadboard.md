@@ -1,13 +1,11 @@
-# Teensy Fan Controller - Router Cooling Demo
-
-The controller is configured to cool a temperature sensor (placed between a desk router and switch) to a specific temperature.
+# Breadboard Prototype
 
 A single PWM fan and single sensor is connected to a Teensy 3.2 using a breadboard.
 
 
 ## Hardware Requirements
 
-1. One Breadboard, or a Teensy Fan Controller board (fe. Simple 001)
+1. One Breadboard
 1. One Teensy 3.x with headers (previously *flashed with Teensy Fan Controller*)
 1. A Micro USB cable
 1. One 10k thermistor (fe. [Adafruit 10K Precision Epoxy Thermistor - 3950 NTC][1])
@@ -22,11 +20,11 @@ A single PWM fan and single sensor is connected to a Teensy 3.2 using a breadboa
 
 ## Hardware Setup
 
-[![Breadboard wiring diagram](../../doc/images/rcd.thumb.breadboard.png)](../../doc/images/rcd.breadboard.png) [![Schematic](../../doc/images/rcd.thumb.schematic.png)](../../doc/images/rcd.schematic.png) [![Board example](../../doc/images/rcd.thumb.board.png)](../../doc/images/rcd.board.png)
+[![Breadboard wiring diagram](../../doc/images/rcd.thumb.breadboard.png)](../../doc/images/rcd.breadboard.png) [![Breadboard example](../../doc/images/rcd.thumb.photo.png)](../../doc/images/rcd.photo.png)
 
 Steps to set up a breadboard with a Teensy 3.2, a single fan, a single temperature sensor, and a 12v power supply:
 
-1. Place the **Teensy** into the top end of the breadboard (Teensy GND on breadboard row 1)
+1. Place the **Teensy** into the top end of the breadboard (**Teensy GND** on breadboard **row 1**)
 1. Place a **10k Ohm resistor** between **Teensy AREF** (breadboard **I4**) and **Teensy A5** (breadboard **I8**)
 1. Place a **diode** with anode at **Teensy D5** (breadboard **A6**) and cathode at breadboard **row 22** (use a wire if needed)
 1. Connect **Teensy GND** (breadboard **A1**) to the **GND bus** on the **left side** of the breadboard
@@ -43,30 +41,7 @@ Steps to set up a breadboard with a Teensy 3.2, a single fan, a single temperatu
    1. Connect **power supply GND** to the **GND bus** on the **left side** of the breadboard
    1. Connect **power supply +12V** to the **PWR bus** on the **left side** of the breadboard
 
-### Sensor and fan placement
-
-TODO 
-
-<div class="ctbl-wrapper">
-<table>
-<tbody>
-<tr>
-<td>
-
-* The temperature sensor is placed between the cases of a router stacked on top of a switch
-* The fan is pointed at the router/switch
-
-</td>
-<td align="right">
-
-![Router cooling demo - sensor/fan setup](../../doc/images/rcd.setup.jpg)
-
-</td>
-</tr>
-</tbody>
-</table>
-</div>
-
+[![Schematic](../../doc/images/rcd.thumb.schematic.png)](../../doc/images/rcd.schematic.png) [![Board example](../../doc/images/rcd.thumb.board.png)](../../doc/images/rcd.board.png)
 
 ## Software Setup
 
@@ -79,12 +54,6 @@ Fan 1 PWM pin | D4 (pin 4)
 Thermistor pin 1 | A5 (pin 19)
 
 Configure the software using the information given above:
-
-<div class="ctbl-wrapper">
-<table>
-<tbody>
-<tr>
-<td>
 
 1. Connect the **Micro USB cable** to the **Teensy 3.x**
 1. Launch **Teensy Fan Controller UI**
@@ -112,17 +81,9 @@ Configure the software using the information given above:
     Fan 6: RPM Pin | 0
 
 1. Click **Save**
-1. Click the **back arrow** on the top-left
-
-</td>
-<td align="right">
-
-![Router cooling demo - fan settings](../../doc/images/rcd.sw.fansettings.jpg)
-
-</td>
-</tr>
-</tbody>
-</table>
-</div>
 
 
+{% hint style="info" %}
+After making changes, the Hardware Setup screen should appear as:
+![Breadboard - fan settings](../../doc/images/rcd.sw.fansettings.jpg)
+{% endhint %}

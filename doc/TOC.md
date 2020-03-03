@@ -3,6 +3,11 @@
 * [Teensy Fan Controller](README.md)
 
 
+## Usage
+
+* [Fan Control Modes](Usage/Fan Control Modes.md)
+
+
 ## Hardware
 
 * [Prototype](Hardware/Prototype.md)
