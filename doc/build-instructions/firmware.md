@@ -1,39 +1,35 @@
-# Firmware \(for Teensy 3.x\)
+# Firmware \(Teensy\)
 
-A Makefile and Arduino project for building the Teensy Fan Controller firmware. Sources are contained in the [teensy_fan_controller sub-folder][1].
+A Makefile and Arduino project for building the Teensy Fan Controller firmware. Sources are contained in the [teensy\_fan\_controller sub-folder](https://github.com/mstrthealias/TeensyFanController/tree/master/teensy_fan_controller).
 
 {% hint style="info" %}
-The Makefile and project structure is based on [Teensy 3.X Project Template][2].
+The Makefile and project structure is based on [Teensy 3.X Project Template](https://github.com/apmorton/teensy-template).
 {% endhint %}
 
-[1]: https://github.com/mstrthealias/TeensyFanController/tree/master/teensy_fan_controller
-[2]: https://github.com/apmorton/teensy-template
+## Usage \(Makefile\)
 
+1. Prepare the project \(once\), as described in [Project Setup](https://github.com/mstrthealias/TeensyFanController/tree/d77a535baa09f12e87e408cf7f574f50edd5e481/build-instructions/setup.md)
+2. Enter the `teensy_fan_controller` directory:
 
-## Usage (Makefile)
-
-1. Prepare the project (once), as described in [Project Setup][3]
-1. Enter the `teensy_fan_controller` directory:
-
-    ```
+   ```text
     cd teensy_fan_controller
-    ```
+   ```
 
-1. Compile from source:
+3. Compile from source:
 
-    ```
+   ```text
     TEENSY=35 make
-    ```
-    
+   ```
+
 {% hint style="info" %}
-Makefile generates a Teensy 3.2 build by default, you may use a different Teensy by setting the TEENSY variable (either 30, 31, 32, 35, or 36).
+Makefile generates a Teensy 3.2 build by default, you may use a different Teensy by setting the TEENSY variable \(either 30, 31, 32, 35, or 36\).
 {% endhint %}
-    
+
 1. Upload to Teensy 3.x:
 
-    ```
+   ```text
      make upload
-     ```
+   ```
 
 {% hint style="info" %}
 Firmware Make targets:
@@ -46,19 +42,15 @@ Firmware Make targets:
 * `make reboot` reboots the teensy
 {% endhint %}
 
-[3]: /build-instructions/setup.md
+## Usage \(Arduino Studio\)
 
-
-## Usage (Arduino Studio)
-
-1. Prepare the project (once), as described in [Project Setup][3]
-1. Copy `teensy_fan_controller/libraries/nanopb` into your user's Arduino libraries folder (fe. `~/Documents/Arduino/libraries/`)
-1. Copy `teensy_fan_controller/libraries/PID` into your user's Arduino libraries folder (fe. `~/Documents/Arduino/libraries/`)
-1. Launch **Arduino Studio**, and open project **teensy_fan_controller/src/src.ino**
-1. Set **Tools > Board** to your Teensy board using the top menu
-1. Set **Tools > USB Type** to **Raw HID** using the top menu
-1. Build and upload firmware using **Sketch > Upload**, or by clicking the **Upload** button in the toolbar
-
+1. Prepare the project \(once\), as described in [Project Setup](https://github.com/mstrthealias/TeensyFanController/tree/d77a535baa09f12e87e408cf7f574f50edd5e481/build-instructions/setup.md)
+2. Copy `teensy_fan_controller/libraries/nanopb` into your user's Arduino libraries folder \(fe. `~/Documents/Arduino/libraries/`\)
+3. Copy `teensy_fan_controller/libraries/PID` into your user's Arduino libraries folder \(fe. `~/Documents/Arduino/libraries/`\)
+4. Launch **Arduino Studio**, and open project **teensy\_fan\_controller/src/src.ino**
+5. Set **Tools &gt; Board** to your Teensy board using the top menu
+6. Set **Tools &gt; USB Type** to **Raw HID** using the top menu
+7. Build and upload firmware using **Sketch &gt; Upload**, or by clicking the **Upload** button in the toolbar
 
 ### Folder Structure
 

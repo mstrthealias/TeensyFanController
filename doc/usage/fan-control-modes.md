@@ -1,28 +1,27 @@
 # Fan Control
 
-Each fan individually configures a *control mode*.
+Each fan individually configures a _control mode_.
 
-The following *control modes* are supported:
+The following _control modes_ are supported:
 
-- PID
-- Temperature-Percent Table (%-table)
-- Fixed Percent
-- Off
+* PID
+* Temperature-Percent Table \(%-table\)
+* Fixed Percent
+* Off
 
-PID and %-table *control modes* configure a *control source*, which represents what temperature sensor is used.
+PID and %-table _control modes_ configure a _control source_, which represents what temperature sensor is used.
 
-The following *control sources* are supported:
+The following _control sources_ are supported:
 
-- Water Supply Temperature
-- Water Return Temperature
-- Case Temperature
-- Aux1 Temperature
-- Aux2 Temperature
+* Water Supply Temperature
+* Water Return Temperature
+* Case Temperature
+* Aux1 Temperature
+* Aux2 Temperature
 
 {% hint style="info" %}
 By default, all fans operate in PID mode for supply water temperature control.
 {% endhint %}
-
 
 ## PID Control Mode
 

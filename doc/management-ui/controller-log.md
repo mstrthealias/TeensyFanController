@@ -2,5 +2,5 @@
 
 TODO
 
-![Controller Log screenshot](../images/ui.log.1.png)
+![Controller Log screenshot](../.gitbook/assets/ui.log.1.png)
 

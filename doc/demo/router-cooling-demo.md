@@ -4,7 +4,7 @@ The controller is configured to cool a temperature sensor \(placed between a des
 
 ## Hardware Requirements
 
-1. A Teensy Fan Controller \(fe. [Breadboard](/hardware/breadboard.md), [Schmart Board prototype](/hardware/prototype.md), [Simple PCB](/hardware/simple-pcb.md)\)
+1. A Teensy Fan Controller \(fe. [Breadboard](../hardware/breadboard.md), [Schmart Board prototype](../hardware/prototype.md), [Simple PCB](../hardware/simple-pcb.md)\)
 2. One Teensy 3.x with headers \(previously _flashed with Teensy Fan Controller_\)
 3. A Micro USB cable
 4. One 12v power supply \(up to 15V should be OK\)
