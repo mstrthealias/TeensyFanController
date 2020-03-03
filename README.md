@@ -6,7 +6,12 @@ A PC fan controller with temperature sensor input, for **Teensy 3.x** USB Develo
 
 Supports up to 6 fans (4pin/PWM), and up to 5 temperature sensors (thermistors). Each fan may individually operate in PID, temperature-percent table, or fixed-percent control modes.
 
-Designed to control radiator fans on a PC water cooling loop (to maintain supply water temperature), but may be configured for other purposes (for example, see [Hardware/Router cooling demo][2]).
+Designed to control radiator fans on a PC water cooling loop (to maintain supply water temperature), but may be configured for other purposes (fe., see [Router Cooling Demo][6]).
+
+
+## Documentation
+
+The project is documented using Gitbook, and accessible at [https://mstrthealias.gitbook.io/teensy-fan-controller/][7].
 
 
 ## Hardware
@@ -15,7 +20,7 @@ Hardware is described in the [Hardware][5] folder:
 
 * [Prototype - Hand-made (Schmart Board based)][3]: uses over-the-shelf components (OK for single fan/single sensor builds)
 * [Prototype - Simple PCB][4]: requires PCB fabrication (gerber files provided) and through-hole soldering
-* [Router Cooling Demo][2]: breadboard based experiment using a single fan/single sensor to cool a router to a specific temperature
+* [Prototype - Breadboard][2]: breadboard example with a single fan/single sensor
 
 
 ## Software
@@ -49,7 +54,9 @@ Releases will be published for supported devices. Teensy 3.x should be used for 
 
 
 
-[2]: Hardware/Router%20cooling%20demo/
+[2]: Hardware/Breadboard/
 [3]: Hardware/Schmart%20Board/
 [4]: Hardware/Simple/
 [5]: Hardware/
+[6]: https://mstrthealias.gitbook.io/teensy-fan-controller/demo/router-cooling-demo
+[7]: https://mstrthealias.gitbook.io/teensy-fan-controller/
