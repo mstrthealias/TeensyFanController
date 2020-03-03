@@ -25,11 +25,11 @@ Note:
 First, build the static [HIDAPI](https://github.com/mstrthealias/HIDAPI-Qt5) library:
 
 1. Launch **x64 Native Tools Command Prompt for VS 2017**
-2. Add Qt5 to PATH, fe.:
+1. Add Qt5 to PATH, fe.:
 
-```text
-SET PATH=%PATH%;c:\share\Qt\5.13.2\msvc2017_64\bin
-```
+    ```text
+    SET PATH=%PATH%;c:\share\Qt\5.13.2\msvc2017_64\bin
+    ```
 
 1. Change directory to HIDAPI
 1. Run qmake:

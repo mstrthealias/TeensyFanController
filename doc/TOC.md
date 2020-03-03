@@ -4,7 +4,7 @@
 
 ## Usage
 
-* [Fan Control Modes](usage/fan-control-modes.md)
+* [Fan Control](usage/fan-control-modes.md)
 
 ## Hardware
 

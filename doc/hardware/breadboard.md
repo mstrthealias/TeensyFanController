@@ -79,6 +79,10 @@ Configure the software using the information given above:
 5. Click **Save**
 
 {% hint style="info" %}
-After making changes, the Hardware Setup screen should appear as: ![Breadboard - fan settings](../images/rcd.sw.fansettings.jpg)
+
+After making changes, the Hardware Setup screen should appear as:
+
+![Breadboard - fan settings](../images/rcd.sw.fansettings.jpg)
+
 {% endhint %}
 

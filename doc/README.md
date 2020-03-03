@@ -6,6 +6,10 @@ Supports up to 6 fans \(4pin/PWM\), and up to 5 temperature sensors \(thermistor
 
 Designed to control radiator fans on a PC water cooling loop \(to maintain supply water temperature\), but may be configured for other purposes \(for example, see [Demo/Router Cooling Demo](demo/router-cooling-demo.md)\).
 
+{% hint style="warning" %}
+An initial release is not yet available.
+{% endhint %}
+
 ## Hardware
 
 The following hardware has been used with Teensy Fan Controller:

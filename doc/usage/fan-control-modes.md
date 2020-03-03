@@ -1,10 +1,32 @@
-# Fan Control Modes
+# Fan Control
 
-TODO
+Each fan individually configures a *control mode*.
+
+The following *control modes* are supported:
+
+- PID
+- Temperature-Percent Table (%-table)
+- Fixed Percent
+- Off
+
+PID and %-table *control modes* configure a *control source*, which represents what temperature sensor is used.
+
+The following *control sources* are supported:
+
+- Water Supply Temperature
+- Water Return Temperature
+- Case Temperature
+- Aux1 Temperature
+- Aux2 Temperature
+
+{% hint style="info" %}
+By default, all fans operate in PID mode for supply water temperature control.
+{% endhint %}
+
 
 ## PID Control Mode
 
-The PID controllers satisfy a temperature setpoint, by changing fan PWM duty cycle\(s\). By default, all fans operate in PID mode for supply water temperature control.
+The PID controllers satisfy a temperature setpoint, by changing fan PWM duty cycle\(s\).
 
 The fan controller may operate up to 4 PID controllers, one per the following temperature sensors: supply water temp, case temp, aux1 temp, and aux2 temp.
 

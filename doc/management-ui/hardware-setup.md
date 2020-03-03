@@ -1,6 +1,6 @@
 # Hardware Setup Screen
 
-Hardware setup options for the Teensy Fan Controller.
+Hardware setup options for the Teensy Fan Controller (fe. pin mapping, thermistor resistance, etc.).
 
 {% hint style="info" %}
 Input fields on this screen are described when hovered with the mouse cursor.
