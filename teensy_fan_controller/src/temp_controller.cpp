@@ -7,7 +7,7 @@
 
 TempController::PIDController::PIDController(const RuntimeConfig::PIDConfig &pidCfg, const uint16_t samplePeriod)
     : pidCfg(pidCfg), setpoint(pidCfg.setpoint), in(0), pct(0),
-      pid(&in, &pct, &setpoint, pidCfg.gain_p, pidCfg.gain_i, pidCfg.gain_d, REVERSE),
+      pid(&in, &pct, &setpoint, pidCfg.gain_p, pidCfg.gain_i, pidCfg.gain_d, PID<float, float, float>::REVERSE),
       samplePeriod(samplePeriod)
 {
   // configure PID
@@ -16,12 +16,12 @@ TempController::PIDController::PIDController(const RuntimeConfig::PIDConfig &pid
     pid.SetOutputLimits(pidCfg.pwm_percent_min, pidCfg.pwm_percent_max2);
   else
     pid.SetOutputLimits(pidCfg.pwm_percent_min, pidCfg.pwm_percent_max1);
-  pid.SetMode(AUTOMATIC);  // start PID
+  pid.SetMode(PID<float, float, float>::AUTOMATIC);  // start PID
 }
 
 uint8_t TempController::PIDController::sample(const float &sample, const SensorData &caseTemp)
 {
-  in = static_cast<double>(sample);
+  in = sample;
   pid.Compute();  // Calculate Fan % using PID controller
 
   if (pidCfg.adaptive_sp) {
@@ -81,7 +81,7 @@ uint8_t TempController::PIDController::sample(const float &sample, const SensorD
   return pct;
 }
 
-const double &TempController::PIDController::getSetpoint() const
+const float &TempController::PIDController::getSetpoint() const
 {
   return setpoint;
 }

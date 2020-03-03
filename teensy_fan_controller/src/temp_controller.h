@@ -24,10 +24,10 @@ class TempController {
     class PIDController {
       private:
         const RuntimeConfig::PIDConfig &pidCfg;
-        double setpoint;
-        double in;
-        double pct;
-        PID pid;
+        float setpoint;
+        float in;
+        float pct;
+        PID<float, float, float> pid;
         const uint16_t samplePeriod;
 
         unsigned long lastSincePercentsBelowLimit = 0;
@@ -40,7 +40,7 @@ class TempController {
 
         uint8_t sample(const float &sample, const SensorData &caseTemp);
 
-        const double &getSetpoint() const;
+        const float &getSetpoint() const;
     };
 
     /**
