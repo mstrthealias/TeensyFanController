@@ -30,11 +30,11 @@ TODO
 
 | Path | Description |
 | :--- | :--- |
-| [datasheets/](https://github.com/mstrthealias/TeensyFanController/tree/8fd073caeeff99d7f1479f11cbf45137c843865e/doc/Hardware/datasheets/README.md) | Part datasheets |
-| [simple001/EAGLE/](https://github.com/mstrthealias/TeensyFanController/tree/8fd073caeeff99d7f1479f11cbf45137c843865e/doc/Hardware/simple001/EAGLE/README.md) | EAGLE library, schematic, and board \(Simple001\) |
-| [simple001/gerbers.zip](https://github.com/mstrthealias/TeensyFanController/tree/8fd073caeeff99d7f1479f11cbf45137c843865e/doc/Hardware/simple001/gerbers.zip) | Gerber files for PCB fabrication \(Simple001\) |
-| [simple001/parts.csv](https://github.com/mstrthealias/TeensyFanController/tree/8fd073caeeff99d7f1479f11cbf45137c843865e/doc/Hardware/simple001/parts.csv) | Part order list \(Simple001\) |
-| [simple001/partslist.txt](https://github.com/mstrthealias/TeensyFanController/tree/8fd073caeeff99d7f1479f11cbf45137c843865e/doc/Hardware/simple001/partslist.txt) | Modified EAGLE partlist.txt export \(Simple001\) |
-| [simple001/schematic.pdf](https://github.com/mstrthealias/TeensyFanController/tree/8fd073caeeff99d7f1479f11cbf45137c843865e/doc/Hardware/simple001/schematic.pdf) | Schematic print-out PDF \(Simple001\) |
-| [simple001/freeDFM.pdf](https://github.com/mstrthealias/TeensyFanController/tree/8fd073caeeff99d7f1479f11cbf45137c843865e/doc/Hardware/simple001/freeDFM.pdf) | freeDFM multi-layer PDF output results \(Simple001\) |
+| [datasheets/](../../Hardware/Simple/datasheets/) | Part datasheets |
+| [simple001/EAGLE/](../../Hardware/simple001/EAGLE/) | EAGLE library, schematic, and board \(Simple001\) |
+| [simple001/gerbers.zip](../../Hardware/simple001/gerbers.zip) | Gerber files for PCB fabrication \(Simple001\) |
+| [simple001/parts.csv](../../Hardware/simple001/parts.csv) | Part order list \(Simple001\) |
+| [simple001/partslist.txt](../../Hardware/simple001/partslist.txt) | Modified EAGLE partlist.txt export \(Simple001\) |
+| [simple001/schematic.pdf](../../Hardware/simple001/schematic.pdf) | Schematic print-out PDF \(Simple001\) |
+| [simple001/freeDFM.pdf](../../Hardware/simple001/freeDFM.pdf) | freeDFM multi-layer PDF output results \(Simple001\) |
 
