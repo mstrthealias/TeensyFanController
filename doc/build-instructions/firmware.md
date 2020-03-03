@@ -8,7 +8,7 @@ The Makefile and project structure is based on [Teensy 3.X Project Template](htt
 
 ## Usage \(Makefile\)
 
-1. Prepare the project \(once\), as described in [Project Setup](https://github.com/mstrthealias/TeensyFanController/tree/d77a535baa09f12e87e408cf7f574f50edd5e481/build-instructions/setup.md)
+1. Prepare the project \(once\), as described in [Project Setup](setup.md)
 2. Enter the `teensy_fan_controller` directory:
 
    ```text
@@ -44,7 +44,7 @@ Firmware Make targets:
 
 ## Usage \(Arduino Studio\)
 
-1. Prepare the project \(once\), as described in [Project Setup](https://github.com/mstrthealias/TeensyFanController/tree/d77a535baa09f12e87e408cf7f574f50edd5e481/build-instructions/setup.md)
+1. Prepare the project \(once\), as described in [Project Setup](setup.md)
 2. Copy `teensy_fan_controller/libraries/nanopb` into your user's Arduino libraries folder \(fe. `~/Documents/Arduino/libraries/`\)
 3. Copy `teensy_fan_controller/libraries/PID` into your user's Arduino libraries folder \(fe. `~/Documents/Arduino/libraries/`\)
 4. Launch **Arduino Studio**, and open project **teensy\_fan\_controller/src/src.ino**

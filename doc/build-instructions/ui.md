@@ -1,7 +1,7 @@
 # Management UI
 
 {% hint style="warning" %}
-You should have cloned the [root project](ttps://github.com/mstrthealias/TeensyFanController) and it's sub-modules \(which includes this project directory\).
+You should have cloned the [root project](https://github.com/mstrthealias/TeensyFanController) and it's sub-modules \(which includes this project directory\).
 
 That-way the **parent directory** contains the **HIDAPI** and **teensy\_fan\_controller** projects.
 {% endhint %}
