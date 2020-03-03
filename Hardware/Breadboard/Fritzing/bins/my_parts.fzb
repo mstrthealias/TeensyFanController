@@ -1,0 +1,9 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<module fritzingVersion="0.9.5d.2020-02-15.CD-548-1-gcc8758a1" icon="Mine.png">
+    <title>My Parts</title>
+    <instances>
+        <instance moduleIdRef="teensy3.2_25c16df68864c20951d2f08813eb2671_15" modelIndex="10122" path="C:/Users/jd/Documents/Fritzing/parts/user/teensy3.2_25c16df68864c20951d2f08813eb2671_15.fzp">
+            <views/>
+        </instance>
+    </instances>
+</module>
