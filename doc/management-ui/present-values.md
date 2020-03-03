@@ -2,5 +2,5 @@
 
 TODO
 
-![Controller Log screenshot](../.gitbook/assets/ui.pv.1.png)
+![Present Values screenshot](../.gitbook/assets/ui.pv.1.png)
 

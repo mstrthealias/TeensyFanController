@@ -2,5 +2,5 @@
 
 TODO
 
-![Controller Log screenshot](../.gitbook/assets/ui.fansetup.1.png)
+![Fan Setup screenshot](../.gitbook/assets/ui.fansetup.1.png)
 
