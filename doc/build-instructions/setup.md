@@ -42,9 +42,11 @@ Requirements to regenerate protobuf \([nanopb](https://github.com/nanopb/nanopb)
 
 {% hint style="info" %}
 To communicate with the Teensy hardware as a **non-root user**, install the [Teensy udev rule][1]:
-```shell script
+
+```
 sudo cp teensy_fan_controller/tools/49-teensy.rules /etc/udev/rules.d/
 ```
+
 {% endhint %}
 
 [1]: https://www.pjrc.com/teensy/49-teensy.rules

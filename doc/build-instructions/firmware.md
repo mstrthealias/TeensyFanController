@@ -15,13 +15,13 @@ The Makefile and project structure is based on [Teensy 3.X Project Template][2].
 1. Prepare the project (once), as described in [Project Setup][3]
 1. Enter the `teensy_fan_controller` directory:
 
-    ```shell script
+    ```
     cd teensy_fan_controller
     ```
 
 1. Compile from source:
 
-    ```shell script
+    ```
     TEENSY=35 make
     ```
 
@@ -31,7 +31,7 @@ The Makefile and project structure is based on [Teensy 3.X Project Template][2].
 
 1. Upload to Teensy 3.x:
 
-    ```shell script
+    ```
      make upload
      ```
 
