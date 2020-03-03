@@ -3,14 +3,14 @@
 * [Teensy Fan Controller](README.md)
 
 
-## Hardware
+## [Hardware](Hardware/Hardware.md)
 
 * [Prototype](Hardware/Prototype.md)
 * [Breadboard](Hardware/Breadboard.md)
 * [Simple PCB](Hardware/Simple PCB.md)
 
 
-## Management UI
+## [Management UI](UI/UI.md)
 
 * [TODO](UI/Home.md)
 
