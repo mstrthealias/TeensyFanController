@@ -24,11 +24,11 @@ The Makefile and project structure is based on [Teensy 3.X Project Template][2].
     ```
     TEENSY=35 make
     ```
-
+    
 {% hint style="info" %}
-    Makefile generates a Teensy 3.2 build by default, you may use a different Teensy by setting the TEENSY variable (either 30, 31, 32, 35, or 36).
+Makefile generates a Teensy 3.2 build by default, you may use a different Teensy by setting the TEENSY variable (either 30, 31, 32, 35, or 36).
 {% endhint %}
-
+    
 1. Upload to Teensy 3.x:
 
     ```
