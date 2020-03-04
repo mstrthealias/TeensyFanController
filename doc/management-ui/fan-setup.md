@@ -2,5 +2,5 @@
 
 TODO
 
-![Fan Setup screenshot](../images/ui.fansetup.1.png)
+![Fan Setup screenshot](../images/ui.fansetup.2.png)
 

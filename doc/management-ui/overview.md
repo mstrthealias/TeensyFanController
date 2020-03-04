@@ -14,11 +14,11 @@ Monitoring fan RPMs and temperature readings is better accomplished using the [l
 
 The application opens to the _Controller Log_ page:
 
-![Management UI - Home screen](../images/ui.log.1.png)
+![Management UI - Home screen](../images/ui.log.2.png)
 
 Clicking the **menu button** provides access to 3 additional pages:
 
-![Management UI - Home screen](../images/ui.menu.png)
+![Management UI - Home screen](../images/ui.menu.1.png)
 
 ### Pages
 
