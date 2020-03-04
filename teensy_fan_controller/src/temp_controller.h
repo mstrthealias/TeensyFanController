@@ -16,6 +16,8 @@
 */
 class TempController {
   public:
+    typedef PIDt<float, float, float> PID;
+
     struct ControlData;
 
     /**
@@ -27,8 +29,7 @@ class TempController {
         float setpoint;
         float in;
         float pct;
-        PID<float, float, float> pid;
-        const uint16_t samplePeriod;
+        PID pid;
 
         unsigned long lastSincePercentsBelowLimit = 0;
         unsigned long lastSincePercentsAboveLimit = 0;
@@ -36,7 +37,7 @@ class TempController {
         bool lastPercentsBelowLimit = false;
 
       public:
-        PIDController(const RuntimeConfig::PIDConfig &pidCfg, uint16_t samplePeriod);
+        PIDController(const RuntimeConfig::PIDConfig &pidCfg);
 
         uint8_t sample(const float &sample, const SensorData &caseTemp);
 
@@ -52,7 +53,6 @@ class TempController {
       std::array<const FanData *, FAN_CNT> fans;
       CONTROL_MODE mode;
       uint8_t source;  //CONTROL_SOURCE (or fixed fan %)
-      uint16_t samplePeriod;
       uint8_t pct = 0;
       String label;
 
@@ -60,9 +60,9 @@ class TempController {
       ~ControlData();
 
       void resetPIDCtrl();
-      void setPctTable(float *sample, CONTROL_MODE mode, CONTROL_SOURCE source, const uint16_t samplePeriod, const String &label);  // %-tbl constructor
-      void setPID(SensorData *pidSensor, CONTROL_MODE mode, CONTROL_SOURCE source, const uint16_t samplePeriod, const String &label);  // PID constructor
-      void setFixed(float *sample, CONTROL_MODE mode, uint8_t source, const uint16_t samplePeriod, const uint8_t pct, const String &label);  // fixed-% constructor
+      void setPctTable(float *const sample, const CONTROL_MODE mode, const CONTROL_SOURCE source, const String &label);  // %-tbl constructor
+      void setPID(SensorData *const pidSensor, const CONTROL_MODE mode, const CONTROL_SOURCE source, const String &label);  // PID constructor
+      void setFixed(float *const sample, const CONTROL_MODE mode, const uint8_t source, const uint8_t pct, const String &label);  // fixed-% constructor
       void reset();
 
       // delete copy assignment
@@ -78,6 +78,8 @@ class TempController {
 
 
   public:
+    static const uint16_t SAMPLE_PERIOD = PERIOD_UPDATE;
+
     RuntimeConfig &config;
 
     SensorData &supplyTemp;  // Water Supply Temp
@@ -86,17 +88,17 @@ class TempController {
     SensorData &aux1Temp;
     SensorData &aux2Temp;
 
-    TempController(RuntimeConfig &config, uint16_t samplePeriod,
+    TempController(RuntimeConfig &config,
                    SensorData &supplyTemp, SensorData &returnTemp, SensorData &caseTemp, SensorData &aux1Temp, SensorData &aux2Temp,
                    const FanData &fan1, const FanData &fan2, const FanData &fan3, const FanData &fan4, const FanData &fan5, const FanData &fan6,
-                   void (*setupHardware)(),
-                   void (*saveConfig)());
+                   void (*const setupHardware)(),
+                   void (*const saveConfig)());
 
     void configChanged(bool doSave = true);
     void doFanUpdate();
     void resetControlModes();
 
-    float getDeltaT() const;
+    const float &getDeltaT() const;
     float getPIDSupplyTempSetpoint() const;
     uint16_t getFanRPM(uint8_t i) const;
     const std::array<ControlData, FAN_CNT> &getControlModes() const;
@@ -108,12 +110,10 @@ class TempController {
 
     float deltaT;  // returnTemp - supplyTemp (0 if no returnTemp sensor)
 
-    const uint16_t samplePeriod;
-
     ControlData &findOrCreateControlMode(CONTROL_MODE mode, uint8_t source, uint8_t i);
 
-    void (*setupHardware)();  // callback to update pin muxing after config changes
-    void (*saveConfig)();  // callback to save config to EEPROM after config changes
+    void (*const setupHardware)();  // callback to update pin muxing after config changes
+    void (*const saveConfig)();  // callback to save config to EEPROM after config changes
 };
 
 

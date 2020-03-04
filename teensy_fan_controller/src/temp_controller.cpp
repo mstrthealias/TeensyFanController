@@ -5,18 +5,17 @@
 #include "temp_controller.h"
 
 
-TempController::PIDController::PIDController(const RuntimeConfig::PIDConfig &pidCfg, const uint16_t samplePeriod)
+TempController::PIDController::PIDController(const RuntimeConfig::PIDConfig &pidCfg)
     : pidCfg(pidCfg), setpoint(pidCfg.setpoint), in(0), pct(0),
-      pid(&in, &pct, &setpoint, pidCfg.gain_p, pidCfg.gain_i, pidCfg.gain_d, PID<float, float, float>::REVERSE),
-      samplePeriod(samplePeriod)
+      pid(&in, &pct, &setpoint, pidCfg.gain_p, pidCfg.gain_i, pidCfg.gain_d, PID::REVERSE)
 {
   // configure PID
-  pid.SetSampleTime(samplePeriod);
+  pid.SetSampleTime(SAMPLE_PERIOD);
   if (setpoint >= pidCfg.setpoint_max)
     pid.SetOutputLimits(pidCfg.pwm_percent_min, pidCfg.pwm_percent_max2);
   else
     pid.SetOutputLimits(pidCfg.pwm_percent_min, pidCfg.pwm_percent_max1);
-  pid.SetMode(PID<float, float, float>::AUTOMATIC);  // start PID
+  pid.SetMode(PID::AUTOMATIC);  // start PID
 }
 
 uint8_t TempController::PIDController::sample(const float &sample, const SensorData &caseTemp)
@@ -92,7 +91,7 @@ TempController::ControlData::ControlData()
       pidCtrl(nullptr),
       fans{{nullptr, nullptr, nullptr, nullptr, nullptr, nullptr}},
       mode(CONTROL_MODE::MODE_OFF), source(static_cast<uint8_t>(CONTROL_SOURCE::SENSOR_WATER_SUPPLY_TEMP)),
-      samplePeriod(0), label("")
+      label("")
 {}
 
 TempController::ControlData::~ControlData()
@@ -120,12 +119,11 @@ void TempController::ControlData::reset()
   this->fans = {{nullptr, nullptr, nullptr, nullptr, nullptr, nullptr}};
   this->mode = CONTROL_MODE::MODE_OFF;
   this->source = static_cast<uint8_t>(CONTROL_SOURCE::SENSOR_WATER_SUPPLY_TEMP);
-  this->samplePeriod = 0;
   this->pct = 0;
   this->label = "";
 }
 
-void TempController::ControlData::setPctTable(float *sample, CONTROL_MODE mode, CONTROL_SOURCE source, const uint16_t samplePeriod, const String &label)
+void TempController::ControlData::setPctTable(float *const sample, const CONTROL_MODE mode, const CONTROL_SOURCE source, const String &label)
 {
   this->resetPIDCtrl();
 
@@ -134,26 +132,24 @@ void TempController::ControlData::setPctTable(float *sample, CONTROL_MODE mode, 
   this->fans = {{nullptr, nullptr, nullptr, nullptr, nullptr, nullptr}};
   this->mode = mode;
   this->source = static_cast<uint8_t>(source);
-  this->samplePeriod = samplePeriod;
   this->pct = 0;
   this->label = label;
 }
 
-void TempController::ControlData::setPID(SensorData *pidSensor, CONTROL_MODE mode, CONTROL_SOURCE source, const uint16_t samplePeriod, const String &label)
+void TempController::ControlData::setPID(SensorData *const pidSensor, const CONTROL_MODE mode, const CONTROL_SOURCE source, const String &label)
 {
   this->resetPIDCtrl();
 
   this->sample = &pidSensor->val;
-  this->pidCtrl = new PIDController(pidSensor->cfg.pid, samplePeriod);
+  this->pidCtrl = new PIDController(pidSensor->cfg.pid);
   this->fans = {{nullptr, nullptr, nullptr, nullptr, nullptr, nullptr}};
   this->mode = mode;
   this->source = static_cast<uint8_t>(source);
-  this->samplePeriod = samplePeriod;
   this->pct = 0;
   this->label = label;
 }
 
-void TempController::ControlData::setFixed(float *sample, CONTROL_MODE mode, uint8_t source, const uint16_t samplePeriod, const uint8_t pct, const String &label)
+void TempController::ControlData::setFixed(float *const sample, const CONTROL_MODE mode, const uint8_t source, const uint8_t pct, const String &label)
 {
   this->resetPIDCtrl();
 
@@ -162,7 +158,6 @@ void TempController::ControlData::setFixed(float *sample, CONTROL_MODE mode, uin
   this->fans = {{nullptr, nullptr, nullptr, nullptr, nullptr, nullptr}};
   this->mode = mode;
   this->source = source;
-  this->samplePeriod = samplePeriod;
   this->pct = pct;
   this->label = label;
 }
@@ -225,15 +220,14 @@ uint8_t TempController::ControlData::getFanCount() const
 
 #define MK_CONTROL_LABEL(sLbl, modeLbl) String(modeLbl) + "[" + sLbl + "]"
 
-TempController::TempController(RuntimeConfig &config, uint16_t samplePeriod, SensorData &supplyTemp, SensorData &returnTemp, SensorData &caseTemp, SensorData &aux1Temp,
+TempController::TempController(RuntimeConfig &config, SensorData &supplyTemp, SensorData &returnTemp, SensorData &caseTemp, SensorData &aux1Temp,
                                SensorData &aux2Temp, const FanData &fan1, const FanData &fan2, const FanData &fan3, const FanData &fan4, const FanData &fan5, const FanData &fan6,
-                               void (*setupHardware)(), void (*saveConfig)()) :
+                               void (*const setupHardware)(), void (*const saveConfig)()) :
     config(config),
     supplyTemp(supplyTemp), returnTemp(returnTemp), caseTemp(caseTemp), aux1Temp(aux1Temp), aux2Temp(aux2Temp),
     fans{&fan1, &fan2, &fan3, &fan4, &fan5, &fan6},
     controlModes(),
     deltaT{0},
-    samplePeriod(samplePeriod),
     setupHardware(setupHardware), saveConfig(saveConfig)
 {
 }
@@ -252,19 +246,19 @@ TempController::ControlData &TempController::findOrCreateControlMode(CONTROL_MOD
         CONTROL_SOURCE src = static_cast<CONTROL_SOURCE>(source);
         switch (src) {
           case CONTROL_SOURCE::SENSOR_WATER_SUPPLY_TEMP:
-            controlMode.setPID(&supplyTemp, mode, src, samplePeriod, MK_CONTROL_LABEL(supplyTemp.lbl, "PID"));
+            controlMode.setPID(&supplyTemp, mode, src, MK_CONTROL_LABEL(supplyTemp.lbl, "PID"));
             break;
           case CONTROL_SOURCE::SENSOR_WATER_RETURN_TEMP:
-            controlMode.setPID(&returnTemp, mode, src, samplePeriod, MK_CONTROL_LABEL(returnTemp.lbl, "PID"));
+            controlMode.setPID(&returnTemp, mode, src, MK_CONTROL_LABEL(returnTemp.lbl, "PID"));
             break;
           case CONTROL_SOURCE::SENSOR_CASE_TEMP:
-            controlMode.setPID(&caseTemp, mode, src, samplePeriod, MK_CONTROL_LABEL(caseTemp.lbl, "PID"));
+            controlMode.setPID(&caseTemp, mode, src, MK_CONTROL_LABEL(caseTemp.lbl, "PID"));
             break;
           case CONTROL_SOURCE::SENSOR_AUX1_TEMP:
-            controlMode.setPID(&aux1Temp, mode, src, samplePeriod, MK_CONTROL_LABEL(aux1Temp.lbl, "PID"));
+            controlMode.setPID(&aux1Temp, mode, src, MK_CONTROL_LABEL(aux1Temp.lbl, "PID"));
             break;
           case CONTROL_SOURCE::SENSOR_AUX2_TEMP:
-            controlMode.setPID(&aux2Temp, mode, src, samplePeriod, MK_CONTROL_LABEL(aux2Temp.lbl, "PID"));
+            controlMode.setPID(&aux2Temp, mode, src, MK_CONTROL_LABEL(aux2Temp.lbl, "PID"));
             break;
           case CONTROL_SOURCE::VIRTUAL_DELTA_TEMP:  // PID on virtual temp is not supported
             break;
@@ -274,28 +268,28 @@ TempController::ControlData &TempController::findOrCreateControlMode(CONTROL_MOD
         CONTROL_SOURCE src = static_cast<CONTROL_SOURCE>(source);
         switch (static_cast<CONTROL_SOURCE>(src)) {
           case CONTROL_SOURCE::SENSOR_WATER_SUPPLY_TEMP:
-            controlMode.setPctTable(&supplyTemp.val, mode, src, samplePeriod, MK_CONTROL_LABEL(supplyTemp.lbl, "%-table"));
+            controlMode.setPctTable(&supplyTemp.val, mode, src, MK_CONTROL_LABEL(supplyTemp.lbl, "%-table"));
             break;
           case CONTROL_SOURCE::SENSOR_WATER_RETURN_TEMP:
-            controlMode.setPctTable(&returnTemp.val, mode, src, samplePeriod, MK_CONTROL_LABEL(returnTemp.lbl, "%-table"));
+            controlMode.setPctTable(&returnTemp.val, mode, src, MK_CONTROL_LABEL(returnTemp.lbl, "%-table"));
             break;
           case CONTROL_SOURCE::SENSOR_CASE_TEMP:
-            controlMode.setPctTable(&caseTemp.val, mode, src, samplePeriod, MK_CONTROL_LABEL(caseTemp.lbl, "%-table"));
+            controlMode.setPctTable(&caseTemp.val, mode, src, MK_CONTROL_LABEL(caseTemp.lbl, "%-table"));
             break;
           case CONTROL_SOURCE::SENSOR_AUX1_TEMP:
-            controlMode.setPctTable(&aux1Temp.val, mode, src, samplePeriod, MK_CONTROL_LABEL(aux1Temp.lbl, "%-table"));
+            controlMode.setPctTable(&aux1Temp.val, mode, src, MK_CONTROL_LABEL(aux1Temp.lbl, "%-table"));
             break;
           case CONTROL_SOURCE::SENSOR_AUX2_TEMP:
-            controlMode.setPctTable(&aux2Temp.val, mode, src, samplePeriod, MK_CONTROL_LABEL(aux2Temp.lbl, "%-table"));
+            controlMode.setPctTable(&aux2Temp.val, mode, src, MK_CONTROL_LABEL(aux2Temp.lbl, "%-table"));
             break;
           case CONTROL_SOURCE::VIRTUAL_DELTA_TEMP:
-            controlMode.setPctTable(&deltaT, mode, src, samplePeriod, MK_CONTROL_LABEL("DeltaT", "%-table"));
+            controlMode.setPctTable(&deltaT, mode, src, MK_CONTROL_LABEL("DeltaT", "%-table"));
             break;
         }
       }
       else if (mode == CONTROL_MODE::MODE_FIXED) {
         // Note: fixed % fans pass deltaT to sample, although it is unused
-        controlMode.setFixed(&deltaT, mode, source, samplePeriod, source, "Fixed");
+        controlMode.setFixed(&deltaT, mode, source, source, "Fixed");
       }
       return controlMode;
     }
@@ -365,7 +359,11 @@ float TempController::getPIDSupplyTempSetpoint() const
 
 void TempController::doFanUpdate()
 {
-  deltaT = getDeltaT();  // update delta T
+  // update delta T
+  if (supplyTemp.cfg.pin && returnTemp.cfg.pin)
+    deltaT = returnTemp.val - supplyTemp.val;
+  else if (deltaT != 0)
+    deltaT = 0;
 
   // Loop control map, calculate pct, and update fan PWM signal
   uint8_t pout, pct;
@@ -413,12 +411,9 @@ void TempController::doFanUpdate()
   }
 }
 
-float TempController::getDeltaT() const
+const float &TempController::getDeltaT() const
 {
-  if (returnTemp.cfg.pin)
-    return returnTemp.val - supplyTemp.val;
-  else
-    return 0;
+  return deltaT;
 }
 
 uint16_t TempController::getFanRPM(uint8_t i) const

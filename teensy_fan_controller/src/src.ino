@@ -43,7 +43,7 @@ void setup_hardware();
 void update_eeprom();
 
 // primary ctrl/TempController
-TempController ctrl(config, PERIOD_UPDATE, supplyTemp, returnTemp, caseTemp, aux1Temp, aux2Temp, fan1, fan2, fan3, fan4, fan5, fan6, setup_hardware, update_eeprom);
+TempController ctrl(config, supplyTemp, returnTemp, caseTemp, aux1Temp, aux2Temp, fan1, fan2, fan3, fan4, fan5, fan6, setup_hardware, update_eeprom);
 
 // HID controller
 #ifdef USB_RAWHID_EN

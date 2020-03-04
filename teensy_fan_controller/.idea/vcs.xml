@@ -2,7 +2,9 @@
 <project version="4">
   <component name="VcsDirectoryMappings">
     <mapping directory="$PROJECT_DIR$/.." vcs="Git" />
+    <mapping directory="$PROJECT_DIR$/../HIDAPI" vcs="Git" />
+    <mapping directory="$PROJECT_DIR$/../nanopb" vcs="Git" />
     <mapping directory="$PROJECT_DIR$/libraries/PID" vcs="Git" />
-    <mapping directory="$PROJECT_DIR$/nanopb" vcs="Git" />
+    <mapping directory="$PROJECT_DIR$/../ui_qt5" vcs="Git" />
   </component>
 </project>
