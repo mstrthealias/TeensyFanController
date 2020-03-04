@@ -32,5 +32,5 @@ Hardware configuration options for each sensor:
 
 ## Screenshot
 
-![Hardware Setup screenshot](../.gitbook/assets/ui.hwsetup.1.png)
+![Hardware Setup screenshot](../images/ui.hwsetup.1.png)
 
