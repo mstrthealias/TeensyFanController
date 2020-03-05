@@ -60,10 +60,13 @@ void FanData::doRPM()
   }
 }
 
-void FanData::writePWM(const uint8_t pout) const
+void FanData::writePWM(const uint8_t pout, const bool useRatio) const
 {
   if (cfg.pinPWM) {
-    analogWrite(cfg.pinPWM, (int) (pout * cfg.ratio));
+    if (useRatio)
+      analogWrite(cfg.pinPWM, (int) (pout * cfg.ratio));
+    else
+      analogWrite(cfg.pinPWM, pout);
   }
 }
 

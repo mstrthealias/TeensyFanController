@@ -114,6 +114,14 @@ void TempController::ControlData::reset()
 {
   this->resetPIDCtrl();
 
+  // turn off all fans
+  for (const auto &fan : fans) {
+    if (fan != nullptr)
+      fan->writePWM(0, false);
+    else
+      break;
+  }
+
   this->sample = nullptr;
   this->pidCtrl = nullptr;
   this->fans = {{nullptr, nullptr, nullptr, nullptr, nullptr, nullptr}};
@@ -374,7 +382,7 @@ void TempController::doFanUpdate()
           if (fan != nullptr) {
             pct = value.doTbl(fan->cfg.tbl.temp_pct_table);
             pout = static_cast<uint8_t>(round(map(pct, 0, 100, 0, 255)));
-            fan->writePWM(pout);
+            fan->writePWM(pout, false);
           }
           else {
             break;
@@ -386,7 +394,7 @@ void TempController::doFanUpdate()
         pout = static_cast<uint8_t>(round(map(pct, 0, 100, 0, 255)));
         for (const auto &fan : value.fans) {
           if (fan != nullptr) {
-            fan->writePWM(pout);
+            fan->writePWM(pout, false);
           }
           else {
             break;
@@ -398,7 +406,7 @@ void TempController::doFanUpdate()
         pout = static_cast<uint8_t>(round(map(pct, 0, 100, 0, 255)));
         for (const auto &fan : value.fans) {
           if (fan != nullptr) {
-            fan->writePWM(pout);
+            fan->writePWM(pout, true);
           }
           else {
             break;

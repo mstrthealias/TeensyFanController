@@ -56,7 +56,7 @@ struct FanData {
 
   void setupPin(void (*isr)());
   void doRPM();
-  void writePWM(const uint8_t pout) const;
+  void writePWM(const uint8_t pout, const bool useRatio) const;
 };
 
 

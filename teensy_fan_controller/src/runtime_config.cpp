@@ -292,7 +292,7 @@ tfcproto_FanConfigV1 RuntimeConfig::FanConfig::toProto() const
   return {
       static_cast<uint8_t>(in.pin_pwm),
       static_cast<uint8_t>(in.pin_rpm),
-      CONTROL_MODE_from_proto(in.mode),
+      in.pin_pwm ? CONTROL_MODE_from_proto(in.mode) : CONTROL_MODE::MODE_OFF,  // force mode OFF if no PWM pin mapped
       CONTROL_SOURCE_from_proto(in.source),
       static_cast<float>(in.ratio / 100.0),
       TableConfig::from_proto(in.tbl)

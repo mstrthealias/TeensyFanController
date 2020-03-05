@@ -190,7 +190,8 @@ void do_adc()
   // average NUMSAMPLES of samples, each delayed by READ_DELAY
   uint8_t i;
   for (i = 0; i < NUMSAMPLES; i++) {
-    supplyTemp.samples[i] = analogRead(supplyTemp.cfg.pin);
+    if (supplyTemp.cfg.pin)
+      supplyTemp.samples[i] = analogRead(supplyTemp.cfg.pin);
     if (returnTemp.cfg.pin)
       returnTemp.samples[i] = analogRead(returnTemp.cfg.pin);
     if (caseTemp.cfg.pin)
@@ -226,10 +227,16 @@ void do_adc()
 */
 void do_log()
 {
-  PRINT_TEMP("CWS-T ", supplyTemp.val);
+  if (supplyTemp.cfg.pin) {
+    PRINT_TEMP("CWS-T ", supplyTemp.val);
+  }
   if (returnTemp.cfg.pin) {
-    //PRINT_TEMP("CWR-T ", returnTemp.val);
-    PRINT_TEMP("DeltaT ", ctrl.getDeltaT());
+    if (supplyTemp.cfg.pin) {
+      PRINT_TEMP("DeltaT ", ctrl.getDeltaT());
+    }
+    else {
+      PRINT_TEMP("CWR-T ", returnTemp.val);
+    }
   }
 
   if (caseTemp.cfg.pin) {
