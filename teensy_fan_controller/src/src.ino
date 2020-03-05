@@ -35,7 +35,9 @@ FanData fan4 = FanData(config.fan4, "4");
 FanData fan5 = FanData(config.fan5, "5");
 FanData fan6 = FanData(config.fan6, "6");
 
+#ifndef DISABLE_EEPROM
 byte rbuffer[CONFIG_BYTES];  // EEPROM buffer
+#endif
 uint8_t logIntervalCnt = 0;
 
 // needed for controller function pointers:
@@ -124,22 +126,26 @@ void setup_hardware()
 
 void read_eeprom()
 {
-  memset(rbuffer, '\0', CONFIG_BYTES);
 #ifndef DISABLE_EEPROM
+  memset(rbuffer, '\0', CONFIG_BYTES);
   read_config(rbuffer, CONFIG_BYTES);
   Serial.println("Config read from EEPROM");
-#endif
   config = RuntimeConfig::parse_bytes(rbuffer, CONFIG_BYTES);
+#else
+  config = RuntimeConfig();
+#endif
 }
 
 void update_eeprom()
 {
-  if (config.toBytes(rbuffer, CONFIG_BYTES) == 0) {
 #ifndef DISABLE_EEPROM
+  if (config.toBytes(rbuffer, CONFIG_BYTES) == 0) {
     write_config(rbuffer, CONFIG_BYTES);
-#endif
     Serial.println("Config written to EEPROM");
   }
+#else
+  Serial.println("Config NOT written to EEPROM");
+#endif
 }
 
 
@@ -215,12 +221,12 @@ void do_adc()
    Macros for do_log().
 */
 
-#define PRINT_RPM(str, f)\
-  if (f->cfg.pinRPM) { Serial.print("; ");Serial.print(str);Serial.print(f->rpm); }
+#define PRINT_RPM(str, lbl, f)\
+  { Serial.print("; ");Serial.print(str);Serial.print(lbl);Serial.print(" ");Serial.print(f->rpm); }
 #define PRINT_TEMP(str, temp)\
-  Serial.print(str); Serial.print(temp); Serial.print(" C; ");
+  { Serial.print(str); Serial.print(temp); Serial.print(" C; "); }
 #define PRINT_PCT(str, pct)\
-  Serial.print(str); Serial.print(pct); Serial.print("%");
+  { Serial.print(str); Serial.print(pct); Serial.print("%"); }
 
 /**
    Writes data log to (usb raw hid) serial. Invoked once every 500ms.
@@ -258,7 +264,9 @@ void do_log()
     if (i++ != 0)
       Serial.print("; ");
 
-    Serial.print(" (" + value.label + ": ");
+    Serial.print(" (");
+    Serial.print(value.label);
+    Serial.print(": ");
 
     if (value.mode == CONTROL_MODE::MODE_PID) {
       PRINT_TEMP("Setpoint ", value.pidCtrl->getSetpoint());
@@ -275,7 +283,8 @@ void do_log()
     // loop and print RPM for each fan associated to this control mode
     for (const auto &fan : value.fans) {
       if (fan != nullptr) {
-        PRINT_RPM("RPM" + fan->lbl + " ", fan);
+        if (fan->cfg.pinRPM)
+          PRINT_RPM("RPM", fan->lbl, fan);
       }
       else {
         break;
@@ -302,7 +311,7 @@ void do_hid_recv()
 void do_hid_send()
 {
   if (hid.send() < 0) {
-    Serial.println(F("Unable to transmit packet"));
+    Serial.println("Unable to transmit packet");
   }
 }
 #endif

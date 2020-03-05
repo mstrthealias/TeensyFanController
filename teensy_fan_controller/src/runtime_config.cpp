@@ -36,7 +36,7 @@
    Macros for nanopb encode/decode errors
 */
 #ifdef ARDUINO
-#define PRINT_STREAM_ERR(from, stream) Serial.println(String(from) + ": " + PB_GET_ERROR(stream))
+#define PRINT_STREAM_ERR(from, stream) { Serial.print(from); Serial.print(": "); Serial.println(PB_GET_ERROR(stream)); }
 #else
 #define PRINT_STREAM_ERR(from, stream) qDebug() << from << ": " << PB_GET_ERROR(stream)
 #endif
@@ -115,7 +115,8 @@ int RuntimeConfig::toBytes(byte *bytes, const uint16_t len) const
 
   // log config length
 #ifdef ARDUINO
-  Serial.println(String("RuntimeConfig::toBytes() configLength = ") + configLen);
+  Serial.print("RuntimeConfig::toBytes() configLength = ");
+  Serial.println(configLen);
 #else
   qDebug() << "RuntimeConfig::toBytes() configLength =" << configLen;
 #endif
@@ -145,7 +146,9 @@ int RuntimeConfig::toBytes(byte *bytes, const uint16_t len) const
   memcpy(&configLen, (bytes + CONFIG_POS_CONFIG_LENGTH), 2);
   if (configLen >= len - CONFIG_POS_CONFIG) {
 #ifdef ARDUINO
-    Serial.println(String("Config length (") + configLen + ") exceeds supported size, defaults returned");
+    Serial.print("Config length (");
+    Serial.print(configLen);
+    Serial.println(") exceeds supported size, defaults returned");
 #else
     qDebug() << "Config length (" <<  configLen << ") exceeds supported size, defaults returned";
 #endif
