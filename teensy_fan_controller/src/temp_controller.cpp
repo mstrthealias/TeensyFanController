@@ -115,7 +115,7 @@ void TempController::ControlData::reset()
   this->resetPIDCtrl();
 
   // turn off all fans
-  for (const auto &fan : fans) {
+  for (auto &fan : fans) {
     if (fan != nullptr)
       fan->writePWM(0, false);
     else
@@ -128,10 +128,11 @@ void TempController::ControlData::reset()
   this->mode = CONTROL_MODE::MODE_OFF;
   this->source = static_cast<uint8_t>(CONTROL_SOURCE::SENSOR_WATER_SUPPLY_TEMP);
   this->pct = 0;
+  this->fanNo = 0;
   this->label = "";
 }
 
-void TempController::ControlData::setPctTable(float *const sample, const CONTROL_MODE mode, const CONTROL_SOURCE source, const String &label)
+void TempController::ControlData::setPctTable(float *const sample, const CONTROL_MODE mode, const CONTROL_SOURCE source, const uint8_t fanNo, const String &label)
 {
   this->resetPIDCtrl();
 
@@ -141,10 +142,11 @@ void TempController::ControlData::setPctTable(float *const sample, const CONTROL
   this->mode = mode;
   this->source = static_cast<uint8_t>(source);
   this->pct = 0;
+  this->fanNo = fanNo;
   this->label = label;
 }
 
-void TempController::ControlData::setPID(SensorData *const pidSensor, const CONTROL_MODE mode, const CONTROL_SOURCE source, const String &label)
+void TempController::ControlData::setPID(SensorData *const pidSensor, const CONTROL_MODE mode, const CONTROL_SOURCE source, const uint8_t fanNo, const String &label)
 {
   this->resetPIDCtrl();
 
@@ -154,10 +156,11 @@ void TempController::ControlData::setPID(SensorData *const pidSensor, const CONT
   this->mode = mode;
   this->source = static_cast<uint8_t>(source);
   this->pct = 0;
+  this->fanNo = fanNo;
   this->label = label;
 }
 
-void TempController::ControlData::setFixed(float *const sample, const CONTROL_MODE mode, const uint8_t source, const uint8_t pct, const String &label)
+void TempController::ControlData::setFixed(float *const sample, const CONTROL_MODE mode, const uint8_t source, const uint8_t pct, const uint8_t fanNo, const String &label)
 {
   this->resetPIDCtrl();
 
@@ -167,6 +170,7 @@ void TempController::ControlData::setFixed(float *const sample, const CONTROL_MO
   this->mode = mode;
   this->source = source;
   this->pct = pct;
+  this->fanNo = fanNo;
   this->label = label;
 }
 
@@ -229,7 +233,7 @@ uint8_t TempController::ControlData::getFanCount() const
 #define MK_CONTROL_LABEL(sLbl, modeLbl) String(modeLbl) + "[" + sLbl + "]"
 
 TempController::TempController(RuntimeConfig &config, SensorData &supplyTemp, SensorData &returnTemp, SensorData &caseTemp, SensorData &aux1Temp,
-                               SensorData &aux2Temp, const FanData &fan1, const FanData &fan2, const FanData &fan3, const FanData &fan4, const FanData &fan5, const FanData &fan6,
+                               SensorData &aux2Temp, FanData &fan1, FanData &fan2, FanData &fan3, FanData &fan4, FanData &fan5, FanData &fan6,
                                void (*const setupHardware)(), void (*const saveConfig)()) :
     config(config),
     supplyTemp(supplyTemp), returnTemp(returnTemp), caseTemp(caseTemp), aux1Temp(aux1Temp), aux2Temp(aux2Temp),
@@ -240,11 +244,11 @@ TempController::TempController(RuntimeConfig &config, SensorData &supplyTemp, Se
 {
 }
 
-TempController::ControlData &TempController::findOrCreateControlMode(CONTROL_MODE mode, uint8_t source, uint8_t i)
+TempController::ControlData &TempController::findOrCreateControlMode(const CONTROL_MODE mode, const uint8_t source, const uint8_t fanNo)
 {
   for (TempController::ControlData &controlMode : controlModes) {
     if (controlMode.mode != CONTROL_MODE::MODE_OFF) {
-      if (controlMode.mode == mode && source == controlMode.source) {
+      if (controlMode.mode == mode && source == controlMode.source && (mode != CONTROL_MODE::MODE_TBL || controlMode.fanNo == fanNo)) {
         return controlMode;
       }
     }
@@ -254,19 +258,19 @@ TempController::ControlData &TempController::findOrCreateControlMode(CONTROL_MOD
         CONTROL_SOURCE src = static_cast<CONTROL_SOURCE>(source);
         switch (src) {
           case CONTROL_SOURCE::SENSOR_WATER_SUPPLY_TEMP:
-            controlMode.setPID(&supplyTemp, mode, src, MK_CONTROL_LABEL(supplyTemp.lbl, "PID"));
+            controlMode.setPID(&supplyTemp, mode, src, fanNo, MK_CONTROL_LABEL(supplyTemp.lbl, "PID"));
             break;
           case CONTROL_SOURCE::SENSOR_WATER_RETURN_TEMP:
-            controlMode.setPID(&returnTemp, mode, src, MK_CONTROL_LABEL(returnTemp.lbl, "PID"));
+            controlMode.setPID(&returnTemp, mode, src, fanNo, MK_CONTROL_LABEL(returnTemp.lbl, "PID"));
             break;
           case CONTROL_SOURCE::SENSOR_CASE_TEMP:
-            controlMode.setPID(&caseTemp, mode, src, MK_CONTROL_LABEL(caseTemp.lbl, "PID"));
+            controlMode.setPID(&caseTemp, mode, src, fanNo, MK_CONTROL_LABEL(caseTemp.lbl, "PID"));
             break;
           case CONTROL_SOURCE::SENSOR_AUX1_TEMP:
-            controlMode.setPID(&aux1Temp, mode, src, MK_CONTROL_LABEL(aux1Temp.lbl, "PID"));
+            controlMode.setPID(&aux1Temp, mode, src, fanNo, MK_CONTROL_LABEL(aux1Temp.lbl, "PID"));
             break;
           case CONTROL_SOURCE::SENSOR_AUX2_TEMP:
-            controlMode.setPID(&aux2Temp, mode, src, MK_CONTROL_LABEL(aux2Temp.lbl, "PID"));
+            controlMode.setPID(&aux2Temp, mode, src, fanNo, MK_CONTROL_LABEL(aux2Temp.lbl, "PID"));
             break;
           case CONTROL_SOURCE::VIRTUAL_DELTA_TEMP:  // PID on virtual temp is not supported
             break;
@@ -276,28 +280,28 @@ TempController::ControlData &TempController::findOrCreateControlMode(CONTROL_MOD
         CONTROL_SOURCE src = static_cast<CONTROL_SOURCE>(source);
         switch (static_cast<CONTROL_SOURCE>(src)) {
           case CONTROL_SOURCE::SENSOR_WATER_SUPPLY_TEMP:
-            controlMode.setPctTable(&supplyTemp.val, mode, src, MK_CONTROL_LABEL(supplyTemp.lbl, "%-table"));
+            controlMode.setPctTable(&supplyTemp.val, mode, src, fanNo, MK_CONTROL_LABEL(supplyTemp.lbl, "%-table"));
             break;
           case CONTROL_SOURCE::SENSOR_WATER_RETURN_TEMP:
-            controlMode.setPctTable(&returnTemp.val, mode, src, MK_CONTROL_LABEL(returnTemp.lbl, "%-table"));
+            controlMode.setPctTable(&returnTemp.val, mode, src, fanNo, MK_CONTROL_LABEL(returnTemp.lbl, "%-table"));
             break;
           case CONTROL_SOURCE::SENSOR_CASE_TEMP:
-            controlMode.setPctTable(&caseTemp.val, mode, src, MK_CONTROL_LABEL(caseTemp.lbl, "%-table"));
+            controlMode.setPctTable(&caseTemp.val, mode, src, fanNo, MK_CONTROL_LABEL(caseTemp.lbl, "%-table"));
             break;
           case CONTROL_SOURCE::SENSOR_AUX1_TEMP:
-            controlMode.setPctTable(&aux1Temp.val, mode, src, MK_CONTROL_LABEL(aux1Temp.lbl, "%-table"));
+            controlMode.setPctTable(&aux1Temp.val, mode, src, fanNo, MK_CONTROL_LABEL(aux1Temp.lbl, "%-table"));
             break;
           case CONTROL_SOURCE::SENSOR_AUX2_TEMP:
-            controlMode.setPctTable(&aux2Temp.val, mode, src, MK_CONTROL_LABEL(aux2Temp.lbl, "%-table"));
+            controlMode.setPctTable(&aux2Temp.val, mode, src, fanNo, MK_CONTROL_LABEL(aux2Temp.lbl, "%-table"));
             break;
           case CONTROL_SOURCE::VIRTUAL_DELTA_TEMP:
-            controlMode.setPctTable(&deltaT, mode, src, MK_CONTROL_LABEL("DeltaT", "%-table"));
+            controlMode.setPctTable(&deltaT, mode, src, fanNo, MK_CONTROL_LABEL("DeltaT", "%-table"));
             break;
         }
       }
       else if (mode == CONTROL_MODE::MODE_FIXED) {
         // Note: fixed % fans pass deltaT to sample, although it is unused
-        controlMode.setFixed(&deltaT, mode, source, source, "Fixed");
+        controlMode.setFixed(&deltaT, mode, source, source, fanNo, "Fixed");
       }
       return controlMode;
     }
@@ -365,6 +369,19 @@ float TempController::getPIDSupplyTempSetpoint() const
   return 0;
 }
 
+float TempController::getPIDAux1TempSetpoint() const
+{
+  for (const TempController::ControlData &controlMode : controlModes) {
+    if (controlMode.mode == CONTROL_MODE::MODE_PID && static_cast<CONTROL_SOURCE>(controlMode.source) == CONTROL_SOURCE::SENSOR_AUX1_TEMP) {
+      return controlMode.pidCtrl->getSetpoint();
+    }
+    else if (controlMode.mode == CONTROL_MODE::MODE_OFF) {
+      break;
+    }
+  }
+  return 0;
+}
+
 void TempController::doFanUpdate()
 {
   // update delta T
@@ -374,27 +391,20 @@ void TempController::doFanUpdate()
     deltaT = 0;
 
   // Loop control map, calculate pct, and update fan PWM signal
-  uint8_t pout, pct;
+  uint8_t pct;
   for (ControlData &value : controlModes) {
     switch (value.mode) {
-      case CONTROL_MODE::MODE_TBL:
-        for (const auto &fan : value.fans) {
-          if (fan != nullptr) {
-            pct = value.doTbl(fan->cfg.tbl.temp_pct_table);
-            pout = static_cast<uint8_t>(round(map(pct, 0, 100, 0, 255)));
-            fan->writePWM(pout, false);
-          }
-          else {
-            break;
-          }
-        }
+      case CONTROL_MODE::MODE_TBL: {
+        auto &fan = value.fans[0];  // always 1 fan per MODE_TBL ControlData
+        pct = value.doTbl(fan->cfg.tbl.temp_pct_table);
+        fan->writePWM(pct, false);
         break;
+      }
       case CONTROL_MODE::MODE_FIXED:
         pct = value.doFixed();
-        pout = static_cast<uint8_t>(round(map(pct, 0, 100, 0, 255)));
-        for (const auto &fan : value.fans) {
+        for (auto &fan : value.fans) {
           if (fan != nullptr) {
-            fan->writePWM(pout, false);
+            fan->writePWM(pct, false);
           }
           else {
             break;
@@ -403,10 +413,9 @@ void TempController::doFanUpdate()
         break;
       case CONTROL_MODE::MODE_PID:
         pct = value.doPID(caseTemp);
-        pout = static_cast<uint8_t>(round(map(pct, 0, 100, 0, 255)));
-        for (const auto &fan : value.fans) {
+        for (auto &fan : value.fans) {
           if (fan != nullptr) {
-            fan->writePWM(pout, true);
+            fan->writePWM(pct, true);
           }
           else {
             break;
@@ -424,12 +433,9 @@ const float &TempController::getDeltaT() const
   return deltaT;
 }
 
-uint16_t TempController::getFanRPM(uint8_t i) const
+const FanData &TempController::getFan(uint8_t i) const
 {
-  if (i < FAN_CNT)
-    return fans[i]->rpm;
-  else
-    return 0;
+  return *fans[i];
 }
 
 const std::array<TempController::ControlData, FAN_CNT> &TempController::getControlModes() const

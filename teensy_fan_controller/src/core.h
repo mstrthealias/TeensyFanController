@@ -17,7 +17,6 @@
 #define USB_RAWHID_EN  // enable RawHID
 
 // Controller constants:
-#define FAN_CNT 6
 #define PERIOD_UPDATE 100  // how often to read ADC / update PID
 #define PERIOD_RPM 500
 
@@ -46,6 +45,7 @@ struct FanData {
   uint16_t rpm = 0;
   Moving_Average<uint16_t, uint16_t, 5> rpmAvg;
   uint16_t pulse_counter = 0;
+  uint8_t pct = 0;
 
   uint8_t isrPin = 0;
   uint8_t pwmPin = 0;
@@ -56,7 +56,7 @@ struct FanData {
 
   void setupPin(void (*isr)());
   void doRPM();
-  void writePWM(const uint8_t pout, const bool useRatio) const;
+  void writePWM(const uint8_t pout, const bool useRatio);
 };
 
 

@@ -50,19 +50,20 @@ class TempController {
     struct ControlData {
       float *sample;
       PIDController *pidCtrl;
-      std::array<const FanData *, FAN_CNT> fans;
+      std::array<FanData *, FAN_CNT> fans;
       CONTROL_MODE mode;
       uint8_t source;  //CONTROL_SOURCE (or fixed fan %)
       uint8_t pct = 0;
+      uint8_t fanNo = 0;  // the first fan associated w/ this control data
       String label;
 
       ControlData();
       ~ControlData();
 
       void resetPIDCtrl();
-      void setPctTable(float *const sample, const CONTROL_MODE mode, const CONTROL_SOURCE source, const String &label);  // %-tbl constructor
-      void setPID(SensorData *const pidSensor, const CONTROL_MODE mode, const CONTROL_SOURCE source, const String &label);  // PID constructor
-      void setFixed(float *const sample, const CONTROL_MODE mode, const uint8_t source, const uint8_t pct, const String &label);  // fixed-% constructor
+      void setPctTable(float *const sample, const CONTROL_MODE mode, const CONTROL_SOURCE source, const uint8_t fanNo, const String &label);  // %-tbl constructor
+      void setPID(SensorData *const pidSensor, const CONTROL_MODE mode, const CONTROL_SOURCE source, const uint8_t fanNo, const String &label);  // PID constructor
+      void setFixed(float *const sample, const CONTROL_MODE mode, const uint8_t source, const uint8_t pct, const uint8_t fanNo, const String &label);  // fixed-% constructor
       void reset();
 
       // delete copy assignment
@@ -90,7 +91,7 @@ class TempController {
 
     TempController(RuntimeConfig &config,
                    SensorData &supplyTemp, SensorData &returnTemp, SensorData &caseTemp, SensorData &aux1Temp, SensorData &aux2Temp,
-                   const FanData &fan1, const FanData &fan2, const FanData &fan3, const FanData &fan4, const FanData &fan5, const FanData &fan6,
+                   FanData &fan1, FanData &fan2, FanData &fan3, FanData &fan4, FanData &fan5, FanData &fan6,
                    void (*const setupHardware)(),
                    void (*const saveConfig)());
 
@@ -100,12 +101,13 @@ class TempController {
 
     const float &getDeltaT() const;
     float getPIDSupplyTempSetpoint() const;
-    uint16_t getFanRPM(uint8_t i) const;
+    float getPIDAux1TempSetpoint() const;
+    const FanData &getFan(uint8_t i) const;
     const std::array<ControlData, FAN_CNT> &getControlModes() const;
 
 
   private:
-    const std::array<const FanData *, FAN_CNT> fans;
+    const std::array<FanData *const, FAN_CNT> fans;
     std::array<ControlData, FAN_CNT> controlModes;
 
     float deltaT;  // returnTemp - supplyTemp (0 if no returnTemp sensor)

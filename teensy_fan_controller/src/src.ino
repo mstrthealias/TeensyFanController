@@ -224,9 +224,9 @@ void do_adc()
 #define PRINT_RPM(str, lbl, f)\
   { Serial.print("; ");Serial.print(str);Serial.print(lbl);Serial.print(" ");Serial.print(f->rpm); }
 #define PRINT_TEMP(str, temp)\
-  { Serial.print(str); Serial.print(temp); Serial.print(" C; "); }
-#define PRINT_PCT(str, pct)\
-  { Serial.print(str); Serial.print(pct); Serial.print("%"); }
+  { Serial.print(str); Serial.print(temp); Serial.print("°C; "); }
+#define PRINT_PCT(pct)\
+  { Serial.print(pct); Serial.print("%"); }
 
 /**
    Writes data log to (usb raw hid) serial. Invoked once every 500ms.
@@ -270,14 +270,13 @@ void do_log()
 
     if (value.mode == CONTROL_MODE::MODE_PID) {
       PRINT_TEMP("Setpoint ", value.pidCtrl->getSetpoint());
-      PRINT_PCT("PWM ", value.pct);
+      PRINT_PCT(value.pct);
     }
-    // do not print % for tbl, as there may be multiple tables in this config
-//    else if (value.mode == CONTROL_MODE::MODE_TBL) {
-//      PRINT_PCT("PWM ", value.pct);
-//    }
+    else if (value.mode == CONTROL_MODE::MODE_TBL) {
+      PRINT_PCT(value.pct);
+    }
     else if (value.mode == CONTROL_MODE::MODE_FIXED) {
-      PRINT_PCT("PWM ", value.pct);
+      PRINT_PCT(value.pct);
     }
 
     // loop and print RPM for each fan associated to this control mode

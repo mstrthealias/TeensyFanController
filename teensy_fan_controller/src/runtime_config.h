@@ -28,6 +28,7 @@ typedef unsigned char byte;
 
 // core related constants
 #define FAN_TBL_SIZE 10
+#define FAN_CNT 6
 
 // config related constants
 #define CONTROLLER_VERSION 1  // use to flag the version of configuration saved

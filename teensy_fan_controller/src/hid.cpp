@@ -132,33 +132,33 @@ void HID::setupPayloadConfig(uint8_t chunk, bool isLast)
 
 void HID::setupPayloadData()
 {
-  uint64_t val;
-  uint16_t rpm;
+  uint64_t val64;
+  uint8_t val8;
 
   // first 2 bytes are a signature
   buffer[0] = HID_OUT_PAYLOAD_DATA1;
   buffer[1] = HID_OUT_PAYLOAD_DATA2;
 
   // write values into buffer
-  memcpy((buffer + 2), &(val = static_cast<uint64_t>(ctrl.supplyTemp.val * 1000)), 4);
-  memcpy((buffer + 6), &(val = static_cast<uint64_t>(ctrl.returnTemp.val * 1000)), 4);
-  memcpy((buffer + 10), &(val = static_cast<uint64_t>(ctrl.caseTemp.val * 1000)), 4);
-  memcpy((buffer + 14), &(val = static_cast<uint64_t>(ctrl.aux1Temp.val * 1000)), 4);
-  memcpy((buffer + 18), &(val = static_cast<uint64_t>(ctrl.aux2Temp.val * 1000)), 4);
+  memcpy((buffer + 2), &(val64 = static_cast<uint64_t>(ctrl.supplyTemp.val * 1000)), 4);
+  memcpy((buffer + 6), &(val64 = static_cast<uint64_t>(ctrl.returnTemp.val * 1000)), 4);
+  memcpy((buffer + 10), &(val64 = static_cast<uint64_t>(ctrl.caseTemp.val * 1000)), 4);
+  memcpy((buffer + 14), &(val64 = static_cast<uint64_t>(ctrl.aux1Temp.val * 1000)), 4);
+  memcpy((buffer + 18), &(val64 = static_cast<uint64_t>(ctrl.aux2Temp.val * 1000)), 4);
 
-  memcpy((buffer + 22), &(val = static_cast<uint64_t>(ctrl.getDeltaT() * 1000)), 4);
-//  memcpy((buffer + 22), &(val = static_cast<uint64_t>(ctrl.getFanPercentPID() * 1000)), 4);
-//  memcpy((buffer + 26), &(val = static_cast<uint64_t>(ctrl.getFanPercentTbl() * 1000)), 4);
-  memcpy((buffer + 30), &(val = static_cast<uint64_t>(ctrl.getPIDSupplyTempSetpoint() * 1000)), 4);
+  memcpy((buffer + 22), &(val64 = static_cast<uint64_t>(ctrl.getDeltaT() * 1000)), 4);
+  memcpy((buffer + 26), &(val64 = static_cast<uint64_t>(ctrl.getPIDAux1TempSetpoint() * 1000)), 4);
+  memcpy((buffer + 30), &(val64 = static_cast<uint64_t>(ctrl.getPIDSupplyTempSetpoint() * 1000)), 4);
 
-  memcpy((buffer + 34), &(rpm = ctrl.getFanRPM(0)), 2);
-  memcpy((buffer + 36), &(rpm = ctrl.getFanRPM(1)), 2);
-  memcpy((buffer + 38), &(rpm = ctrl.getFanRPM(2)), 2);
-  memcpy((buffer + 40), &(rpm = ctrl.getFanRPM(3)), 2);
-  memcpy((buffer + 42), &(rpm = ctrl.getFanRPM(4)), 2);
-  memcpy((buffer + 44), &(rpm = ctrl.getFanRPM(5)), 2);
+  // fill 34 - 63 with fan specific {rpm,pct,mode,source}n
+  for (uint8_t i = 0; i < FAN_CNT; i++) {
+    const FanData &fan =  ctrl.getFan(i);
+    memcpy((buffer + 34 + 5*i), &fan.rpm, 2);
+    memcpy((buffer + 36 + 5*i), &fan.pct, 1);
+    memcpy((buffer + 37 + 5*i), &(val8 = static_cast<uint8_t>(fan.cfg.mode)), 1);
+    memcpy((buffer + 38 + 5*i), &(val8 = static_cast<uint8_t>(fan.cfg.source)), 1);
+  }
 
-  FILL_ZEROS(buffer, 46, sizeof(buffer));
   buffer[63] = HID_DATA;  // put next state at the end
 }
 

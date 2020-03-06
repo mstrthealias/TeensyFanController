@@ -26,6 +26,7 @@ void FanData::setupPin(void (*isr)())
 {
   rpm = 0;
   pulse_counter = 0;
+  pct = 0;
   if (pwmPin != cfg.pinPWM) {
     if (pwmPin) {
       pinMode(pwmPin, INPUT);  // default pin mode
@@ -60,13 +61,14 @@ void FanData::doRPM()
   }
 }
 
-void FanData::writePWM(const uint8_t pout, const bool useRatio) const
+void FanData::writePWM(const uint8_t pct, const bool useRatio)
 {
+  this->pct = pct;
   if (cfg.pinPWM) {
     if (useRatio)
-      analogWrite(cfg.pinPWM, (int) (pout * cfg.ratio));
+      analogWrite(cfg.pinPWM, static_cast<int>(round(map(pct, 0, 100, 0, 255)) * cfg.ratio));
     else
-      analogWrite(cfg.pinPWM, pout);
+      analogWrite(cfg.pinPWM, static_cast<int>(round(map(pct, 0, 100, 0, 255))));
   }
 }
 
