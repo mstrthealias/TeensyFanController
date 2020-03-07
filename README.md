@@ -45,12 +45,19 @@ Hardware is described in the [Hardware][5] folder:
 Releases will be published for supported devices. Teensy 3.x should be used for development.
 
 
+## Credits
+
+Icons made by [Freepik](https://www.flaticon.com/authors/freepik) from [www.flaticon.com](https://www.flaticon.com/):
+
+* ui_qt5/images/log.svg
+* ui_qt5/images/worldwide.svg
+
+
 ### Code
 - https://github.com/br3ttb/Arduino-PID-Library/ (License MIT)
 - https://learn.adafruit.com/thermistor/using-a-thermistor (License Apache?)
 - https://stackoverflow.com/a/10990893/1345237 (License ?)
 - https://github.com/apmorton/teensy-template (License ?)
-
 
 
 
