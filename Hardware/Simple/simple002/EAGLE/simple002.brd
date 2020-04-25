@@ -147,11 +147,11 @@
 <wire x1="51.74" y1="78.73" x2="-2.54" y2="78.73" width="0" layer="20"/>
 <wire x1="-2.54" y1="78.73" x2="-2.54" y2="-2.54" width="0" layer="20"/>
 <hole x="0" y="0" drill="2.54" locked="yes"/>
-<hole x="0" y="59.000009375" drill="2.54" locked="yes"/>
-<hole x="49.000003125" y="59.000009375" drill="2.54" locked="yes"/>
+<hole x="0" y="58.0000125" drill="2.54" locked="yes"/>
+<hole x="49.000003125" y="58.0000125" drill="2.54" locked="yes"/>
 <hole x="49.000003125" y="0" drill="2.54" locked="yes"/>
 <text x="50.8" y="77.47" size="1.397" layer="25" align="center-right">TEENSY FAN CONTROLLER</text>
-<text x="50.8" y="76.2" size="1.016" layer="25" align="top-right">SIMPLE 001</text>
+<text x="50.8" y="76.2" size="1.016" layer="25" align="top-right">SIMPLE 002</text>
 <text x="23.241" y="57.785" size="0.762" layer="25">(Teensy 3.x, 4.0)</text>
 <text x="31.242" y="40.005" size="0.635" layer="25" rot="R90">(NC for Teensy 4.0)</text>
 </plain>
@@ -3294,8 +3294,8 @@ design rules under a new name.</description>
 <vertex x="-2.286" y="78.486"/>
 <vertex x="-2.286" y="-2.286"/>
 <vertex x="51.562" y="-2.286"/>
-<vertex x="51.562" y="5.588"/>
-<vertex x="46.228" y="0.254"/>
+<vertex x="51.562" y="5.969"/>
+<vertex x="45.847" y="0.254"/>
 <vertex x="36.576" y="0.254"/>
 <vertex x="36.576" y="27.686"/>
 <vertex x="34.036" y="27.686"/>
@@ -3304,16 +3304,16 @@ design rules under a new name.</description>
 <vertex x="36.576" y="37.846"/>
 <vertex x="34.036" y="37.846"/>
 <vertex x="34.036" y="58.674"/>
-<vertex x="45.466" y="58.674"/>
-<vertex x="51.562" y="52.578"/>
+<vertex x="44.069" y="58.674"/>
+<vertex x="51.562" y="51.181"/>
 <vertex x="51.562" y="78.486"/>
 </polygon>
 <polygon width="0.1524" layer="16" spacing="0.3175">
 <vertex x="-2.286" y="78.486"/>
 <vertex x="-2.286" y="-2.286"/>
 <vertex x="51.562" y="-2.286"/>
-<vertex x="51.562" y="5.588"/>
-<vertex x="46.228" y="0.254"/>
+<vertex x="51.562" y="5.969"/>
+<vertex x="45.847" y="0.254"/>
 <vertex x="36.576" y="0.254"/>
 <vertex x="36.576" y="27.686"/>
 <vertex x="34.036" y="27.686"/>
@@ -3322,8 +3322,8 @@ design rules under a new name.</description>
 <vertex x="36.576" y="37.846"/>
 <vertex x="34.036" y="37.846"/>
 <vertex x="34.036" y="58.674"/>
-<vertex x="45.466" y="58.674"/>
-<vertex x="51.562" y="52.578"/>
+<vertex x="44.069" y="58.674"/>
+<vertex x="51.562" y="51.181"/>
 <vertex x="51.562" y="78.486"/>
 </polygon>
 <contactref element="HDR1" pad="2"/>
@@ -3339,9 +3339,9 @@ design rules under a new name.</description>
 <wire x1="1.27" y1="34.29" x2="1.27" y2="25.4" width="1.27" layer="1"/>
 <wire x1="1.27" y1="25.4" x2="1.27" y2="16.51" width="1.27" layer="1"/>
 <wire x1="1.27" y1="16.51" x2="1.27" y2="7.62" width="1.27" layer="1"/>
-<wire x1="1.27" y1="52.07" x2="1.27" y2="56.13909375" width="1.27" layer="1"/>
-<wire x1="8.89" y1="63.75909375" x2="1.27" y2="56.13909375" width="1.27" layer="1"/>
-<wire x1="8.89" y1="63.75909375" x2="8.89" y2="64.77" width="1.27" layer="1"/>
+<wire x1="1.27" y1="52.07" x2="1.27" y2="54.99609375" width="1.27" layer="1"/>
+<wire x1="8.89" y1="62.61609375" x2="1.27" y2="54.99609375" width="1.27" layer="1"/>
+<wire x1="8.89" y1="62.61609375" x2="8.89" y2="64.77" width="1.27" layer="1"/>
 <wire x1="36.83" y1="68.58" x2="42.545" y2="68.58" width="1.27" layer="1"/>
 <wire x1="36.83" y1="68.58" x2="29.21" y2="68.58" width="1.27" layer="1"/>
 <contactref element="C1" pad="2"/>
@@ -3369,10 +3369,10 @@ design rules under a new name.</description>
 <wire x1="49.53" y1="49.53" x2="49.53" y2="41.91" width="1.27" layer="1"/>
 <polygon width="0.1524" layer="1" spacing="0.3175">
 <vertex x="37.211" y="0.762"/>
-<vertex x="46.101" y="0.762"/>
-<vertex x="51.562" y="6.223"/>
-<vertex x="51.562" y="51.816"/>
-<vertex x="45.212" y="58.166"/>
+<vertex x="45.72" y="0.762"/>
+<vertex x="51.562" y="6.604"/>
+<vertex x="51.562" y="50.419"/>
+<vertex x="43.815" y="58.166"/>
 <vertex x="34.544" y="58.166"/>
 <vertex x="34.544" y="38.354"/>
 <vertex x="37.211" y="38.354"/>
@@ -3383,10 +3383,10 @@ design rules under a new name.</description>
 </polygon>
 <polygon width="0.1524" layer="16" spacing="0.3175">
 <vertex x="37.211" y="0.762"/>
-<vertex x="46.101" y="0.762"/>
-<vertex x="51.562" y="6.223"/>
-<vertex x="51.562" y="51.816"/>
-<vertex x="45.212" y="58.166"/>
+<vertex x="45.72" y="0.762"/>
+<vertex x="51.562" y="6.604"/>
+<vertex x="51.562" y="50.419"/>
+<vertex x="43.815" y="58.166"/>
 <vertex x="34.544" y="58.166"/>
 <vertex x="34.544" y="38.354"/>
 <vertex x="37.211" y="38.354"/>
