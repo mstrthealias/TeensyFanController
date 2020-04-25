@@ -2,7 +2,7 @@
 
 ## Authors
 
-* [Jack Davis]:(https://github.com/mstrthealias)
+* [Jack Davis](https://github.com/mstrthealias)
 
 
 ## Design

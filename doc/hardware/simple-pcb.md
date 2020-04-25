@@ -2,7 +2,7 @@
 
 The initial Teensy Fan Controller PCB, designed to fit in a [Raspberry Pi 3 case](https://www.microcenter.com/product/614861/micro-connectors-plastic-raspberry-pi-3-model-b-case-kit):
 
-![Simple 001 PCB in a Raspberry Pi 3 case](../.gitbook/assets/simple001.photo.1.png)
+![Simple 001 PCB in a Raspberry Pi 3 case](../images/simple001.photo.1.png)
 
 {% hint style="info" %}
 [Simple002 design files](https://github.com/mstrthealias/TeensyFanController/blob/master/Hardware/Simple/simple002) are available, but untested.
