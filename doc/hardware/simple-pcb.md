@@ -47,7 +47,7 @@ A 2nd revision--Simple002--will be published, removing the AGND-GND bridge and t
 | Path | Description |
 | :--- | :--- |
 | [datasheets/](https://github.com/mstrthealias/TeensyFanController/tree/master/Hardware/Simple/datasheets) | Part datasheets |
-| [simple001/EAGLE/](https://github.com/mstrthealias/TeensyFanController/tree/master/Hardware/Simple/simple001/EAGLE) | EAGLE library, schematic, and board \(_Simple 001_\) |
+| [EAGLE/](https://github.com/mstrthealias/TeensyFanController/tree/master/Hardware/Simple/EAGLE) | EAGLE library, schematic, and board \(_Simple 002_\) |
 | [simple001/gerbers.zip](https://github.com/mstrthealias/TeensyFanController/tree/0ceefdbffbd5efc627939be4be3313a873193821/Hardware/Simple/simple001/gerbers.zip) | Gerber files for PCB fabrication \(_Simple 001_\) |
 | [simple001/parts.csv](https://github.com/mstrthealias/TeensyFanController/tree/0ceefdbffbd5efc627939be4be3313a873193821/Hardware/Simple/simple001/parts.csv) | Part order list \(_Simple 001_\) |
 | [simple001/partslist.txt](https://github.com/mstrthealias/TeensyFanController/tree/0ceefdbffbd5efc627939be4be3313a873193821/Hardware/Simple/simple001/partslist.txt) | Modified EAGLE partlist.txt export \(_Simple 001_\) |
