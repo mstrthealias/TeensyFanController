@@ -25490,83 +25490,6 @@ Source: http://products.nichicon.co.jp/en/pdf/XJA043/e-ud.pdf</description>
 </deviceset>
 </devicesets>
 </library>
-<library name="jumper" urn="urn:adsk.eagle:library:252">
-<description>&lt;b&gt;Jumpers&lt;/b&gt;&lt;p&gt;
-&lt;author&gt;Created by librarian@cadsoft.de&lt;/author&gt;</description>
-<packages>
-<package name="JP1" urn="urn:adsk.eagle:footprint:15398/1" library_version="2">
-<description>&lt;b&gt;JUMPER&lt;/b&gt;</description>
-<wire x1="-1.016" y1="0" x2="-1.27" y2="0.254" width="0.1524" layer="21"/>
-<wire x1="-1.016" y1="0" x2="-1.27" y2="-0.254" width="0.1524" layer="21"/>
-<wire x1="1.016" y1="0" x2="1.27" y2="0.254" width="0.1524" layer="21"/>
-<wire x1="1.016" y1="0" x2="1.27" y2="-0.254" width="0.1524" layer="21"/>
-<wire x1="1.27" y1="-0.254" x2="1.27" y2="-2.286" width="0.1524" layer="21"/>
-<wire x1="1.016" y1="-2.54" x2="1.27" y2="-2.286" width="0.1524" layer="21"/>
-<wire x1="1.27" y1="2.286" x2="1.016" y2="2.54" width="0.1524" layer="21"/>
-<wire x1="1.27" y1="2.286" x2="1.27" y2="0.254" width="0.1524" layer="21"/>
-<wire x1="1.016" y1="2.54" x2="-1.016" y2="2.54" width="0.1524" layer="21"/>
-<wire x1="-1.27" y1="2.286" x2="-1.016" y2="2.54" width="0.1524" layer="21"/>
-<wire x1="-1.27" y1="2.286" x2="-1.27" y2="0.254" width="0.1524" layer="21"/>
-<wire x1="-1.27" y1="-0.254" x2="-1.27" y2="-2.286" width="0.1524" layer="21"/>
-<wire x1="-1.016" y1="-2.54" x2="-1.27" y2="-2.286" width="0.1524" layer="21"/>
-<wire x1="-1.016" y1="-2.54" x2="1.016" y2="-2.54" width="0.1524" layer="21"/>
-<pad name="1" x="0" y="-1.27" drill="0.9144" shape="long"/>
-<pad name="2" x="0" y="1.27" drill="0.9144" shape="long"/>
-<text x="-1.651" y="-2.54" size="1.27" layer="25" ratio="10" rot="R90">&gt;NAME</text>
-<text x="2.921" y="-2.54" size="1.27" layer="27" ratio="10" rot="R90">&gt;VALUE</text>
-<rectangle x1="-0.3048" y1="0.9652" x2="0.3048" y2="1.5748" layer="51"/>
-<rectangle x1="-0.3048" y1="-1.5748" x2="0.3048" y2="-0.9652" layer="51"/>
-</package>
-</packages>
-<packages3d>
-<package3d name="JP1" urn="urn:adsk.eagle:package:15455/1" type="box" library_version="2">
-<description>JUMPER</description>
-<packageinstances>
-<packageinstance name="JP1"/>
-</packageinstances>
-</package3d>
-</packages3d>
-<symbols>
-<symbol name="JP2E" urn="urn:adsk.eagle:symbol:15391/1" library_version="2">
-<wire x1="0" y1="0" x2="0" y2="1.27" width="0.1524" layer="94"/>
-<wire x1="0" y1="2.54" x2="0" y2="1.27" width="0.4064" layer="94"/>
-<wire x1="2.54" y1="0" x2="2.54" y2="1.27" width="0.1524" layer="94"/>
-<wire x1="2.54" y1="2.54" x2="2.54" y2="1.27" width="0.4064" layer="94"/>
-<wire x1="-0.635" y1="0" x2="3.175" y2="0" width="0.4064" layer="94"/>
-<wire x1="3.175" y1="0" x2="3.175" y2="0.635" width="0.4064" layer="94"/>
-<wire x1="3.175" y1="0.635" x2="-0.635" y2="0.635" width="0.4064" layer="94"/>
-<wire x1="-0.635" y1="0.635" x2="-0.635" y2="0" width="0.4064" layer="94"/>
-<text x="-1.27" y="0" size="1.778" layer="95" rot="R90">&gt;NAME</text>
-<text x="5.715" y="0" size="1.778" layer="96" rot="R90">&gt;VALUE</text>
-<pin name="1" x="0" y="-2.54" visible="pad" length="short" direction="pas" rot="R90"/>
-<pin name="2" x="2.54" y="-2.54" visible="pad" length="short" direction="pas" rot="R90"/>
-</symbol>
-</symbols>
-<devicesets>
-<deviceset name="JP1E" urn="urn:adsk.eagle:component:15487/2" prefix="JP" uservalue="yes" library_version="2">
-<description>&lt;b&gt;JUMPER&lt;/b&gt;</description>
-<gates>
-<gate name="A" symbol="JP2E" x="2.54" y="0"/>
-</gates>
-<devices>
-<device name="" package="JP1">
-<connects>
-<connect gate="A" pin="1" pad="1"/>
-<connect gate="A" pin="2" pad="2"/>
-</connects>
-<package3dinstances>
-<package3dinstance package3d_urn="urn:adsk.eagle:package:15455/1"/>
-</package3dinstances>
-<technologies>
-<technology name="">
-<attribute name="POPULARITY" value="61" constant="no"/>
-</technology>
-</technologies>
-</device>
-</devices>
-</deviceset>
-</devicesets>
-</library>
 <library name="teensyfanctrl">
 <packages>
 <package name="641737-1">
@@ -25845,6 +25768,67 @@ Source: http://products.nichicon.co.jp/en/pdf/XJA043/e-ud.pdf</description>
 </deviceset>
 </devicesets>
 </library>
+<library name="shorts">
+<packages>
+<package name="SHORT_TOP-50">
+<description>Short, top layer, 50mil width</description>
+<smd name="1" x="0.635" y="0" dx="1.27" dy="1.27" layer="1" stop="no" cream="no"/>
+<smd name="2" x="-0.635" y="0" dx="1.27" dy="1.27" layer="1" stop="no" cream="no"/>
+<text x="-1.27" y="-2.032" size="1.27" layer="25" ratio="16">&gt;NAME</text>
+</package>
+<package name="SHORT_ALL-50">
+<description>Short, all layers, 50mil width</description>
+<pad name="1" x="-0.635" y="0" drill="0.7366" diameter="1.524"/>
+<pad name="2" x="0.635" y="0" drill="0.7366" diameter="1.524"/>
+<text x="-1.7145" y="-2.2225" size="1.27" layer="25" ratio="16">&gt;NAME</text>
+<text x="0.381" y="-0.889" size="0.762" layer="51" ratio="10" rot="R90">&gt;NAME</text>
+<rectangle x1="-0.254" y1="0.381" x2="0.254" y2="0.635" layer="1"/>
+<rectangle x1="-0.254" y1="-0.635" x2="0.254" y2="-0.381" layer="1"/>
+<rectangle x1="-0.254" y1="0.381" x2="0.254" y2="0.635" layer="16"/>
+<rectangle x1="-0.254" y1="-0.635" x2="0.254" y2="-0.381" layer="16"/>
+</package>
+</packages>
+<symbols>
+<symbol name="SHORT-H">
+<wire x1="-2.54" y1="0" x2="2.54" y2="0" width="0.508" layer="94"/>
+<text x="-2.2225" y="1.27" size="1.778" layer="95">&gt;NAME</text>
+<pin name="P$1" x="-2.54" y="0" visible="off" length="point" swaplevel="1"/>
+<pin name="P$2" x="2.54" y="0" visible="off" length="point" swaplevel="1"/>
+</symbol>
+</symbols>
+<devicesets>
+<deviceset name="SHORT" prefix="SH">
+<description>Short between two nets</description>
+<gates>
+<gate name="G$1" symbol="SHORT-H" x="0" y="0" swaplevel="1"/>
+</gates>
+<devices>
+<device name="T5" package="SHORT_TOP-50">
+<connects>
+<connect gate="G$1" pin="P$1" pad="1"/>
+<connect gate="G$1" pin="P$2" pad="2"/>
+</connects>
+<technologies>
+<technology name="">
+<attribute name="BOM" value="no"/>
+</technology>
+</technologies>
+</device>
+<device name="A5" package="SHORT_ALL-50">
+<connects>
+<connect gate="G$1" pin="P$1" pad="1"/>
+<connect gate="G$1" pin="P$2" pad="2"/>
+</connects>
+<technologies>
+<technology name="">
+<attribute name="BOM" value="no"/>
+</technology>
+</technologies>
+</device>
+</devices>
+</deviceset>
+</devicesets>
+</library>
 </libraries>
 <attributes>
 </attributes>
@@ -25964,12 +25948,6 @@ Source: http://products.nichicon.co.jp/en/pdf/XJA043/e-ud.pdf</description>
 <attribute name="MANUFACTURER" value="KEMET"/>
 <attribute name="MANUFACTURER_PART_NUMBER" value="C320C104M1U5TA7303"/>
 </part>
-<part name="JP1" library="jumper" library_urn="urn:adsk.eagle:library:252" deviceset="JP1E" device="" package3d_urn="urn:adsk.eagle:package:15455/1" value="JP1">
-<attribute name="DESC" value="Break Away Headers - Straight"/>
-<attribute name="DIGIKEY_PART_NUMBER" value="PRT-00116"/>
-<attribute name="MANUFACTURER" value="SparkFun Electronics"/>
-<attribute name="MANUFACTURER_PART_NUMBER" value="PRT-00116"/>
-</part>
 <part name="C1" library="capacitor-wima" library_urn="urn:adsk.eagle:library:116" deviceset="C" device="2,5-3" package3d_urn="urn:adsk.eagle:package:5436/1" value="0.1uF">
 <attribute name="DESC" value="CAP CER 0.1UF 100V Z5U RADIAL"/>
 <attribute name="DIGIKEY_PART_NUMBER" value="399-14023-1-ND"/>
@@ -25979,14 +25957,14 @@ Source: http://products.nichicon.co.jp/en/pdf/XJA043/e-ud.pdf</description>
 <part name="R6" library="adafruit" library_urn="urn:adsk.eagle:library:420" deviceset="R-US_" device="R0402" package3d_urn="urn:adsk.eagle:package:6240564/1" value="JMP">
 <attribute name="DESC" value="UNUSED"/>
 </part>
+<part name="SH1" library="shorts" deviceset="SHORT" device="T5"/>
 </parts>
 <sheets>
 <sheet>
 <plain>
 <text x="-78.74" y="109.22" size="1.778" layer="97">Header to connect GND to AGND
  (not needed in practice?)</text>
-<text x="-78.74" y="139.7" size="1.778" layer="97">Jumper to connect V3.3 to AREF
- (not used for Teensy 4.0)</text>
+<text x="-78.74" y="139.7" size="1.778" layer="97">Short to connect V3.3 to AREF</text>
 <text x="182.88" y="172.72" size="1.778" layer="97">Equivilent series resistors for thermistors
  (1% resistors, same resistance as thermistor nominal resistance)</text>
 <text x="40.64" y="281.94" size="1.778" layer="97">Fan headers</text>
@@ -26157,14 +26135,6 @@ Source: http://products.nichicon.co.jp/en/pdf/XJA043/e-ud.pdf</description>
 <attribute name="DIGIKEY_PART_NUMBER" x="55.88" y="121.92" size="1.778" layer="96" display="off"/>
 <attribute name="DESC" x="55.88" y="121.92" size="1.778" layer="96" display="off"/>
 </instance>
-<instance part="JP1" gate="A" x="-60.96" y="132.08" smashed="yes" rot="R270">
-<attribute name="NAME" x="-60.96" y="133.35" size="1.778" layer="95"/>
-<attribute name="VALUE" x="-60.96" y="126.365" size="1.778" layer="96"/>
-<attribute name="DIGIKEY_PART_NUMBER" x="-60.96" y="132.08" size="1.778" layer="96" rot="R270" display="off"/>
-<attribute name="DESC" x="-60.96" y="132.08" size="1.778" layer="96" rot="R270" display="off"/>
-<attribute name="MANUFACTURER" x="-60.96" y="132.08" size="1.778" layer="96" rot="R270" display="off"/>
-<attribute name="MANUFACTURER_PART_NUMBER" x="-60.96" y="132.08" size="1.778" layer="96" rot="R270" display="off"/>
-</instance>
 <instance part="C1" gate="G$1" x="45.72" y="121.92" smashed="yes">
 <attribute name="NAME" x="47.244" y="122.301" size="1.778" layer="95"/>
 <attribute name="VALUE" x="47.244" y="117.221" size="1.778" layer="96"/>
@@ -26177,6 +26147,9 @@ Source: http://products.nichicon.co.jp/en/pdf/XJA043/e-ud.pdf</description>
 <attribute name="NAME" x="-62.23" y="103.0986" size="1.778" layer="95"/>
 <attribute name="VALUE" x="-62.23" y="98.298" size="1.778" layer="96"/>
 <attribute name="DESC" x="-58.42" y="101.6" size="1.778" layer="96" display="off"/>
+</instance>
+<instance part="SH1" gate="G$1" x="-58.42" y="132.08" smashed="yes">
+<attribute name="NAME" x="-60.6425" y="133.35" size="1.778" layer="95"/>
 </instance>
 </instances>
 <busses>
@@ -26528,14 +26501,14 @@ Source: http://products.nichicon.co.jp/en/pdf/XJA043/e-ud.pdf</description>
 </net>
 <net name="HDR_PWM6" class="0">
 <segment>
-<wire x1="-60.96" y1="226.06" x2="-78.74" y2="226.06" width="0.1524" layer="91"/>
-<pinref part="TEENSY" gate="G$1" pin="16/A2"/>
-<label x="-76.2" y="226.06" size="1.778" layer="95"/>
-</segment>
-<segment>
 <pinref part="FAN6" gate="G$1" pin="PWM"/>
 <wire x1="134.62" y1="236.22" x2="119.38" y2="236.22" width="0.1524" layer="91"/>
 <label x="121.92" y="236.22" size="1.778" layer="95"/>
+</segment>
+<segment>
+<pinref part="TEENSY" gate="G$1" pin="22/A8/PWM"/>
+<wire x1="-60.96" y1="210.82" x2="-78.74" y2="210.82" width="0.1524" layer="91"/>
+<label x="-76.2" y="210.82" size="1.778" layer="95"/>
 </segment>
 </net>
 <net name="HDR_PWM1" class="0">
@@ -26700,11 +26673,6 @@ Source: http://products.nichicon.co.jp/en/pdf/XJA043/e-ud.pdf</description>
 <label x="187.96" y="124.46" size="1.778" layer="95" font="vector"/>
 </segment>
 <segment>
-<pinref part="JP1" gate="A" pin="2"/>
-<wire x1="-63.5" y1="129.54" x2="-76.2" y2="129.54" width="0.1524" layer="91"/>
-<label x="-73.66" y="129.54" size="1.778" layer="95"/>
-</segment>
-<segment>
 <pinref part="C2" gate="G$1" pin="1"/>
 <wire x1="101.6" y1="124.46" x2="101.6" y2="134.62" width="0.1524" layer="91"/>
 <label x="104.14" y="127" size="1.778" layer="95" rot="R90"/>
@@ -26714,6 +26682,11 @@ Source: http://products.nichicon.co.jp/en/pdf/XJA043/e-ud.pdf</description>
 <wire x1="114.3" y1="124.46" x2="114.3" y2="134.62" width="0.1524" layer="91"/>
 <label x="116.84" y="127" size="1.778" layer="95" rot="R90"/>
 </segment>
+<segment>
+<pinref part="SH1" gate="G$1" pin="P$2"/>
+<wire x1="-55.88" y1="132.08" x2="-38.1" y2="132.08" width="0.1524" layer="91"/>
+<label x="-53.34" y="132.08" size="1.778" layer="95"/>
+</segment>
 </net>
 <net name="V3.3" class="3">
 <segment>
@@ -26722,8 +26695,8 @@ Source: http://products.nichicon.co.jp/en/pdf/XJA043/e-ud.pdf</description>
 <label x="-7.62" y="261.62" size="1.778" layer="95"/>
 </segment>
 <segment>
-<pinref part="JP1" gate="A" pin="1"/>
-<wire x1="-63.5" y1="132.08" x2="-76.2" y2="132.08" width="0.1524" layer="91"/>
+<pinref part="SH1" gate="G$1" pin="P$1"/>
+<wire x1="-60.96" y1="132.08" x2="-76.2" y2="132.08" width="0.1524" layer="91"/>
 <label x="-73.66" y="132.08" size="1.778" layer="95"/>
 </segment>
 </net>
