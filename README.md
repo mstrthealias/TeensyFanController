@@ -37,24 +37,17 @@ The project is **documented using Gitbook**, and accessible at **[https://mstrth
 [Fork of liquidtux](https://github.com/mstrthealias/liquidtux): Linux kernel module for reading temperatures and fan RPMs using *lm-sensors* or *psensor*.  Tested on Ubuntu 18.04.
 
 
-## Credits
+## Simple 001 PCB
+
+![Simple 001 PCB](doc/images/simple001.photo.1.png)
+
+
+## [Credits](https://mstrthealias.gitbook.io/teensy-fan-controller/credits)
 
 Icons made by [Freepik](https://www.flaticon.com/authors/freepik) from [www.flaticon.com](https://www.flaticon.com/):
 
 * ui_qt5/images/log.svg
 * ui_qt5/images/worldwide.svg
-
-
-### Code
-- https://github.com/br3ttb/Arduino-PID-Library/ (License MIT)
-- https://learn.adafruit.com/thermistor/using-a-thermistor (License Apache?)
-- https://stackoverflow.com/a/10990893/1345237 (License ?)
-- https://github.com/apmorton/teensy-template (License ?)
-
-
-## Simple 001 PCB
-
-![Simple 001 PCB](doc/images/simple001.photo.1.png)
 
 
 
