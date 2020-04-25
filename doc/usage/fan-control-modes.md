@@ -23,6 +23,16 @@ The following _control sources_ are supported:
 By default, all fans operate in PID mode for supply water temperature control.
 {% endhint %}
 
+## Percent-Table Mode
+
+Each fan may be individually configured to operate using its own _temperature to fan %-table_. This is like BIOS custom fan configurations.
+
+Any one of the five temperature sensors, or DeltaT \(return temp - supply temp\), may be used as a temperature source.
+
+## Fixed Mode
+
+Each fan may be individually configured to operate using a fixed speed \(percent\).
+
 ## PID Control Mode
 
 The PID controllers satisfy a temperature setpoint, by changing fan PWM duty cycle\(s\).
@@ -34,14 +44,3 @@ The fan controller may operate up to 4 PID controllers, one per the following te
 Supply water temperature _setpoint adjustment_ is enabled by default, to handle room and/or case temperature changes. By default, the setpoint adjusts between 28°C and 31.5°C, at 0.25°C increments.
 
 If a case temperature sensor is connected, _setpoint adjustment_ is limited by a difference between supply water and case temperature \(allowing fan spin-up when case temperature does not change\).
-
-## Percent-Table Mode
-
-Each fan may be individually configured to operate using its own _temperature to fan %-table_. This is like BIOS custom fan configurations.
-
-Any one of the five temperature sensors, or DeltaT \(return temp - supply temp\), may be used as a temperature source.
-
-## Fixed Mode
-
-Each fan may be individually configured to operate using a fixed speed \(percent\).
-

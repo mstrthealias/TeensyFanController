@@ -4,6 +4,10 @@ The initial Teensy Fan Controller PCB, designed to fit in a [Raspberry Pi 3 case
 
 ![Simple 001 PCB in a Raspberry Pi 3 case](../.gitbook/assets/simple001.photo.1.png)
 
+{% hint style="info" %}
+[Simple002 design files](https://github.com/mstrthealias/TeensyFanController/blob/master/Hardware/Simple/simple002) are available, but untested.
+{% endhint %}
+
 ## Build Instructions
 
 * Order PCB fabrication using the provided [Gerber files](https://github.com/mstrthealias/TeensyFanController/blob/master/Hardware/Simple/simple001/gerbers.zip) \(fe. 4pcb 33each\)

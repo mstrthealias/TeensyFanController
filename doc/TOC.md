@@ -8,17 +8,17 @@
 
 ## Hardware
 
-* [Prototype](hardware/prototype.md)
-* [Breadboard](hardware/breadboard.md)
 * [Simple PCB](hardware/simple-pcb.md)
+* [Breadboard](hardware/breadboard.md)
+* [Prototype](hardware/prototype.md)
 
 ## Management UI
 
 * [Overview](management-ui/overview.md)
-* [Controller Log](management-ui/controller-log.md)
-* [Present Values](management-ui/present-values.md)
-* [Fan Setup](management-ui/fan-setup.md)
+* [Controller Status](management-ui/present-values.md)
 * [Hardware Setup](management-ui/hardware-setup.md)
+* [Fan Setup](management-ui/fan-setup.md)
+* [Controller Log](management-ui/controller-log.md)
 
 ## Build Instructions
 
@@ -31,3 +31,6 @@
 * [Router Cooling Demo](demo/router-cooling-demo.md)
 * [Water-cooled CPU and air-cooled GPU](demo/pc-water-cooling-demo-1.md)
 
+## Credits
+
+* [Credits](credits.md)
